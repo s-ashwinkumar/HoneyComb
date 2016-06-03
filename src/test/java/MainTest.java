@@ -1,6 +1,6 @@
 
+import fi.core.Helloworld;
 import org.junit.BeforeClass;
-import org.junit.Assert.*;
 
 import static org.junit.Assert.assertEquals;
 
