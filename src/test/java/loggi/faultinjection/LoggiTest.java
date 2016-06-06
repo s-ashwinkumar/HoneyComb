@@ -17,6 +17,11 @@ import java.util.TimeZone;
  */
 public class LoggiTest {
 
+    /**
+     * tdd start
+     * @throws Exception
+     */
+
     @Test
     public void testStart() throws Exception {
         File file = new File("src/main/resources/log");
@@ -30,7 +35,6 @@ public class LoggiTest {
             Assert.assertTrue(file.exists());
 
             if (!file.exists()) {
-                //file.createNewFile();
                 System.out.println(" file not existed yet");
             } else {
                 FileWriter fw =  new FileWriter(file);
@@ -41,7 +45,6 @@ public class LoggiTest {
                 //make sure the current time can be very close
                 java.util.Date date= new java.util.Date();
                 DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z");
-                //sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
                 loggi.start();
 
@@ -56,7 +59,6 @@ public class LoggiTest {
                 br.close();
 
 
-                //System.out.println(sb);
 
                 //secondly I will compare the content inside the log with the expected content after loggi.start()
                 StringBuilder answer = new StringBuilder("");
@@ -74,7 +76,6 @@ public class LoggiTest {
 
                 String a1 = s1.substring(0,19) + s1.substring(23);
                 String a2 = s2.substring(0,19) + s2.substring(23);
-                //System.out.println(a1);
                 Assert.assertEquals(a1, a2);
             }
         }catch(Exception e){
@@ -94,7 +95,6 @@ public class LoggiTest {
             Assert.assertTrue(file.exists());
 
             if (!file.exists()) {
-                //file.createNewFile();
                 System.out.println(" file not existed yet");
             } else {
                 FileWriter fw =  new FileWriter(file);
@@ -104,7 +104,6 @@ public class LoggiTest {
                 //make sure the current time can be very close
                 java.util.Date date= new java.util.Date();
                 DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z");
-                //sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
                 loggi.log("Hello World!");
 
@@ -117,8 +116,6 @@ public class LoggiTest {
                 }
                 br.close();
 
-
-                //System.out.println(sb);
 
                 //secondly I will compare the content inside the log with the expected content after loggi.start()
                 StringBuilder answer = new StringBuilder("");
@@ -136,7 +133,6 @@ public class LoggiTest {
 
                 String a1 = s1.substring(0,19) + s1.substring(23);
                 String a2 = s2.substring(0,19) + s2.substring(23);
-                //System.out.println(a1);
                 Assert.assertEquals(a1, a2);
             }
         }catch(Exception e){
@@ -157,7 +153,6 @@ public class LoggiTest {
             Assert.assertTrue(file.exists());
 
             if (!file.exists()) {
-                //file.createNewFile();
                 System.out.println(" file not existed yet");
             } else {
                 FileWriter fw =  new FileWriter(file);
@@ -168,7 +163,6 @@ public class LoggiTest {
                 //make sure the current time can be very close
                 java.util.Date date= new java.util.Date();
                 DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z");
-                //sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
                 loggi.finish();
 
@@ -183,7 +177,6 @@ public class LoggiTest {
                 br.close();
 
 
-                //System.out.println(sb);
 
                 //secondly I will compare the content inside the log with the expected content after loggi.start()
                 StringBuilder answer = new StringBuilder("");
@@ -201,7 +194,6 @@ public class LoggiTest {
 
                 String a1 = s1.substring(0,19) + s1.substring(23);
                 String a2 = s2.substring(0,19) + s2.substring(23);
-                //System.out.println(a1);
                 Assert.assertEquals(a1, a2);
             }
         }catch(Exception e){
@@ -221,7 +213,6 @@ public class LoggiTest {
             Assert.assertTrue(file.exists());
 
             if (!file.exists()) {
-                //file.createNewFile();
                 System.out.println(" file not existed yet");
             } else {
                 FileWriter fw =  new FileWriter(file);
@@ -231,7 +222,6 @@ public class LoggiTest {
                 //make sure the current time can be very close
                 java.util.Date date= new java.util.Date();
                 DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z");
-                //sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
                 loggi.error("Bad Aws Request");
 
@@ -244,8 +234,6 @@ public class LoggiTest {
                 }
                 br.close();
 
-
-                //System.out.println(sb);
 
                 //secondly I will compare the content inside the log with the expected content after loggi.start()
                 StringBuilder answer = new StringBuilder("");
@@ -263,7 +251,6 @@ public class LoggiTest {
 
                 String a1 = s1.substring(0,19) + s1.substring(23);
                 String a2 = s2.substring(0,19) + s2.substring(23);
-                //System.out.println(a1);
                 Assert.assertEquals(a1, a2);
             }
         }catch(Exception e){
@@ -283,7 +270,6 @@ public class LoggiTest {
             Assert.assertTrue(file.exists());
 
             if (!file.exists()) {
-                //file.createNewFile();
                 System.out.println(" file not existed yet");
             } else {
                 FileWriter fw =  new FileWriter(file);
@@ -319,7 +305,6 @@ public class LoggiTest {
                 br.close();
 
 
-                //System.out.println(sb);
 
                 //secondly I will compare the content inside the log with the expected content after loggi.start()
                 StringBuilder answer = new StringBuilder("");
@@ -337,7 +322,6 @@ public class LoggiTest {
 
                 String a1 = s1.substring(0,19) + s1.substring(23);
                 String a2 = s2.substring(0,19) + s2.substring(23);
-                //System.out.println(a1);
                 Assert.assertEquals(a1, a2);
             }
         }catch(Exception e){
@@ -345,6 +329,10 @@ public class LoggiTest {
         }
     }
 
+    /**
+     * unit test start
+     * @throws Exception
+     */
     //improve the coverage, test When log file is not existed
     @Test
     public void testFile() throws Exception {
@@ -361,7 +349,6 @@ public class LoggiTest {
             Assert.assertTrue(file.exists());
 
             if (!file.exists()) {
-                //file.createNewFile();
                 System.out.println(" file not existed yet");
             } else {
                 FileWriter fw =  new FileWriter(file);
@@ -372,7 +359,6 @@ public class LoggiTest {
                 //make sure the current time can be very close
                 java.util.Date date= new java.util.Date();
                 DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z");
-                //sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
                 loggi.start();
 
@@ -387,7 +373,6 @@ public class LoggiTest {
                 br.close();
 
 
-                //System.out.println(sb);
 
                 //secondly I will compare the content inside the log with the expected content after loggi.start()
                 StringBuilder answer = new StringBuilder("");
@@ -405,7 +390,6 @@ public class LoggiTest {
 
                 String a1 = s1.substring(0,19) + s1.substring(23);
                 String a2 = s2.substring(0,19) + s2.substring(23);
-                //System.out.println(a1);
                 Assert.assertEquals(a1, a2);
             }
         }catch(Exception e){
