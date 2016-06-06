@@ -41,22 +41,23 @@ public class Loggi {
     private Logger logger;
 
     /**
+     * position for the faultId (FaultInstanceId is timeStamp + faultId).
+     */
+    static final int FAULT_POS = 13;
+
+    /**
      * This is the constructor, it will check whether the log file is existed,
      * and it will make a new one if not existed.
      * @param s is the faultInstanceId
      * @param c is the className (faultName)
      */
-    public Loggi(final String s, final String c) {
+    public Loggi(final String s, final String c) throws IOException {
         File file = new File("src/main/resources/log");
         if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            file.createNewFile();
         }
         faultInstanceId = s;
-        faultId = s.substring(13);
+        faultId = s.substring(FAULT_POS);
         className = c;
         logger = Logger.getLogger("honeycomb");
     }
@@ -65,7 +66,7 @@ public class Loggi {
      * this is the start log function,
      * you should call this at the start of a fault injection.
      */
-    public void start() {
+    public final void start() {
         logger.info("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
                 + faultId + "]\t"
                 + "[FaultName = " + className + "]\t"
@@ -76,7 +77,7 @@ public class Loggi {
      * This function can log any normal message you want to store.
      * @param s is the message you want to store.
      */
-    public void log(final String s) {
+    public final void log(final String s) {
         logger.info("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
                 + faultId + "]\t"
                 + "[FaultName = " + className + "]\t"
@@ -87,7 +88,7 @@ public class Loggi {
      * this is the start log function,
      * you should call this at the end of a fault injection.
      */
-    public void finish() {
+    public final void finish() {
         logger.info("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
                 + faultId + "]\t"
                 + "[FaultName = " + className + "]\t"
@@ -98,7 +99,7 @@ public class Loggi {
      * This function can log any error string message you want to store.
      * @param s is the error message.
      */
-    public void error(final String s) {
+    public final void error(final String s) {
         logger.error("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
                 + faultId + "]\t"
                 + "[FaultName = "
@@ -109,7 +110,7 @@ public class Loggi {
      * This function can log any error exception message you want to store.
      * @param e is the error exception.
      */
-    public void error(final Exception e) {
+    public final void error(final Exception e) {
         logger.error("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
                 + faultId + "]\t"
                 + "[FaultName = "
