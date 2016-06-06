@@ -45,7 +45,7 @@ public class Loggi {
     /**
      * position for the faultId (FaultInstanceId is timeStamp + faultId).
      */
-    static final int FAULT_POS = 13;
+    static final int FAULTID_POSITION = 13;
 
     /**
      * This is the constructor, it will check whether the log file is existed,
@@ -58,7 +58,7 @@ public class Loggi {
         if (!file.exists())
             file.createNewFile();
         faultInstanceId = s;
-        faultId = s.substring(FAULT_POS);
+        faultId = s.substring(FAULTID_POSITION);
         className = c;
         logger = Logger.getLogger("honeycomb");
     }
