@@ -20,6 +20,8 @@ import java.io.IOException;
  * loggi.start();
  * loggi.log("hehe");
  * loggi.finish();
+ * loggi.error("wrong");
+ * loggi.error(Exception e);
  *
  */
 public class Loggi {
@@ -53,9 +55,8 @@ public class Loggi {
      */
     public Loggi(final String s, final String c) throws IOException {
         File file = new File("src/main/resources/log");
-        if (!file.exists()) {
+        if (!file.exists())
             file.createNewFile();
-        }
         faultInstanceId = s;
         faultId = s.substring(FAULT_POS);
         className = c;
