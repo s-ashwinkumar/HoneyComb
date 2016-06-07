@@ -94,6 +94,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/MainServer.*</exclude>
+                        <exclude>**/RouterClass.*</exclude>
                     </excludes>
                 </configuration>
                 <version>0.7.5.201505241946</version>
