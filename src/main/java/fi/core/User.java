@@ -42,6 +42,7 @@ public class User {
 
   /**
    * getter for api token.
+   *
    * @return string api token
    */
   public String getApiToken() {
@@ -50,6 +51,7 @@ public class User {
 
   /**
    * getter for api token.
+   *
    * @return string api token
    */
   public String getFileName() {
@@ -58,6 +60,7 @@ public class User {
 
   /**
    * getter for username.
+   *
    * @return string password
    */
   public String getUsername() {
@@ -66,6 +69,7 @@ public class User {
 
   /**
    * getter for password.
+   *
    * @return string password
    */
   public String getPassword() {
@@ -95,8 +99,29 @@ public class User {
     } catch (Exception ex) {
       ex.printStackTrace();
     }
+    return false;
+  }
 
-
+  /**
+   * This method checks if the token given is the existing token.
+   *
+   * @return boolean true if valid token, false if invalid
+   */
+  public static boolean isValidUser(String token) {
+    BufferedReader br = null;
+    String line;
+    try {
+      br = new BufferedReader(
+          new FileReader(PASSWORD_FILE));
+      while ((line = br.readLine()) != null) {
+        String[] fields = line.split("\t");
+        if (token.equals(fields[2])) {
+          return true;
+        }
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
     return false;
   }
 }

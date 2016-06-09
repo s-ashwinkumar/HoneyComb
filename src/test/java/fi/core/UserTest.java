@@ -63,6 +63,9 @@ public class UserTest {
         obj1 = new User("admin","password");
         assertEquals(obj1.isValidUser(),true);
         assertNotNull(obj1.getApiToken());
+        // for the overloaded method that checks the token
+        assertFalse(User.isValidUser("blablabla"));
+        assertTrue(User.isValidUser("YWRtaW4scGFzc3dvcmQ="));
     }
 
     @Test
