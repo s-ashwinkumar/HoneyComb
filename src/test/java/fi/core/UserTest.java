@@ -48,7 +48,7 @@ public class UserTest {
 
     // written as a part of TDD
     @Test
-    public void isValidUser()  {
+    public void isValidUser() throws Exception {
         //wrong username wrong password
         User obj1 = new User("test","pwd");
         boolean result = obj1.isValidUser();

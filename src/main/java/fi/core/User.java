@@ -107,10 +107,10 @@ public class User {
    *
    * @return boolean true if valid token, false if invalid
    */
-  public static boolean isValidUser(String token) {
+  public static boolean isValidUser(String token) throws Exception {
     BufferedReader br = null;
     String line;
-    try {
+    if (token != null) {
       br = new BufferedReader(
           new FileReader(PASSWORD_FILE));
       while ((line = br.readLine()) != null) {
@@ -119,8 +119,6 @@ public class User {
           return true;
         }
       }
-    } catch (Exception ex) {
-      ex.printStackTrace();
     }
     return false;
   }
