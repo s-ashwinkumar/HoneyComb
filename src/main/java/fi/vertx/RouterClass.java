@@ -7,6 +7,7 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -101,7 +102,12 @@ public final class RouterClass {
                 /**
                  * every validation pass! ready to inject
                  */
-                String faultInstanceId = object1.inject();
+                String faultInstanceId = null;
+                try {
+                    faultInstanceId = object1.inject();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 /**
                  * success injection start
                  */

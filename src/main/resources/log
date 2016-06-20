@@ -1,0 +1,2 @@
+
+2016-06-20 14:27:57.149 EDT	ERROR	[FaultInstanceId = 146644727707310001]	[FaultId = 10001]	[FaultName = ChangeAMIInLCFault]	java.lang.ClassNotFoundException: ChangeAMIInLCFault

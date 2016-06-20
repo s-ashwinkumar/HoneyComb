@@ -2,8 +2,10 @@ package fi.core;
 
 import fault.Fault;
 import io.vertx.core.MultiMap;
+import loggi.faultinjection.Loggi;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.Connection;
@@ -83,7 +85,6 @@ public class FaultInjector {
             for (String retval : arguments.split(";")) {
                 if (map.get(retval) == null) {
                     reason.append(retval);
-                    //System.out.println(reason);
                     return false;
                 }
             }
@@ -95,7 +96,7 @@ public class FaultInjector {
      * This is the inject function
      * @return faultInstanceId
      */
-    public String inject() {
+    public String inject() throws IOException{
         String faultInsanceId = null;
 
         String location = null;
@@ -138,16 +139,18 @@ public class FaultInjector {
         /**
          * load fault script and inject in a thread.
          */
+        Loggi loggi = new Loggi(faultInsanceId, faultName);
+
         Thread t = new Thread(new Runnable() {
             public void run() {
-                String s = loc;
                 try {
                     File authorizedJarFile = new File(loc);
                     ClassLoader authorizedLoader = URLClassLoader.newInstance(new URL[]{authorizedJarFile.toURI().toURL()});
                     Fault authorizedPlugin = (Fault) authorizedLoader.loadClass(nam).newInstance();
                     authorizedPlugin.start();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    loggi.error(e);
                 }
             }
         });
@@ -158,4 +161,5 @@ public class FaultInjector {
 
         return faultInsanceId;
     }
+
 }
