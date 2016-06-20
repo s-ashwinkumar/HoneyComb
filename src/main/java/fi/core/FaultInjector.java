@@ -1,7 +1,9 @@
 package fi.core;
 
+import fault.AbstractFault;
 import fault.Fault;
 import io.vertx.core.MultiMap;
+import io.vertx.core.http.CaseInsensitiveHeaders;
 import loggi.faultinjection.Loggi;
 
 import java.io.File;
@@ -12,6 +14,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by joe on 16/6/13.
@@ -26,7 +30,7 @@ public class FaultInjector {
      */
     public static String userr="root";
     public static String pass="123";
-    public static String url="jdbc:mysql://ec2-184-72-206-196.compute-1.amazonaws.com:3306/honeycomb?useUnicode=true&characterEncoding=utf-8";
+    public static String url= "jdbc:mysql://ec2-184-72-206-196.compute-1.amazonaws.com:3306/honeycomb?useUnicode=true&characterEncoding=utf-8";
 
     /**
      * The faultId indicate a fault in the fault list
@@ -144,9 +148,21 @@ public class FaultInjector {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {
+
+                    /**
+                     * put the arguments into hashMap.
+                     */
+                    HashMap<String, String> params = new HashMap<>();
+                    for(Map.Entry<String,String> item : map.entries()) {
+                        params.put(item.getKey(), item.getValue());
+                    }
+
                     File authorizedJarFile = new File(loc);
-                    ClassLoader authorizedLoader = URLClassLoader.newInstance(new URL[]{authorizedJarFile.toURI().toURL()});
-                    Fault authorizedPlugin = (Fault) authorizedLoader.loadClass(nam).newInstance();
+                    ClassLoader authorizedLoader = URLClassLoader.
+                            newInstance(new URL[]{authorizedJarFile.toURI().toURL()});
+                    Fault authorizedPlugin = (Fault) authorizedLoader.loadClass(nam).
+                            getDeclaredConstructor(HashMap.class)
+                            .newInstance(params);
                     authorizedPlugin.start();
                 } catch (Exception e) {
                     //e.printStackTrace();

@@ -1,2 +1,7 @@
-
-2016-06-20 14:27:57.149 EDT	ERROR	[FaultInstanceId = 146644727707310001]	[FaultId = 10001]	[FaultName = ChangeAMIInLCFault]	java.lang.ClassNotFoundException: ChangeAMIInLCFault
+2016-06-20 15:59:21.450 EDT	ERROR	[FaultInstanceId = 146645276135810001]	[FaultId = 10001]	[FaultName = ChangeAMIInLCFault]	java.lang.NoSuchMethodException: ChangeAMIInLCFault.<init>(java.util.Map)
+2016-06-20 16:00:11.769 EDT	DEBUG	Internal logging succesfully configured to commons logger: true
+2016-06-20 16:00:11.991 EDT	DEBUG	Configuration override awssdk_config_override.json not found.
+2016-06-20 16:00:12.372 EDT	DEBUG	Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+2016-06-20 16:08:01.168 EDT	DEBUG	Internal logging succesfully configured to commons logger: true
+2016-06-20 16:08:01.437 EDT	DEBUG	Configuration override awssdk_config_override.json not found.
+2016-06-20 16:08:01.929 EDT	DEBUG	Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
