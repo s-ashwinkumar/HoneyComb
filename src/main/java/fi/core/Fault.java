@@ -164,7 +164,7 @@ public class Fault {
    * @return list of faults
    * @throws Exception exceptions during db connection
    */
-  public static List<Fault> getFaults(MyDbWrapper dbCon) throws Exception {
+  public static List<Fault> getFaults(DbConnection dbCon) throws Exception {
     List<Fault> faultList = new ArrayList<>();
     String query = "select * from fault";
     ResultSet rs = dbCon.getStmt().executeQuery(query);
@@ -182,7 +182,7 @@ public class Fault {
    * @param id id of the fault to be deactivated
    * @return integer number of records updated
    */
-  public static Integer removeFault(String id, MyDbWrapper dbCon) throws
+  public static Integer removeFault(String id, DbConnection dbCon) throws
       Exception {
     String query = "update fault set active=0 where faultID=" + id;
     return dbCon.getStmt().executeUpdate(query);

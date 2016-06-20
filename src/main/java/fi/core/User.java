@@ -54,8 +54,8 @@ public class User {
    *
    * @return string api token
    */
-  public String getFileName() {
-    return PASSWORD_FILE;
+  public static String getFileName() {
+    return "flatfiles/users";
   }
 
   /**
@@ -80,14 +80,15 @@ public class User {
    * This method checks if the user is valid and sets the api token and
    * returns true if the user is valid. Else it just returns false
    *
+   * @param filename String filename path to pass
    * @return boolean true if valid username password, false if invalid
    */
-  public boolean isValidUser() {
+  public boolean isValidUser(String filename) {
     BufferedReader br = null;
     String line;
     try {
       br = new BufferedReader(
-          new FileReader(getFileName()));
+          new FileReader(filename));
       while ((line = br.readLine()) != null) {
         String[] fields = line.split("\t");
         if (getUsername().equals(fields[0])
@@ -98,6 +99,7 @@ public class User {
       }
     } catch (Exception ex) {
       ex.printStackTrace();
+      return false;
     }
     return false;
   }
@@ -105,14 +107,18 @@ public class User {
   /**
    * This method checks if the token given is the existing token.
    *
+   * @param token    String token
+   * @param filename String filename
    * @return boolean true if valid token, false if invalid
+   * @throws Exception file exceptions
    */
-  public static boolean isValidUser(String token) throws Exception {
+  public static boolean isValidUser(String token, String filename) throws
+      Exception {
     BufferedReader br = null;
     String line;
     if (token != null) {
       br = new BufferedReader(
-          new FileReader(PASSWORD_FILE));
+          new FileReader(filename));
       while ((line = br.readLine()) != null) {
         String[] fields = line.split("\t");
         if (token.equals(fields[2])) {

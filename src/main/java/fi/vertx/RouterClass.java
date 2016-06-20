@@ -2,7 +2,6 @@ package fi.vertx;
 
 import fi.core.DbConnection;
 import fi.core.Fault;
-import fi.core.MyDbWrapper;
 import fi.core.User;
 import fi.core.Utils;
 import io.vertx.core.http.HttpServerRequest;
@@ -44,7 +43,7 @@ public final class RouterClass {
 
     User user = new User(request.getParam("username"),
         request.getParam("password"));
-    boolean validUser = user.isValidUser();
+    boolean validUser = user.isValidUser(User.getFileName());
     HashMap<String, String> response = new HashMap<>();
     int responseCode;
     if (validUser) {
@@ -69,9 +68,11 @@ public final class RouterClass {
     String token = request.getParam("token");
     int responseCode;
     try {
-      boolean validUser = User.isValidUser(token);
+      boolean validUser = User.isValidUser(token,User.getFileName());
       if (validUser) {
-        MyDbWrapper dbCon = new DbConnection();
+        DbConnection dbCon = new DbConnection();
+        dbCon.setConn(DbConnection.getFileName());
+        dbCon.setStmt(dbCon.getConn().createStatement());
         List<Fault> list = Fault.getFaults(dbCon);
         responseCode = SUCCESS;
         dbCon.getConn().close();
@@ -108,9 +109,11 @@ public final class RouterClass {
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
       }
-      boolean validUser = User.isValidUser(token);
+      boolean validUser = User.isValidUser(token,User.getFileName());
       if (validUser) {
-        MyDbWrapper dbCon = new DbConnection();
+        DbConnection dbCon = new DbConnection();
+        dbCon.setConn(DbConnection.getFileName());
+        dbCon.setStmt(dbCon.getConn().createStatement());
         Integer res = Fault.removeFault(faultId, dbCon);
         if (res == 0) {
           responseCode = ERROR;

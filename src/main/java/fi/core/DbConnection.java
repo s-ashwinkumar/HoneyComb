@@ -10,7 +10,7 @@ import java.util.Properties;
 /**
  * Created by ashwin on 6/15/16.
  */
-public class DbConnection implements MyDbWrapper {
+public class DbConnection {
   /**
    * connection object.
    */
@@ -23,25 +23,20 @@ public class DbConnection implements MyDbWrapper {
    * input stream to get properties.
    */
   private InputStream inputStream;
-  /**
-   * constant path for credential file.
-   */
-  private static final String PROPERTY_FILE = "MySQL.properties";
 
   /**
-   * constructor.
+   * method to return filename.
    *
-   * @throws Exception IOexception
+   * @return String filename
    */
-  public DbConnection() throws Exception {
-    setConn();
-    setStmt(getConn().createStatement());
+  public static String getFileName() {
+    return "MySQL.properties";
   }
 
   /**
    * getter for statement object.
    *
-   * @return statement objct
+   * @return statement object
    */
   public Statement getStmt() {
     return stmt;
@@ -70,17 +65,17 @@ public class DbConnection implements MyDbWrapper {
    *
    * @throws Exception Db connection exceptions
    */
-  public void setConn() throws Exception {
+  public void setConn(String file) throws Exception {
     conn = null;
 
     Properties prop = new Properties();
     inputStream = getClass().getClassLoader()
-        .getResourceAsStream(PROPERTY_FILE);
+        .getResourceAsStream(file);
 
     if (inputStream != null) {
       prop.load(inputStream);
     } else {
-      throw new FileNotFoundException("property file '" + PROPERTY_FILE + "' "
+      throw new FileNotFoundException("property file '" + file + "' "
           + "not found in the classpath");
     }
     Class.forName(prop.getProperty("driver"));
