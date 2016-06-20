@@ -56,6 +56,11 @@
     <artifactId>mockito-all</artifactId>
     <version>1.10.19</version>
 </dependency>
+    <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-core</artifactId>
+        <version>1.10.49</version>
+    </dependency>
 </dependencies>
 <reporting>
     <plugins>

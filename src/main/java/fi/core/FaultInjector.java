@@ -1,7 +1,11 @@
 package fi.core;
 
+import fault.Fault;
 import io.vertx.core.MultiMap;
 
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -32,12 +36,22 @@ public class FaultInjector {
      */
     final private MultiMap map;
 
+    /**
+     * constructor for the Faultinjector
+     * @param faultId1
+     * @param map1
+     */
     public FaultInjector(String faultId1, MultiMap map1) {
 
         this.faultId = faultId1;
         this.map = map1;
     }
 
+    /**
+     * This method is used to check the arguments of the fault beforehand
+     * @param reason
+     * @return true false
+     */
     public boolean validate(StringBuilder reason) {
         String arguments = "";
 
@@ -69,11 +83,79 @@ public class FaultInjector {
             for (String retval : arguments.split(";")) {
                 if (map.get(retval) == null) {
                     reason.append(retval);
-                    System.out.println(reason);
+                    //System.out.println(reason);
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    /**
+     * This is the inject function
+     * @return faultInstanceId
+     */
+    public String inject() {
+        String faultInsanceId = null;
+
+        String location = null;
+        String faultName = null;
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con= DriverManager.getConnection(url, userr, pass);
+            Statement stmt = con.createStatement();
+
+
+            String sql="select location, name from fault where faultID = '" + faultId +"' limit 0,1";
+
+            ResultSet rs=stmt.executeQuery(sql);
+            while(rs.next()) {
+                location = rs.getString("location");
+                faultName = rs.getString("name");
+                break;
+            }
+            rs.close();
+            stmt.close();
+            con.close();
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * We should make sure these values are existed in the upload function.
+         */
+        final String loc = location;
+        final String nam = faultName;
+
+        /**
+         * generate the faultInstanceId 13 + faultId
+         */
+        long unixTime = System.currentTimeMillis();
+        faultInsanceId = String.valueOf(unixTime) + faultId;
+
+        /**
+         * load fault script and inject in a thread.
+         */
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                String s = loc;
+                try {
+                    File authorizedJarFile = new File(loc);
+                    ClassLoader authorizedLoader = URLClassLoader.newInstance(new URL[]{authorizedJarFile.toURI().toURL()});
+                    Fault authorizedPlugin = (Fault) authorizedLoader.loadClass(nam).newInstance();
+                    authorizedPlugin.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        t.setName(faultInsanceId);
+        t.start();
+
+
+        return faultInsanceId;
     }
 }

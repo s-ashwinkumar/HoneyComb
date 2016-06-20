@@ -76,8 +76,11 @@ public final class RouterClass {
         HttpServerRequest request = routingContext.request();
 
         boolean validateToken = User.isValidUser(request.getParam("token"));
+
+        FaultInjector object1;
+
         if(validateToken) {
-            FaultInjector object1 = new FaultInjector(
+            object1 = new FaultInjector(
                     request.getParam("faultId"), request.params());
             StringBuilder reason = new StringBuilder();
             if (!object1.validate(reason)) {
@@ -98,6 +101,21 @@ public final class RouterClass {
                 /**
                  * every validation pass! ready to inject
                  */
+                String faultInstanceId = object1.inject();
+                /**
+                 * success injection start
+                 */
+                HashMap<String, String> response = new HashMap<>();
+                int responseCode;
+
+                response.put("success", "Fault start injection");
+                response.put("faultInstanceId", faultInstanceId);
+                responseCode = SUCCESS;
+
+                routingContext.response()
+                        .setStatusCode(responseCode)
+                        .putHeader("content-type", "application/json; charset=utf-8")
+                        .end(Json.encodePrettily(response));
 
             }
         } else {

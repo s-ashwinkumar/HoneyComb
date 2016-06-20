@@ -22,7 +22,7 @@ public class FaultTest {
     public void testValidateFault() throws Exception {
         /**
          * we assume token validation is passed.
-         * This validation will not handle it at all.
+         * This token validation will not handle it at all.
          */
 
         /**
@@ -58,7 +58,7 @@ public class FaultTest {
         assertEquals("thirdargument", reason.toString());
 
         /**
-         * the third test, we miss nothingt
+         * the third test, we miss nothing.
          */
         reason.delete(0,reason.length());
         map.add("thirdargument","test3");
@@ -69,7 +69,53 @@ public class FaultTest {
 
     @Test
     public void testInjection() throws Exception {
+        /**
+         * we assume token validation is passed.
+         * This validation will not handle it at all.
+         *
+         * We also assume the validation of the arguments are passed
+         */
 
+        /**
+         * We use faultId = 10000 to inejct.
+         * 10000 contains arguments such as instancename,
+         * secondargument, thirdargument.
+         */
+        String faultId = "10000";
+
+        /**
+         * missing arguments (why cannot pass the validation)
+         */
+        StringBuilder reason = new StringBuilder();
+
+        /**
+         * vertex MultiMap.
+         */
+        MultiMap map = new CaseInsensitiveHeaders();
+
+        /**
+         * make a fault and pass the arguments validation
+         */
+        map.add("instancename", "test2");
+        map.add("secondargument", "test2");
+        map.add("thirdargument","test3");
+        FaultInjector object1 = new FaultInjector(faultId, map);
+
+        assertTrue(object1.validate(reason));
+
+        String faultInstanceId = object1.inject();
+
+        /**
+         * test pass, we get the faultInstanceId
+         */
+        assertNotNull(faultInstanceId);
+        assertEquals(18, faultInstanceId.length());
+        assertEquals(faultId, faultInstanceId.substring(13));
+
+        /**
+         * test the fault injection resutls
+         */
+        Thread.sleep(3000);
 
     }
 }
