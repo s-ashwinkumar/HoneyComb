@@ -5,3 +5,77 @@
 2016-06-20 16:08:01.168 EDT	DEBUG	Internal logging succesfully configured to commons logger: true
 2016-06-20 16:08:01.437 EDT	DEBUG	Configuration override awssdk_config_override.json not found.
 2016-06-20 16:08:01.929 EDT	DEBUG	Admin mbean registered under com.amazonaws.management:type=AwsSdkMetrics
+2016-06-20 16:21:30.644 EDT	DEBUG	Configuration override awssdk_config_override.json not found.
+2016-06-20 16:21:31.008 EDT	DEBUG	Unable to load credentials from EnvironmentVariableCredentialsProvider: Unable to load AWS credentials from environment variables (AWS_ACCESS_KEY_ID (or AWS_ACCESS_KEY) and AWS_SECRET_KEY (or AWS_SECRET_ACCESS_KEY))
+2016-06-20 16:21:31.008 EDT	DEBUG	Unable to load credentials from SystemPropertiesCredentialsProvider: Unable to load AWS credentials from Java system properties (aws.accessKeyId and aws.secretKey)
+2016-06-20 16:21:31.015 EDT	DEBUG	Loading credentials from com.amazonaws.auth.profile.ProfileCredentialsProvider@59615f75
+2016-06-20 16:21:31.019 EDT	DEBUG	Sending Request: POST https://autoscaling.us-east-1.amazonaws.com / Parameters: (Action: DescribeAutoScalingGroups, Version: 2011-01-01, AutoScalingGroupNames.member.1: test2, ) Headers: (User-Agent: aws-sdk-java/1.9.3 Mac_OS_X/10.11.5 Java_HotSpot(TM)_64-Bit_Server_VM/25.60-b23/1.8.0_60, ) 
+2016-06-20 16:21:31.056 EDT	DEBUG	AWS4 Canonical Request: '"POST
+/
+
+host:autoscaling.us-east-1.amazonaws.com
+user-agent:aws-sdk-java/1.9.3 Mac_OS_X/10.11.5 Java_HotSpot(TM)_64-Bit_Server_VM/25.60-b23/1.8.0_60
+x-amz-date:20160620T202131Z
+
+host;user-agent;x-amz-date
+fcdd2263d2ce9a5b47c5afed9948256b0cfae7383f181fff5fb9a80076a4d3dc"
+2016-06-20 16:21:31.057 EDT	DEBUG	AWS4 String to Sign: '"AWS4-HMAC-SHA256
+20160620T202131Z
+20160620/us-east-1/autoscaling/aws4_request
+bf794dddf99355a2a89ee973b494d81a520803535d6d3207f55c092def8e1c81"
+2016-06-20 16:21:31.163 EDT	DEBUG	Connection request: [route: {s}->https://autoscaling.us-east-1.amazonaws.com][total kept alive: 0; route allocated: 0 of 50; total allocated: 0 of 50]
+2016-06-20 16:21:31.173 EDT	DEBUG	Connection leased: [id: 0][route: {s}->https://autoscaling.us-east-1.amazonaws.com][total kept alive: 0; route allocated: 1 of 50; total allocated: 1 of 50]
+2016-06-20 16:21:31.339 EDT	DEBUG	Connecting to autoscaling.us-east-1.amazonaws.com:443
+2016-06-20 16:21:31.513 EDT	DEBUG	CookieSpec selected: best-match
+2016-06-20 16:21:31.534 EDT	DEBUG	Auth cache not set in the context
+2016-06-20 16:21:31.535 EDT	DEBUG	Proxy auth state: UNCHALLENGED
+2016-06-20 16:21:31.536 EDT	DEBUG	Attempt 1 to execute request
+2016-06-20 16:21:31.536 EDT	DEBUG	Sending request: POST / HTTP/1.1
+2016-06-20 16:21:31.537 EDT	DEBUG	 >> "POST / HTTP/1.1[\r][\n]"
+2016-06-20 16:21:31.540 EDT	DEBUG	 >> "Host: autoscaling.us-east-1.amazonaws.com[\r][\n]"
+2016-06-20 16:21:31.540 EDT	DEBUG	 >> "Authorization: AWS4-HMAC-SHA256 Credential=AKIAI2X7VMYYFC7IV6AA/20160620/us-east-1/autoscaling/aws4_request, SignedHeaders=host;user-agent;x-amz-date, Signature=8cb0adb2f147c8c2df362fa329dd365925d5687e924c2e68458244c013da9f2c[\r][\n]"
+2016-06-20 16:21:31.540 EDT	DEBUG	 >> "X-Amz-Date: 20160620T202131Z[\r][\n]"
+2016-06-20 16:21:31.540 EDT	DEBUG	 >> "User-Agent: aws-sdk-java/1.9.3 Mac_OS_X/10.11.5 Java_HotSpot(TM)_64-Bit_Server_VM/25.60-b23/1.8.0_60[\r][\n]"
+2016-06-20 16:21:31.540 EDT	DEBUG	 >> "Content-Type: application/x-www-form-urlencoded; charset=utf-8[\r][\n]"
+2016-06-20 16:21:31.540 EDT	DEBUG	 >> "Content-Length: 88[\r][\n]"
+2016-06-20 16:21:31.540 EDT	DEBUG	 >> "Connection: Keep-Alive[\r][\n]"
+2016-06-20 16:21:31.541 EDT	DEBUG	 >> "[\r][\n]"
+2016-06-20 16:21:31.541 EDT	DEBUG	>> POST / HTTP/1.1
+2016-06-20 16:21:31.541 EDT	DEBUG	>> Host: autoscaling.us-east-1.amazonaws.com
+2016-06-20 16:21:31.541 EDT	DEBUG	>> Authorization: AWS4-HMAC-SHA256 Credential=AKIAI2X7VMYYFC7IV6AA/20160620/us-east-1/autoscaling/aws4_request, SignedHeaders=host;user-agent;x-amz-date, Signature=8cb0adb2f147c8c2df362fa329dd365925d5687e924c2e68458244c013da9f2c
+2016-06-20 16:21:31.541 EDT	DEBUG	>> X-Amz-Date: 20160620T202131Z
+2016-06-20 16:21:31.541 EDT	DEBUG	>> User-Agent: aws-sdk-java/1.9.3 Mac_OS_X/10.11.5 Java_HotSpot(TM)_64-Bit_Server_VM/25.60-b23/1.8.0_60
+2016-06-20 16:21:31.541 EDT	DEBUG	>> Content-Type: application/x-www-form-urlencoded; charset=utf-8
+2016-06-20 16:21:31.541 EDT	DEBUG	>> Content-Length: 88
+2016-06-20 16:21:31.541 EDT	DEBUG	>> Connection: Keep-Alive
+2016-06-20 16:21:31.542 EDT	DEBUG	 >> "Action=DescribeAutoScalingGroups&Version=2011-01-01&AutoScalingGroupNames.member.1=test2"
+2016-06-20 16:21:31.582 EDT	DEBUG	 << "HTTP/1.1 200 OK[\r][\n]"
+2016-06-20 16:21:31.585 EDT	DEBUG	 << "x-amzn-RequestId: 938ed3ac-3724-11e6-b90f-312799a87c4a[\r][\n]"
+2016-06-20 16:21:31.585 EDT	DEBUG	 << "Content-Type: text/xml[\r][\n]"
+2016-06-20 16:21:31.585 EDT	DEBUG	 << "Content-Length: 335[\r][\n]"
+2016-06-20 16:21:31.586 EDT	DEBUG	 << "Date: Mon, 20 Jun 2016 20:21:31 GMT[\r][\n]"
+2016-06-20 16:21:31.586 EDT	DEBUG	 << "[\r][\n]"
+2016-06-20 16:21:31.587 EDT	DEBUG	Receiving response: HTTP/1.1 200 OK
+2016-06-20 16:21:31.588 EDT	DEBUG	<< HTTP/1.1 200 OK
+2016-06-20 16:21:31.588 EDT	DEBUG	<< x-amzn-RequestId: 938ed3ac-3724-11e6-b90f-312799a87c4a
+2016-06-20 16:21:31.588 EDT	DEBUG	<< Content-Type: text/xml
+2016-06-20 16:21:31.588 EDT	DEBUG	<< Content-Length: 335
+2016-06-20 16:21:31.588 EDT	DEBUG	<< Date: Mon, 20 Jun 2016 20:21:31 GMT
+2016-06-20 16:21:31.593 EDT	DEBUG	Connection can be kept alive indefinitely
+2016-06-20 16:21:31.643 EDT	DEBUG	 << "<"
+2016-06-20 16:21:31.644 EDT	DEBUG	 << "D"
+2016-06-20 16:21:31.644 EDT	DEBUG	 << "e"
+2016-06-20 16:21:31.644 EDT	DEBUG	 << "s"
+2016-06-20 16:21:31.644 EDT	DEBUG	 << "cribeAutoScalingGroupsRespon"
+2016-06-20 16:21:31.649 EDT	DEBUG	 << "se xmlns="http://autoscaling.amazonaws.com/doc/2011-01-01/">[\n]"
+2016-06-20 16:21:31.650 EDT	DEBUG	 << "  <DescribeAutoScalingGroupsResult>[\n]"
+2016-06-20 16:21:31.650 EDT	DEBUG	 << "    <AutoScalingGroups/>[\n]"
+2016-06-20 16:21:31.650 EDT	DEBUG	 << "  </DescribeAutoScalingGroupsResult>[\n]"
+2016-06-20 16:21:31.650 EDT	DEBUG	 << "  <ResponseMetadata>[\n]"
+2016-06-20 16:21:31.650 EDT	DEBUG	 << "    <RequestId>938ed3ac-3724-11e6-b90f-312799a87c4a</RequestId>[\n]"
+2016-06-20 16:21:31.650 EDT	DEBUG	 << "  </ResponseMetadata>[\n]"
+2016-06-20 16:21:31.650 EDT	DEBUG	 << "</DescribeAutoScalingGroupsResponse>[\n]"
+2016-06-20 16:21:31.659 EDT	DEBUG	Connection [id: 0][route: {s}->https://autoscaling.us-east-1.amazonaws.com] can be kept alive indefinitely
+2016-06-20 16:21:31.659 EDT	DEBUG	Connection released: [id: 0][route: {s}->https://autoscaling.us-east-1.amazonaws.com][total kept alive: 1; route allocated: 1 of 50; total allocated: 1 of 50]
+2016-06-20 16:21:31.660 EDT	DEBUG	Received successful response: 200, AWS Request ID: 938ed3ac-3724-11e6-b90f-312799a87c4a
+2016-06-20 16:21:31.661 EDT	ERROR	[FaultInstanceId = 146645408967510001]	[FaultId = 10001]	[FaultName = ChangeAMIInLCFault]	fault.HoneyCombException: LC or ASG do not exist
