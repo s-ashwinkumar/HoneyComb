@@ -43,6 +43,8 @@ final class MainServer {
 
         router.post("/login").blockingHandler(RouterClass::login, false);
 
+        router.post("/inject/:faultId").blockingHandler(RouterClass::inject, false);
+
         Vertx.vertx().createHttpServer().requestHandler(router::accept)
                 .listen(PORT);
     }
