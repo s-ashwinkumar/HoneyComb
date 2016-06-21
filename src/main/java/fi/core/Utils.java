@@ -34,9 +34,10 @@ public class Utils {
    * @returnDbconnection object
    * @throws Exception any kind
    */
-  public static DbConnection returnDbconnection() throws Exception {
+  public static DbConnection returnDbconnection(String filename) throws
+      Exception {
     DbConnection dbCon = new DbConnection();
-    dbCon.setConn(DbConnection.getFileName());
+    dbCon.setConn(filename);
     dbCon.setStmt(dbCon.getConn().createStatement());
     return dbCon;
   }

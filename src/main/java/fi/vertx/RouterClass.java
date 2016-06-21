@@ -76,7 +76,7 @@ public final class RouterClass {
     try {
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
-        DbConnection dbCon = Utils.returnDbconnection();
+        DbConnection dbCon = Utils.returnDbconnection(DbConnection.getFileName());
         List<FaultModel> list = FaultModel.getFaults(dbCon);
         responseCode = SUCCESS;
         dbCon.getConn().close();
@@ -115,7 +115,7 @@ public final class RouterClass {
       }
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
-        DbConnection dbCon = Utils.returnDbconnection();
+        DbConnection dbCon = Utils.returnDbconnection(DbConnection.getFileName());
         Integer res = FaultModel.removeFault(faultId, dbCon);
         if (res == 0) {
           responseCode = ERROR;
