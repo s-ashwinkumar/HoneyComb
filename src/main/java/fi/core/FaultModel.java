@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by ashwin on 6/15/16.
  */
-public class Fault {
+public class FaultModel {
   /**
    * variable for fault id.
    */
@@ -42,7 +42,7 @@ public class Fault {
    * @param arguments semicolon separated arguments
    * @param active    active flag
    */
-  public Fault(int faultId, String name, String arguments, boolean active) {
+  public FaultModel(int faultId, String name, String arguments, boolean active) {
     this.faultId = faultId;
     this.name = name;
     this.arguments = arguments;
@@ -164,12 +164,13 @@ public class Fault {
    * @return list of faults
    * @throws Exception exceptions during db connection
    */
-  public static List<Fault> getFaults(DbConnection dbCon) throws Exception {
-    List<Fault> faultList = new ArrayList<>();
+  public static List<FaultModel> getFaults(DbConnection dbCon) throws
+      Exception {
+    List<FaultModel> faultList = new ArrayList<>();
     String query = "select * from fault";
     ResultSet rs = dbCon.getStmt().executeQuery(query);
     while (rs.next()) {
-      Fault tempObj = new Fault(rs.getInt("faultID"), rs.getString("name"),
+      FaultModel tempObj = new FaultModel(rs.getInt("faultID"), rs.getString("name"),
           rs.getString("arguments"), rs.getBoolean("active"));
       faultList.add(tempObj);
     }

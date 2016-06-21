@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 /**
  * Created by ashwin on 6/19/16.
  */
-public class FaultTest {
+public class FaultModelTest {
   DbConnection obj;
   @Before
   public void setUp() throws Exception {
@@ -45,7 +45,7 @@ public class FaultTest {
 
   @Test
   public void getterSetterConstructorTest(){
-    Fault testObj = new Fault(123,"name","arguments",true);
+    FaultModel testObj = new FaultModel(123,"name","arguments",true);
     assertSame(123,testObj.getFaultId());
     assertEquals("name",testObj.getName());
     assertEquals("arguments",testObj.getArguments());
@@ -69,11 +69,11 @@ public class FaultTest {
   //TDD tests
   @Test
   public void getFaultsTest() throws Exception {
-    List<Fault> res = Fault.getFaults(obj);
+    List<FaultModel> res = FaultModel.getFaults(obj);
     assertEquals(1,res.size());
-    assertEquals("Test Fault",((Fault)res.toArray()[0]).getName());
+    assertEquals("Test Fault",((FaultModel)res.toArray()[0]).getName());
     obj.getStmt().execute("Truncate table fault");
-    res = Fault.getFaults(obj);
+    res = FaultModel.getFaults(obj);
     assertEquals(0,res.size());
     // reset table with a fault
     obj.getStmt().execute("Insert into fault (name,description,location," +
@@ -84,11 +84,11 @@ public class FaultTest {
 
   @Test
   public void removeFaultTest() throws Exception {
-    List<Fault> res = Fault.getFaults(obj);
-    int id = ((Fault)res.toArray()[0]).getFaultId();
-    int result = Fault.removeFault("99999",obj);
+    List<FaultModel> res = FaultModel.getFaults(obj);
+    int id = ((FaultModel)res.toArray()[0]).getFaultId();
+    int result = FaultModel.removeFault("99999",obj);
     assertEquals(0,result);
-    result = Fault.removeFault(id+"",obj);
+    result = FaultModel.removeFault(id+"",obj);
     assertEquals(1,result);
   }
 

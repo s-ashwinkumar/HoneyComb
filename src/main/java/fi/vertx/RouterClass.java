@@ -1,7 +1,7 @@
 package fi.vertx;
 
 import fi.core.DbConnection;
-import fi.core.Fault;
+import fi.core.FaultModel;
 import fi.core.User;
 import fi.core.Utils;
 import io.vertx.core.http.HttpServerRequest;
@@ -73,7 +73,7 @@ public final class RouterClass {
         DbConnection dbCon = new DbConnection();
         dbCon.setConn(DbConnection.getFileName());
         dbCon.setStmt(dbCon.getConn().createStatement());
-        List<Fault> list = Fault.getFaults(dbCon);
+        List<FaultModel> list = FaultModel.getFaults(dbCon);
         responseCode = SUCCESS;
         dbCon.getConn().close();
         returnResponse(routingContext, responseCode, list);
@@ -114,7 +114,7 @@ public final class RouterClass {
         DbConnection dbCon = new DbConnection();
         dbCon.setConn(DbConnection.getFileName());
         dbCon.setStmt(dbCon.getConn().createStatement());
-        Integer res = Fault.removeFault(faultId, dbCon);
+        Integer res = FaultModel.removeFault(faultId, dbCon);
         if (res == 0) {
           responseCode = ERROR;
           response.put("error", "No fault for given fault ID.");
