@@ -1,6 +1,7 @@
 package fi.vertx;
 
 import fi.core.DbConnection;
+import fi.core.FaultInjector;
 import fi.core.FaultModel;
 import fi.core.User;
 import fi.core.Utils;
@@ -20,9 +21,14 @@ public final class RouterClass {
    */
   private static final int SUCCESS = 200;
   /**
-   * Constant for ERROR return.
+   * Constant ERROR for authentication return.
    */
   private static final int ERROR = 401;
+
+  /**
+   * The request could not be understood by the server due to malformed syntax.
+   */
+  private static final int BADREQUEST = 400;
 
   /**
    * Instantiates a new RouterClass. Private to prevent instantiation.
@@ -68,7 +74,7 @@ public final class RouterClass {
     String token = request.getParam("token");
     int responseCode;
     try {
-      boolean validUser = User.isValidUser(token,User.getFileName());
+      boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
         DbConnection dbCon = new DbConnection();
         dbCon.setConn(DbConnection.getFileName());
@@ -109,7 +115,7 @@ public final class RouterClass {
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
       }
-      boolean validUser = User.isValidUser(token,User.getFileName());
+      boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
         DbConnection dbCon = new DbConnection();
         dbCon.setConn(DbConnection.getFileName());
@@ -140,6 +146,53 @@ public final class RouterClass {
   }
 
   /**
+   * inject method responding to post action
+   *
+   * @param routingContext receives routing context from vertx.
+   */
+  static void inject(RoutingContext routingContext) {
+    HttpServerRequest request = routingContext.request();
+    HashMap<String, String> response = new HashMap<>();
+    String token = request.getParam("token");
+    String faultId = request.getParam("faultId");
+    String faultInstanceId = null;
+    int responseCode;
+    try {
+      if (!Utils.isNumeric(faultId)) {
+        response.put("error", "The parameter fault ID is not a number");
+        responseCode = ERROR;
+        returnResponse(routingContext, responseCode, response);
+      }
+      boolean validUser = User.isValidUser(token, User.getFileName());
+      if (validUser) {
+        StringBuilder reason = new StringBuilder();
+        FaultInjector injector = new FaultInjector(faultId, request.params());
+        if (injector.validate(reason)) {
+          faultInstanceId = injector.inject();
+          response.put("success", "Fault start injection");
+          response.put("faultInstanceId", faultInstanceId);
+          responseCode = SUCCESS;
+          returnResponse(routingContext, responseCode, response);
+        } else {
+          response.put("error", "Missing arguments: " + reason.toString());
+          responseCode = BADREQUEST;
+          returnResponse(routingContext, responseCode, response);
+        }
+
+      } else {
+        response.put("error", "You are not unauthorized to make this request.");
+        responseCode = ERROR;
+        returnResponse(routingContext, responseCode, response);
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      response.put("error", "Something went wrong.Please try again later");
+      responseCode = ERROR;
+      returnResponse(routingContext, responseCode, response);
+    }
+  }
+
+  /**
    * A Helper method to respond to request.
    *
    * @param routingContext Routing context object from vertx
@@ -153,5 +206,4 @@ public final class RouterClass {
         .putHeader("content-type", "application/json; charset=utf-8")
         .end(Json.encodePrettily(response));
   }
-
 }

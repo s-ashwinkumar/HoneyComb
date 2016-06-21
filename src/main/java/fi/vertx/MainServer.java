@@ -49,6 +49,8 @@ final class MainServer {
     router.delete("/faults").blockingHandler(RouterClass::removeFault,
         false);
 
+    router.post("/inject/:faultId").blockingHandler(RouterClass::inject, false);
+
     Vertx.vertx().createHttpServer().requestHandler(router::accept)
         .listen(PORT);
   }
