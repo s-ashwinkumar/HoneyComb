@@ -7,10 +7,10 @@ public class Utils {
 
   /**
    * Constructs a new MyUtilities.
-   * @throws InstantiationException
+   *
+   * @throws InstantiationException Exception
    */
-  public Utils() throws InstantiationException
-  {
+  public Utils() throws InstantiationException {
     throw new InstantiationException("Instances of this type are forbidden.");
   }
 
@@ -29,10 +29,13 @@ public class Utils {
     return true;
   }
 
+
   /**
-   * Method that returns a db connection object
-   * @returnDbconnection object
-   * @throws Exception any kind
+   * Util method to get db connection.
+   *
+   * @param filename filename config mysql
+   * @return db connection object
+   * @throws Exception Exception
    */
   public static DbConnection returnDbconnection(String filename) throws
       Exception {
