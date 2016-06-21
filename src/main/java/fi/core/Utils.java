@@ -28,4 +28,16 @@ public class Utils {
     }
     return true;
   }
+
+  /**
+   * Method that returns a db connection object
+   * @returnDbconnection object
+   * @throws Exception any kind
+   */
+  public static DbConnection returnDbconnection() throws Exception {
+    DbConnection dbCon = new DbConnection();
+    dbCon.setConn(DbConnection.getFileName());
+    dbCon.setStmt(dbCon.getConn().createStatement());
+    return dbCon;
+  }
 }

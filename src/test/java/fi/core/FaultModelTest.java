@@ -45,24 +45,24 @@ public class FaultModelTest {
 
   @Test
   public void getterSetterConstructorTest(){
-    FaultModel testObj = new FaultModel(123,"name","arguments",true);
+    FaultModel testObj = new FaultModel(123,"name","arguments",true,"location");
     assertSame(123,testObj.getFaultId());
     assertEquals("name",testObj.getName());
     assertEquals("arguments",testObj.getArguments());
     assertEquals(true,testObj.getActive());
-
+    assertEquals("location",testObj.getLocation());
     testObj.setActive(false);
     testObj.setFaultId(1234);
     testObj.setArguments("testargs");
     testObj.setDescription("description");
-    testObj.setLocation("location");
+    testObj.setLocation("location/new");
     testObj.setName("new name");
 
     assertTrue(testObj.getFaultId() == 1234);
     assertEquals(false,testObj.getActive());
     assertEquals("testargs",testObj.getArguments());
     assertEquals("description",testObj.getDescription());
-    assertEquals("location",testObj.getLocation());
+    assertEquals("location/new",testObj.getLocation());
     assertEquals("new name",testObj.getName());
   }
 

@@ -76,9 +76,7 @@ public final class RouterClass {
     try {
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
-        DbConnection dbCon = new DbConnection();
-        dbCon.setConn(DbConnection.getFileName());
-        dbCon.setStmt(dbCon.getConn().createStatement());
+        DbConnection dbCon = Utils.returnDbconnection();
         List<FaultModel> list = FaultModel.getFaults(dbCon);
         responseCode = SUCCESS;
         dbCon.getConn().close();
@@ -117,9 +115,7 @@ public final class RouterClass {
       }
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
-        DbConnection dbCon = new DbConnection();
-        dbCon.setConn(DbConnection.getFileName());
-        dbCon.setStmt(dbCon.getConn().createStatement());
+        DbConnection dbCon = Utils.returnDbconnection();
         Integer res = FaultModel.removeFault(faultId, dbCon);
         if (res == 0) {
           responseCode = ERROR;
@@ -206,4 +202,5 @@ public final class RouterClass {
         .putHeader("content-type", "application/json; charset=utf-8")
         .end(Json.encodePrettily(response));
   }
+
 }

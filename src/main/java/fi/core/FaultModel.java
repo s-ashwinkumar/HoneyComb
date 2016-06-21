@@ -42,11 +42,13 @@ public class FaultModel {
    * @param arguments semicolon separated arguments
    * @param active    active flag
    */
-  public FaultModel(int faultId, String name, String arguments, boolean active) {
+  public FaultModel(int faultId, String name, String arguments, boolean
+      active, String location) {
     this.faultId = faultId;
     this.name = name;
     this.arguments = arguments;
     this.active = active;
+    this.location = location;
   }
 
   /**
@@ -170,8 +172,10 @@ public class FaultModel {
     String query = "select * from fault";
     ResultSet rs = dbCon.getStmt().executeQuery(query);
     while (rs.next()) {
-      FaultModel tempObj = new FaultModel(rs.getInt("faultID"), rs.getString("name"),
-          rs.getString("arguments"), rs.getBoolean("active"));
+      FaultModel tempObj = new FaultModel(rs.getInt("faultID"), rs.getString
+          ("name"),
+          rs.getString("arguments"), rs.getBoolean("active"), rs.getString
+          ("location"));
       faultList.add(tempObj);
     }
     return faultList;
@@ -188,4 +192,20 @@ public class FaultModel {
     String query = "update fault set active=0 where faultID=" + id;
     return dbCon.getStmt().executeUpdate(query);
   }
+
+  public static FaultModel getFault(DbConnection dbCon, String faultId) throws
+      Exception {
+    String sql = "select * from fault where faultID = '" + faultId + "'";
+    ResultSet rs = dbCon.getStmt().executeQuery(sql);
+    FaultModel tempObj=null;
+    while (rs.next()) {
+      tempObj = new FaultModel(rs.getInt("faultID"), rs.getString("name"),
+          rs.getString("arguments"), rs.getBoolean("active"), rs.getString
+          ("location"));
+    }
+    rs.close();
+    return tempObj;
+  }
+
+
 }
