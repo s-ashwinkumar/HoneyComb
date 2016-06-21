@@ -45,7 +45,7 @@ public class FaultInjector {
    */
   public boolean validate(StringBuilder reason) throws Exception {
 
-    DbConnection dbCon = Utils.returnDbconnection();
+    DbConnection dbCon = Utils.returnDbconnection(DbConnection.getFileName());
     FaultModel fault = FaultModel.getFault(dbCon, faultId);
     String arguments = fault.getArguments();
     /**
@@ -70,7 +70,7 @@ public class FaultInjector {
    */
   public String inject() throws Exception {
     String faultInstanceId = null;
-    DbConnection dbCon = Utils.returnDbconnection();
+    DbConnection dbCon = Utils.returnDbconnection(DbConnection.getFileName());
     FaultModel fault = FaultModel.getFault(dbCon, faultId);
     final String location = fault.getLocation();
     final String name = fault.getName();
