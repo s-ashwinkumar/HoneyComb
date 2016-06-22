@@ -8,6 +8,7 @@ import java.io.IOException;
 /**
  * Created by wilsoncao on 6/9/16.
  */
-public interface Fault {
-    public void start() throws AmazonServiceException, AmazonClientException, HoneyCombException, IOException;
+public interface FaultInterface {
+  public void start() throws AmazonServiceException,
+          AmazonClientException, HoneyCombException, IOException;
 }

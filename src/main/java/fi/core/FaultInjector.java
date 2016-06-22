@@ -1,6 +1,6 @@
 package fi.core;
 
-import fault.Fault;
+import fault.FaultInterface;
 import io.vertx.core.MultiMap;
 import loggi.faultinjection.Loggi;
 
@@ -105,7 +105,7 @@ public class FaultInjector {
           File authorizedJarFile = new File(location);
           ClassLoader authorizedLoader = URLClassLoader
               .newInstance(new URL[]{authorizedJarFile.toURI().toURL()});
-          Fault authorizedPlugin = (Fault) authorizedLoader.loadClass(name)
+          FaultInterface authorizedPlugin = (FaultInterface) authorizedLoader.loadClass(name)
               .getDeclaredConstructor(HashMap.class)
               .newInstance(params);
           authorizedPlugin.start();
