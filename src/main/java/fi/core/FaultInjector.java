@@ -105,7 +105,8 @@ public class FaultInjector {
           File authorizedJarFile = new File(location);
           ClassLoader authorizedLoader = URLClassLoader
               .newInstance(new URL[]{authorizedJarFile.toURI().toURL()});
-          FaultInterface authorizedPlugin = (FaultInterface) authorizedLoader.loadClass(name)
+          String faultName = "fault."+name;
+          FaultInterface authorizedPlugin = (FaultInterface) authorizedLoader.loadClass(faultName)
               .getDeclaredConstructor(HashMap.class)
               .newInstance(params);
           authorizedPlugin.start();
