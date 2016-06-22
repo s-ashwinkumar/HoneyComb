@@ -43,12 +43,13 @@ public class FaultModel {
    * @param active    active flag
    */
   public FaultModel(int faultId, String name, String arguments, boolean
-      active, String location) {
+      active, String location, String description) {
     this.faultId = faultId;
     this.name = name;
     this.arguments = arguments;
     this.active = active;
     this.location = location;
+    this.description = description;
   }
 
   /**
@@ -175,7 +176,7 @@ public class FaultModel {
       FaultModel tempObj = new FaultModel(rs.getInt("faultID"), rs.getString
           ("name"),
           rs.getString("arguments"), rs.getBoolean("active"), rs.getString
-          ("location"));
+          ("location"), rs.getString("description"));
       faultList.add(tempObj);
     }
     return faultList;
@@ -201,7 +202,7 @@ public class FaultModel {
     while (rs.next()) {
       tempObj = new FaultModel(rs.getInt("faultID"), rs.getString("name"),
           rs.getString("arguments"), rs.getBoolean("active"), rs.getString
-          ("location"));
+          ("location"), rs.getString("description"));
     }
     rs.close();
     return tempObj;

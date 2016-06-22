@@ -45,12 +45,13 @@ public class FaultModelTest {
 
   @Test
   public void getterSetterConstructorTest(){
-    FaultModel testObj = new FaultModel(123,"name","arguments",true,"location");
+    FaultModel testObj = new FaultModel(123,"name","arguments",true,"location","description old");
     assertSame(123,testObj.getFaultId());
     assertEquals("name",testObj.getName());
     assertEquals("arguments",testObj.getArguments());
     assertEquals(true,testObj.getActive());
     assertEquals("location",testObj.getLocation());
+    assertEquals("description old",testObj.getDescription());
     testObj.setActive(false);
     testObj.setFaultId(1234);
     testObj.setArguments("testargs");
