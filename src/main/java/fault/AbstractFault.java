@@ -5,41 +5,11 @@ import java.util.HashMap;
 /**
  * Created by wilsoncao on 6/10/16.
  */
-public abstract class AbstractFault implements Fault {
-    private String faultID;
-    private String faultName;
-    private HashMap<String,String> params;
+public abstract class AbstractFault implements FaultInterface {
+  private HashMap<String, String> params;
 
-    public AbstractFault(HashMap<String,String> params){
-        this.params = params;
-    }
+  public AbstractFault(HashMap<String, String> params) {
+    this.params = params;
+  }
 
-    /**
-     * @return the faultID
-     */
-
-    public String getFaultID() {
-        return faultID;
-    }
-
-    /**
-     * @return the faultName
-     */
-    public String getFaultName() {
-        return faultName;
-    }
-
-    /**
-     * @param faultName the faultName to set
-     */
-    public void setfaultName(String faultName) {
-        this.faultName = faultName;
-    }
-
-    /**
-     * @param faultID the faultID to set
-     */
-    public void setFaultID(String faultID){
-        this.faultID = faultID;
-    }
 }

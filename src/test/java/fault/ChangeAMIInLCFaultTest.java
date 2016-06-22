@@ -5,8 +5,8 @@ import com.amazonaws.services.autoscaling.model.CreateLaunchConfigurationRequest
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.autoscaling.model.LaunchConfiguration;
 import com.amazonaws.services.ec2.model.InstanceState;
-import lib.ASGService;
-import lib.EC2Service;
+import lib.AsgService;
+import lib.Ec2Service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -22,8 +22,8 @@ import static org.mockito.Mockito.*;
  * Created by wilsoncao on 6/14/16.
  */
 public class ChangeAMIInLCFaultTest {
-    private static EC2Service ec2Service;
-    private static ASGService asgService;
+    private static Ec2Service Ec2Service;
+    private static AsgService AsgService;
     private static LaunchConfiguration lc;
     private static CreateLaunchConfigurationRequest req;
     private static Instance instance;
@@ -36,8 +36,8 @@ public class ChangeAMIInLCFaultTest {
 
     @Before
     public void setUp() {
-        ec2Service = mock(EC2Service.class);
-        asgService = mock(ASGService.class);
+        Ec2Service = mock(Ec2Service.class);
+        AsgService = mock(AsgService.class);
         lc = mock(LaunchConfiguration.class);
         instance = mock(Instance.class);
         asg = mock(AutoScalingGroup.class);
@@ -48,12 +48,12 @@ public class ChangeAMIInLCFaultTest {
                 mock(com.amazonaws.services.autoscaling.model.Instance.class);
 
         // Setting the behavior for mock
-        when(asgService.getLaunchConfigurationForAutoScalingGroup(asgName)).thenReturn(lc);
-        when(asgService.createLaunchConfiguration(any())).thenReturn("ok");
+        when(AsgService.getLaunchConfigurationForAutoScalingGroup(asgName)).thenReturn(lc);
+        when(AsgService.createLaunchConfiguration(any())).thenReturn("ok");
         when(lc.getInstanceType()).thenReturn("ok");
         when(lc.getKeyName()).thenReturn("ok");
         when(lc.getSecurityGroups()).thenReturn(null);
-        doNothing().when(asgService).updateLaunchConfigurationInAutoScalingGroup(asgName, "faulty-lc");
+        doNothing().when(AsgService).updateLaunchConfigurationInAutoScalingGroup(asgName, "faulty-lc");
 
         List<com.amazonaws.services.autoscaling.model.Instance> list = new ArrayList<>();
         list.add(asgInstance);
@@ -61,27 +61,31 @@ public class ChangeAMIInLCFaultTest {
 
         when(asg.getInstances()).thenReturn(list);
 
-        when(ec2Service.describeEC2Instance(anyString())).thenReturn(instance);
+        when(Ec2Service.describeEC2Instance(anyString())).thenReturn(instance);
         InstanceState state = mock(InstanceState.class);
         when(instance.getState()).thenReturn(state);
         when(state.getName()).thenReturn("running");
-        doNothing().when(ec2Service).terminateInstance(anyString());
+        doNothing().when(Ec2Service).terminateInstance(anyString());
 
     }
 
     @Test
     public void faultTest() throws Exception{
-        ChangeAMIInLCFault fault = new ChangeAMIInLCFault(asgName,faultyAmiId,params);
-        fault.ec2ServiceSetter(ec2Service);
-        fault.asgServiceSetter(asgService);
+        HashMap<String,String> params = new HashMap<>();
+        params.put("asgName",asgName);
+        params.put("faultyAmiId",faultyAmiId);
+        params.put("faultInstanceId", "asdfjasldfkjasdf;");
+        ChangeAmiInLcFault fault = new ChangeAmiInLcFault(params);
+        fault.ec2ServiceSetter(Ec2Service);
+        fault.asgServiceSetter(AsgService);
         fault.asgSetter(asg);
         fault.start();
 
-        InOrder inOrder = inOrder(asgService,ec2Service);
-        inOrder.verify(asgService).getLaunchConfigurationForAutoScalingGroup(asgName);
-        inOrder.verify(asgService).createLaunchConfiguration(any());
-        inOrder.verify(asgService).updateLaunchConfigurationInAutoScalingGroup(asgName, "faulty-lc");
-        inOrder.verify(ec2Service).terminateInstance(anyString());
+        InOrder inOrder = inOrder(AsgService,Ec2Service);
+        inOrder.verify(AsgService).getLaunchConfigurationForAutoScalingGroup(asgName);
+        inOrder.verify(AsgService).createLaunchConfiguration(any());
+        inOrder.verify(AsgService).updateLaunchConfigurationInAutoScalingGroup(asgName, "faulty-lc");
+        inOrder.verify(Ec2Service).terminateInstance(anyString());
 
 
     }

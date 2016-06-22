@@ -1,7 +1,7 @@
 package fault;
 
 import com.amazonaws.services.elasticloadbalancing.model.LoadBalancerDescription;
-import lib.ELBService;
+import lib.ElbService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -16,31 +16,35 @@ public class ELBUnavailableFaultTest {
     private String asgName;
     private String elbName;
     private HashMap<String,String> params;
-    private ELBService elbService;
+    private ElbService elbService;
 
     @Before
     public void setUp(){
         asgName = "hello";
         elbName = "hello";
         params = new HashMap<String,String>();
-        elbService = mock(ELBService.class);
+        elbService = mock(ElbService.class);
         LoadBalancerDescription lbDescription  = mock(LoadBalancerDescription.class);
         when(elbService.describeLoadBalancer(anyString())).thenReturn(lbDescription);
-        doNothing().when(elbService).tagELB(elbName, "elb_experiment_status", "unavailable");
+        doNothing().when(elbService).tagElb(elbName, "elb_experiment_status", "unavailable");
     }
 
 
 
     @Test
     public void faultTest() throws Exception{
-        ELBUnavailableFault fault = new ELBUnavailableFault(asgName,elbName,params);
+        HashMap<String,String> params = new HashMap<>();
+        params.put("asgName",asgName);
+        params.put("elbName",elbName);
+        params.put("faultInstanceId", "asdfjasldfkjasdf;");
+        ElbUnavailableFault fault = new ElbUnavailableFault(params);
         fault.elbServiceSetter(elbService);
         fault.start();
 
         InOrder inOrder = inOrder(elbService);
 
         inOrder.verify(elbService).describeLoadBalancer(anyString());
-        inOrder.verify(elbService).tagELB(elbName, "elb_experiment_status", "unavailable");
+        inOrder.verify(elbService).tagElb(elbName, "elb_experiment_status", "unavailable");
 
 
     }

@@ -1,9 +1,9 @@
 package fault;
 
 import com.amazonaws.services.elasticloadbalancing.model.LoadBalancerDescription;
-import lib.ASGService;
-import lib.EC2Service;
-import lib.ELBService;
+import lib.AsgService;
+import lib.Ec2Service;
+import lib.ElbService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -19,15 +19,13 @@ import static org.mockito.Mockito.*;
 public class InstanceUnavailableFaultTest {
     private String instanceName;
     private HashMap<String,String> params;
-    private EC2Service ec2Service;
-    private ASGService asgService;
+    private Ec2Service ec2Service;
 
     @Before
     public void setUp(){
         instanceName = "hello";
         params = new HashMap<String,String>();
-        ec2Service = mock(EC2Service.class);
-        asgService = mock(ASGService.class);
+        ec2Service = mock(Ec2Service.class);
         doNothing().when(ec2Service).terminateInstance(anyString());
     }
 
@@ -35,7 +33,10 @@ public class InstanceUnavailableFaultTest {
 
     @Test
     public void faultTest() throws Exception{
-        InstanceUnavailableFault fault = new InstanceUnavailableFault(instanceName,params);
+        HashMap<String,String> params = new HashMap<>();
+        params.put("instanceId",instanceName);
+        params.put("faultInstanceId", "asdfjasldfkjasdf;");
+        InstanceUnavailableFault fault = new InstanceUnavailableFault(params);
         fault.ec2ServiceSetter(ec2Service);
         fault.start();
 

@@ -1,88 +1,96 @@
 package lib;
 
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
-import org.powermock.core.classloader.annotations.PrepareForTest;
+import java.io.IOException;
 
 /**
  * Static factory class for the various AWS API wrapper services.
- * 
- * @author anbinhtran
- *
  */
 public class ServiceFactory {
 
-	private static ASGService asgService = new ASGServiceImpl();
+  private static AsgService AsgService;
+  private static Ec2Service Ec2Service;
+  private static ElbService ElbService;
+  private static SshService SshService;
 
-	/**
-	 * Static method for obtaining wrapper service for ASG
-	 * @return an ASGService object
-	 */
-	public static ASGService getASGService() {
-		return asgService;
-	}
-	
-	private static EC2Service ec2Service = new EC2ServiceImpl();
-	
-	/**
-	 * Static method for obtaining wrapper service for EC2
-	 * @return an EC2Service object
-	 */
-	public static EC2Service getEC2Service() {
-		return ec2Service;
-	}
+  /**
+   * Static method for obtaining wrapper service for ASG.
+   *
+   * @return an AsgService object.
+   */
+  public static AsgService getAsgService(String faultInstanceId) throws IOException {
+    AsgService = new AsgServiceImpl(faultInstanceId);
+    return AsgService;
+  }
 
-	private static ELBService elbService = new ELBServiceImpl();
+  /**
+   * Static method for obtaining wrapper service for EC2.
+   *
+   * @return an Ec2Service object.
+   */
+  public static Ec2Service getEc2Service(String faultInstanceId) throws IOException  {
+    Ec2Service = new Ec2ServiceImpl(faultInstanceId);
+    return Ec2Service;
+  }
 
-	/**
-	 * Static method for obtaining wrapper service for ELB
-	 * @return an ELBService object
-	 */
-	public static ELBService getELBService() {
-		return elbService;
-	}
-
-	private static SSHService sshService = new SSHServiceImpl();
-
-	/**
-	 * Static method for obtaining SSH service
-	 * @return an SSHService object
-	 */
-	public static SSHService getSSHService() {
-		return sshService;
-	}
-
-	/**
-	 * Non-Static method of obtaining ec2 service for testing purpose
-	 * @return an EC2Service object
-     */
-	public EC2Service getEC2ServiceTest() {
-		return ec2Service;
-	}
-
-	/**
-	 * Non-Static method of obtaining ELB service for testing purpose
-	 * @return an ELBService object
-     */
-	public ELBService getElbServiceTest() {
-		return elbService;
-	}
-
-	/**
-	 * Non-Static method of obtaining ASG service for testing purpose
-	 * @return an ASGService object
-     */
-
-	public ASGService getAsgServiceTest(){
-		return asgService;
-	}
+  /**
+   * Static method for obtaining wrapper service for ELB.
+   *
+   * @return an ElbService object.
+   */
+  public static ElbService getElbService(String faultInstanceId) throws IOException  {
+    ElbService = new ElbServiceImpl(faultInstanceId);
+    return ElbService;
+  }
 
 
-	/**
-	 * Non-Static method of obtaining SSH service for testing purpose
-	 * @return
-     */
-	public SSHService getSSHServiceTest(){
-		return sshService;
-	}
+  /**
+   * Static method for obtaining SSH service.
+   *
+   * @return an SshService object.
+   */
+  public static SshService getSshService(String faultInstanceId) throws IOException  {
+    SshService = new SshServiceImpl(faultInstanceId);
+    return SshService;
+  }
+
+  /**
+   * Non-Static method of obtaining ec2 service for testing purpose.
+   *
+   * @return an Ec2Service object.
+   */
+  public Ec2Service getEc2ServiceTest() {
+
+    return Ec2Service;
+  }
+
+  /**
+   * Non-Static method of obtaining ELB service for testing purpose.
+   *
+   * @return an ElbService object.
+   */
+  public ElbService getElbServiceTest() {
+
+    return ElbService;
+  }
+
+  /**
+   * Non-Static method of obtaining ASG service for testing purpose.
+   *
+   * @return an AsgService object.
+   */
+
+  public AsgService getAsgServiceTest() {
+    return AsgService;
+  }
+
+
+  /**
+   * Non-Static method of obtaining SSH service for testing purpose.
+   *
+   * @return an SshService object
+   */
+  public SshService getSshServiceTest() {
+    return SshService;
+  }
 
 }

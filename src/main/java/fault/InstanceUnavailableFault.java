@@ -1,46 +1,61 @@
 package fault;
 
-import lib.ASGService;
-import lib.EC2Service;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lib.AsgService;
+import lib.Ec2Service;
+import lib.ServiceFactory;
+import loggi.faultinjection.Loggi;
 
+
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
  * Created by wilsoncao on 6/16/16.
  */
 public class InstanceUnavailableFault extends AbstractFault {
-    private EC2Service ec2Service;
-    private String instanceId;
-    static final Logger logger = LogManager.getLogger(InstanceUnavailableFault.class.getName());
-    public InstanceUnavailableFault(String instanceId, HashMap<String,String> params){
-        super(params);
-        this.instanceId = instanceId;
-    }
-    @Override
-    public void start(){
-        logger.info("Terminating instance with id = "
-                + instanceId + " ...");
+  private Ec2Service ec2Service;
+  private String instanceId;
+  private static Loggi logger;
+  private String faultInstanceId;
 
-        // Terminate the instance
-        ec2Service.terminateInstance(instanceId);
+  /**
+   * Constructor of this class.
+   * @param params A HashMap object.
+   * @throws IOException If we can't get the class name, throw this exception
+   */
+  public InstanceUnavailableFault(HashMap<String, String> params) throws IOException {
+    super(params);
+    this.instanceId = params.get("instanceId");
+    faultInstanceId = params.get("faultInstanceId");
+    logger = new Loggi(params.get("faultInstanceId"),InstanceUnavailableFault.class.getName());
+  }
 
-        // Delay for 5 minutes (ASG EC2 Health Check time) for ASG to spawn new faulty instance
-        try {
-            Thread.sleep(1000);
-        }catch(InterruptedException e){
-            e.printStackTrace();
-        }
+  @Override
+  public void start() throws IOException {
+    logger.log("Terminating instance with id = "
+            + instanceId + " ...");
+    if (ec2Service == null) {
+      ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
     }
+    // Terminate the instance
+    ec2Service.terminateInstance(instanceId);
 
-    /**
-     * EC2 Service Setter for testing purpose
-     * @param ec2Service
-     */
-    public void ec2ServiceSetter(EC2Service ec2Service) {
-        this.ec2Service = ec2Service;
+    // Delay for 5 minutes (ASG EC2 Health Check time) for ASG to spawn new faulty instance
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException exception) {
+      exception.printStackTrace();
     }
+  }
+
+  /**
+   * EC2 Service Setter for testing purpose.
+   *
+   * @param ec2Service An Ec2Service object.
+   */
+  public void ec2ServiceSetter(Ec2Service ec2Service) {
+    this.ec2Service = ec2Service;
+  }
 
 
 }
