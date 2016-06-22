@@ -31,6 +31,16 @@ public final class RouterClass {
   private static final int BADREQUEST = 400;
 
   /**
+   * Test mysql.
+   */
+  private static final String testMysql = "MySQLTest.properties";
+
+  /**
+   * mysql
+   */
+  private static final String Mysql = "MySQL.properties";
+
+  /**
    * Instantiates a new RouterClass. Private to prevent instantiation.
    */
   private RouterClass() {
@@ -163,8 +173,8 @@ public final class RouterClass {
       if (validUser) {
         StringBuilder reason = new StringBuilder();
         FaultInjector injector = new FaultInjector(faultId, request.params());
-        if (injector.validate(reason)) {
-          faultInstanceId = injector.inject();
+        if (injector.validate(reason, Mysql)) {
+          faultInstanceId = injector.inject(Mysql);
           response.put("success", "Fault start injection");
           response.put("faultInstanceId", faultInstanceId);
           responseCode = SUCCESS;

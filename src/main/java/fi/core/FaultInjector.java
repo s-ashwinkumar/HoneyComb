@@ -31,7 +31,7 @@ public class FaultInjector {
    * @param id      fault id
    * @param hashMap hash map for arguments
    */
-  public FaultInjector(String id, MultiMap hashMap) {
+  public FaultInjector(final String id, final MultiMap hashMap) {
 
     this.faultId = id;
     this.map = hashMap;
@@ -39,13 +39,15 @@ public class FaultInjector {
 
   /**
    * This method is used to check the arguments of the fault beforehand.
-   *
    * @param reason string builder to add reason
+   * @param fileName database configuration
    * @return true false
-   */
-  public boolean validate(StringBuilder reason) throws Exception {
+   * @throws Exception potential exception
+     */
+  public final boolean validate(final StringBuilder reason,
+                                final String fileName) throws Exception {
 
-    DbConnection dbCon = Utils.returnDbconnection(DbConnection.getFileName());
+    DbConnection dbCon = Utils.returnDbconnection(fileName);
     FaultModel fault = FaultModel.getFault(dbCon, faultId);
     String arguments = fault.getArguments();
     /**
@@ -65,12 +67,12 @@ public class FaultInjector {
 
   /**
    * This is the inject function.
-   *
+   * @param fileName the database configuration
    * @return faultInstanceId
-   */
-  public String inject() throws Exception {
-    String faultInstanceId = null;
-    DbConnection dbCon = Utils.returnDbconnection(DbConnection.getFileName());
+   * @throws Exception potential exception
+     */
+  public final String inject(final String fileName) throws Exception {
+    DbConnection dbCon = Utils.returnDbconnection(fileName);
     FaultModel fault = FaultModel.getFault(dbCon, faultId);
     final String location = fault.getLocation();
     final String name = fault.getName();
@@ -80,7 +82,7 @@ public class FaultInjector {
      * generate the faultInstanceId 13 + faultId.
      */
     long unixTime = System.currentTimeMillis();
-    faultInstanceId = String.valueOf(unixTime) + faultId;
+    final String faultInstanceId = String.valueOf(unixTime) + faultId;
 
     /**
      * load fault script and inject in a thread.
@@ -95,6 +97,7 @@ public class FaultInjector {
            * put the arguments into hashMap.
            */
           HashMap<String, String> params = new HashMap<>();
+          params.put("faultInstanceId", faultInstanceId);
           for (Map.Entry<String, String> item : map.entries()) {
             params.put(item.getKey(), item.getValue());
           }
