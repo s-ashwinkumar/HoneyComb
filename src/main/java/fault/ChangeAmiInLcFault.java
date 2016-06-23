@@ -52,9 +52,9 @@ public class ChangeAmiInLcFault extends AbstractFault {
    * @throws HoneyCombException thrown by AWS API.
    */
   @Override
-  public void start() throws AmazonServiceException, AmazonClientException,
-          HoneyCombException, IOException {
+  public void start() throws Exception {
 
+    logger.start();
     // Get the services
     if (ec2Service == null) {
       ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
@@ -126,13 +126,11 @@ public class ChangeAmiInLcFault extends AbstractFault {
       ec2Service.terminateInstance(instanceToInject.getInstanceId());
 
       // Delay for 5 minutes (ASG EC2 Health Check time) for ASG to spawn new faulty instance
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException exception) {
-        exception.printStackTrace();
-      }
+      Thread.sleep(1000);
 
     }
+
+    logger.finish();
 
   }
 
