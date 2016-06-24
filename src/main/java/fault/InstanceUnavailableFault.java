@@ -42,7 +42,7 @@ public class InstanceUnavailableFault extends AbstractFault {
     }
     // Terminate the instance
     ec2Service.terminateInstance(instanceId);
-    
+
     logger.finish();
   }
 
