@@ -1,8 +1,9 @@
 *.class
 
 *.jar
+!faults/*.jar
 .DS_Store
-
+log
 *.iml*
 *.idea*
 target*
