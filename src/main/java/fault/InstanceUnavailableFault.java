@@ -31,7 +31,10 @@ public class InstanceUnavailableFault extends AbstractFault {
   }
 
   @Override
-  public void start() throws IOException {
+  public void start() throws Exception {
+
+    logger.start();
+
     logger.log("Terminating instance with id = "
             + instanceId + " ...");
     if (ec2Service == null) {
@@ -39,13 +42,8 @@ public class InstanceUnavailableFault extends AbstractFault {
     }
     // Terminate the instance
     ec2Service.terminateInstance(instanceId);
-
-    // Delay for 5 minutes (ASG EC2 Health Check time) for ASG to spawn new faulty instance
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException exception) {
-      exception.printStackTrace();
-    }
+    
+    logger.finish();
   }
 
   /**
