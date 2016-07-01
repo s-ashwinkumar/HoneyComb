@@ -9,11 +9,20 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by joe on 16/6/13.
  */
 public class FaultInjector {
+
+  /**
+   * Ensure that ONLY ONE ConcurrentHashMap is used for every thread
+   * this is used to store the fault injection thread and used to terminate it
+   *
+   */
+  public static final ConcurrentMap<String, InjectionThread> faultInstances = new ConcurrentHashMap();
 
   /**
    * The faultId indicate a fault in the fault list.
@@ -89,36 +98,75 @@ public class FaultInjector {
      */
     Loggi loggi = new Loggi(faultInstanceId, name);
 
-    Thread faultThread = new Thread(new Runnable() {
-      public void run() {
-        try {
+    /**
+     * put the arguments into hashMap.
+     */
+    HashMap<String, String> params = new HashMap<>();
+    params.put("faultInstanceId", faultInstanceId);
+    for (Map.Entry<String, String> item : map.entries()) {
+      params.put(item.getKey(), item.getValue());
+    }
 
-          /**
-           * put the arguments into hashMap.
-           */
-          HashMap<String, String> params = new HashMap<>();
-          params.put("faultInstanceId", faultInstanceId);
-          for (Map.Entry<String, String> item : map.entries()) {
-            params.put(item.getKey(), item.getValue());
-          }
+    File authorizedJarFile = new File(location);
+    ClassLoader authorizedLoader = URLClassLoader
+            .newInstance(new URL[]{authorizedJarFile.toURI().toURL()});
+    String faultName = "fault."+name;
+    FaultInterface authorizedPlugin = (FaultInterface) authorizedLoader.loadClass(faultName)
+            .getDeclaredConstructor(HashMap.class)
+            .newInstance(params);
 
-          File authorizedJarFile = new File(location);
-          ClassLoader authorizedLoader = URLClassLoader
-              .newInstance(new URL[]{authorizedJarFile.toURI().toURL()});
-          String faultName = "fault."+name;
-          FaultInterface authorizedPlugin = (FaultInterface) authorizedLoader.loadClass(faultName)
-              .getDeclaredConstructor(HashMap.class)
-              .newInstance(params);
-          authorizedPlugin.start();
-        } catch (Exception ex) {
-          //e.printStackTrace();
-          loggi.error(ex);
-        }
-      }
-    });
+    InjectionThread faultInstance = new InjectionThread(authorizedPlugin, loggi, faultInstanceId);
 
-    faultThread.setName(faultInstanceId);
-    faultThread.start();
+    FaultInjector.faultInstances.putIfAbsent(faultInstanceId, faultInstance);
+    (new Thread(faultInstance)).start();
+    //faultInstance.run();
+
     return faultInstanceId;
+  }
+
+  /**
+   * termiante method
+   * @param faultInstanceId faultinstanceId
+     */
+  public static void terminateFault(String faultInstanceId) {
+    if (FaultInjector.faultInstances.get(faultInstanceId) != null) {
+      FaultInjector.faultInstances.get(faultInstanceId).terminate();
+    }
+  }
+}
+
+/**
+ * This is fault injection thread class
+ */
+class InjectionThread implements Runnable {
+  private FaultInterface fault;
+  private Loggi loggi;
+  private String faultInstanceId;
+
+  public InjectionThread(FaultInterface fault, Loggi loggi, String faultInstanceId) {
+    this.fault = fault;
+    this.loggi = loggi;
+    this.faultInstanceId = faultInstanceId;
+  }
+  @Override
+  public void run() {
+    try {
+      this.fault.start();
+      if (FaultInjector.faultInstances.get(faultInstanceId) != null) {
+        FaultInjector.faultInstances.remove(faultInstanceId);
+      }
+    } catch (Exception e) {
+      if (FaultInjector.faultInstances.get(faultInstanceId) != null) {
+        FaultInjector.faultInstances.remove(faultInstanceId);
+      }
+      loggi.error(e);
+    }
+  }
+
+  public void terminate() {
+    this.fault.terminate();
+    if (FaultInjector.faultInstances.get(faultInstanceId) != null)
+      FaultInjector.faultInstances.remove(faultInstanceId);
+    loggi.log("terminate by users");
   }
 }

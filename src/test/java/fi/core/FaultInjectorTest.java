@@ -62,7 +62,7 @@ public class FaultInjectorTest {
                 "'/var/whatever','instancename;secondargument;thirdargument',true);");
         //insert ChangeAMIInLCFFault.jar
         obj.getStmt().execute("Insert into fault (name,description,location," +
-                "arguments,active) values ('fault.TestFault','test for fault injection'," +
+                "arguments,active) values ('TestFault','test for fault injection'," +
                 "'faults/TestFault.jar','nothing',true);");
     }
 
@@ -168,7 +168,7 @@ public class FaultInjectorTest {
          * test the fault injection resutls, to see whether there exists end
          */
         boolean isExist = false;
-        Thread.sleep(3000);
+        Thread.sleep(15000);
         File file = new File("src/main/resources/log");
 
         try{
@@ -184,6 +184,89 @@ public class FaultInjectorTest {
 
                 while ((thisLine = br.readLine()) != null) {
                     if(thisLine.indexOf("fault injection finish!") != -1 || thisLine.indexOf("ERROR") != -1) {
+                        if (thisLine.indexOf(faultInstanceId) != -1) {
+                            isExist = true;
+                            break;
+                        }
+                    }
+                }
+                br.close();
+            }
+
+            Assert.assertTrue(isExist);
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+    @Test
+    public void testTerminateFault() throws Exception {
+        /**
+         * we assume token validation is passed.
+         * This validation will not handle it at all.
+         *
+         * We also assume the validation of the arguments are passed
+         */
+
+        /**
+         * We use faultId = 10001 to inject.
+         * 10001 contains arguments such as asgName;faultyAmiId.
+         */
+        String faultId = "10001";
+
+        /**
+         * missing arguments (why cannot pass the validation)
+         */
+        StringBuilder reason = new StringBuilder();
+
+        /**
+         * vertex MultiMap.
+         */
+        MultiMap map = new CaseInsensitiveHeaders();
+
+        /**
+         * make a fault and pass the arguments validation
+         */
+        map.add("nothing", "hehe");
+        //map.add("faultyAmiId", "ami-fce3c696");
+        FaultInjector object1 = new FaultInjector(faultId, map);
+
+        assertTrue(object1.validate(reason, testMysql));
+
+        String faultInstanceId = object1.inject(testMysql);
+
+        FaultInjector.terminateFault(faultInstanceId);
+
+        /**
+         * test pass, we get the faultInstanceId
+         */
+        assertNotNull(faultInstanceId);
+        assertEquals(18, faultInstanceId.length());
+        assertEquals(faultId, faultInstanceId.substring(13));
+
+        /**
+         * test the fault injection resutls, to see whether there exists end
+         */
+        boolean isExist = false;
+        Thread.sleep(10000);
+        File file = new File("src/main/resources/log");
+
+        try{
+            //firstly, we make sure we have the log file
+            Assert.assertTrue(file.exists());
+
+            if (!file.exists()) {
+                System.out.println(" file not existed yet");
+            } else {
+                String  thisLine = null;
+                FileReader fileReader = new FileReader(file);
+                BufferedReader br = new BufferedReader(fileReader);
+
+                while ((thisLine = br.readLine()) != null) {
+                    if(thisLine.indexOf("terminate") != -1) {
                         if (thisLine.indexOf(faultInstanceId) != -1) {
                             isExist = true;
                             break;

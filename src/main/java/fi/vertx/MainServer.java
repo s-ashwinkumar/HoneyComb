@@ -51,6 +51,8 @@ final class MainServer {
 
     router.post("/inject/:faultId").blockingHandler(RouterClass::inject, false);
 
+    router.post("/terminate/:faultInstanceId").blockingHandler(RouterClass::termination, false);
+
     Vertx.vertx().createHttpServer().requestHandler(router::accept)
         .listen(PORT);
   }

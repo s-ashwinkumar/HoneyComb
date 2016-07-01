@@ -199,6 +199,42 @@ public final class RouterClass {
   }
 
   /**
+   * terminate a injection thread
+   * @param routingContext faultInstanceId
+     */
+  public static void termination(RoutingContext routingContext) {
+    HttpServerRequest request = routingContext.request();
+    HashMap<String, String> response = new HashMap<>();
+    String token = request.getParam("token");
+    String faultInstanceId = request.getParam("faultInstanceId");
+    int responseCode;
+    try {
+      if (!Utils.isNumeric(faultInstanceId)) {
+        response.put("error", "The parameter faultInstanceId is not a number");
+        responseCode = ERROR;
+        returnResponse(routingContext, responseCode, response);
+      }
+      boolean validUser = User.isValidUser(token, User.getFileName());
+      if (validUser) {
+        FaultInjector.terminateFault(faultInstanceId);
+        response.put("success", "Fault is terminated by user now");
+        response.put("faultInstanceId", faultInstanceId);
+        responseCode = SUCCESS;
+        returnResponse(routingContext, responseCode, response);
+      } else {
+        response.put("error", "You are not unauthorized to make this request.");
+        responseCode = ERROR;
+        returnResponse(routingContext, responseCode, response);
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      response.put("error", "Something went wrong.Please try again later");
+      responseCode = ERROR;
+      returnResponse(routingContext, responseCode, response);
+    }
+  }
+
+  /**
    * A Helper method to respond to request.
    *
    * @param routingContext Routing context object from vertx
@@ -212,5 +248,4 @@ public final class RouterClass {
         .putHeader("content-type", "application/json; charset=utf-8")
         .end(Json.encodePrettily(response));
   }
-
 }
