@@ -18,11 +18,12 @@ import java.util.concurrent.ConcurrentMap;
 public class FaultInjector {
 
   /**
-   * Ensure that ONLY ONE ConcurrentHashMap is used for every thread
-   * this is used to store the fault injection thread and used to terminate it
+   * Ensure that ONLY ONE ConcurrentHashMap is used for every thread,
+   * this is used to store the fault injection thread and used to terminate it.
    *
    */
-  public static final ConcurrentMap<String, InjectionThread> faultInstances = new ConcurrentHashMap();
+  public static final ConcurrentMap<String, InjectionThread> faultInstances =
+          new ConcurrentHashMap();
 
   /**
    * The faultId indicate a fault in the fault list.
@@ -111,11 +112,13 @@ public class FaultInjector {
     ClassLoader authorizedLoader = URLClassLoader
             .newInstance(new URL[]{authorizedJarFile.toURI().toURL()});
     String faultName = "fault."+name;
-    FaultInterface authorizedPlugin = (FaultInterface) authorizedLoader.loadClass(faultName)
+    FaultInterface authorizedPlugin =
+            (FaultInterface) authorizedLoader.loadClass(faultName)
             .getDeclaredConstructor(HashMap.class)
             .newInstance(params);
 
-    InjectionThread faultInstance = new InjectionThread(authorizedPlugin, loggi, faultInstanceId);
+    InjectionThread faultInstance =
+            new InjectionThread(authorizedPlugin, loggi, faultInstanceId);
 
     FaultInjector.faultInstances.putIfAbsent(faultInstanceId, faultInstance);
     (new Thread(faultInstance)).start();
@@ -128,10 +131,12 @@ public class FaultInjector {
    * termiante method
    * @param faultInstanceId faultinstanceId
      */
-  public static void terminateFault(String faultInstanceId) {
+  public static int terminateFault(String faultInstanceId) {
     if (FaultInjector.faultInstances.get(faultInstanceId) != null) {
       FaultInjector.faultInstances.get(faultInstanceId).terminate();
+      return 0;
     }
+    return 1;
   }
 }
 
@@ -139,6 +144,9 @@ public class FaultInjector {
  * This is fault injection thread class
  */
 class InjectionThread implements Runnable {
+  /**
+   * store the fault object inside the thread object
+   */
   private FaultInterface fault;
   private Loggi loggi;
   private String faultInstanceId;
@@ -165,8 +173,7 @@ class InjectionThread implements Runnable {
 
   public void terminate() {
     this.fault.terminate();
-    if (FaultInjector.faultInstances.get(faultInstanceId) != null)
-      FaultInjector.faultInstances.remove(faultInstanceId);
+    FaultInjector.faultInstances.remove(faultInstanceId);
     loggi.log("terminate by users");
   }
 }

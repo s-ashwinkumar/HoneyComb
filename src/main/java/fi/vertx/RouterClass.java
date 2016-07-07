@@ -71,6 +71,7 @@ public final class RouterClass {
       responseCode = ERROR;
     }
     returnResponse(routingContext, responseCode, response);
+    return;
   }
 
   /**
@@ -91,11 +92,13 @@ public final class RouterClass {
         responseCode = SUCCESS;
         dbCon.getConn().close();
         returnResponse(routingContext, responseCode, list);
+        return;
 
       } else {
         response.put("error", "You are not unauthorized to make this request.");
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
+        return;
       }
 
     } catch (Exception ex) {
@@ -103,6 +106,7 @@ public final class RouterClass {
       response.put("error", "Something went wrong.Please try again later");
       responseCode = ERROR;
       returnResponse(routingContext, responseCode, response);
+      return;
     }
   }
 
@@ -122,6 +126,7 @@ public final class RouterClass {
         response.put("error", "The parameter fault ID is not a number");
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
+        return;
       }
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
@@ -146,8 +151,10 @@ public final class RouterClass {
       response.put("error", "Something went wrong.Please try again later");
       responseCode = ERROR;
       returnResponse(routingContext, responseCode, response);
+      return;
     }
     returnResponse(routingContext, responseCode, response);
+    return;
 
   }
 
@@ -168,10 +175,22 @@ public final class RouterClass {
         response.put("error", "The parameter fault ID is not a number");
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
+        return;
       }
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
         StringBuilder reason = new StringBuilder();
+
+        DbConnection dbCon = Utils.returnDbconnection(Mysql);
+        FaultModel fault = FaultModel.getFault(dbCon, faultId);
+
+        if (fault == null) {
+          response.put("error", "the fault doesn't existed");
+          responseCode = ERROR;
+          returnResponse(routingContext, responseCode, response);
+          return;
+        }
+
         FaultInjector injector = new FaultInjector(faultId, request.params());
         if (injector.validate(reason, Mysql)) {
           faultInstanceId = injector.inject(Mysql);
@@ -183,18 +202,21 @@ public final class RouterClass {
           response.put("error", "Missing arguments: " + reason.toString());
           responseCode = BADREQUEST;
           returnResponse(routingContext, responseCode, response);
+          return;
         }
 
       } else {
         response.put("error", "You are not unauthorized to make this request.");
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
+        return;
       }
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
       responseCode = ERROR;
       returnResponse(routingContext, responseCode, response);
+      return;
     }
   }
 
@@ -213,24 +235,35 @@ public final class RouterClass {
         response.put("error", "The parameter faultInstanceId is not a number");
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
+        return;
       }
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
-        FaultInjector.terminateFault(faultInstanceId);
-        response.put("success", "Fault is terminated by user now");
-        response.put("faultInstanceId", faultInstanceId);
-        responseCode = SUCCESS;
-        returnResponse(routingContext, responseCode, response);
+        if(FaultInjector.terminateFault(faultInstanceId) == 0) {
+          response.put("success", "Fault instance is terminated by user now");
+          response.put("faultInstanceId", faultInstanceId);
+          responseCode = SUCCESS;
+          returnResponse(routingContext, responseCode, response);
+          return;
+        } else {
+          response.put("fail", "FaultInstance is already end or not existed");
+          response.put("faultInstanceId", faultInstanceId);
+          responseCode = ERROR;
+          returnResponse(routingContext, responseCode, response);
+          return;
+        }
       } else {
         response.put("error", "You are not unauthorized to make this request.");
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
+        return;
       }
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
       responseCode = ERROR;
       returnResponse(routingContext, responseCode, response);
+      return;
     }
   }
 
