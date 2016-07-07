@@ -32,29 +32,37 @@ public class FaultInjector {
    * @param hashMap hash map for arguments
    */
   public FaultInjector(final String id, final MultiMap hashMap) {
-
     this.faultId = id;
     this.map = hashMap;
   }
 
   /**
    * This method is used to check the arguments of the fault beforehand.
-   * @param reason string builder to add reason
+   *
+   * @param reason   string builder to add reason
    * @param fileName database configuration
    * @return true false
    * @throws Exception potential exception
-     */
+   */
   public final boolean validate(final StringBuilder reason,
                                 final String fileName) throws Exception {
 
     DbConnection dbCon = Utils.returnDbconnection(fileName);
     FaultModel fault = FaultModel.getFault(dbCon, faultId);
+    /**
+     * if fault is not active return false
+     */
+    if(!fault.getActive()){
+      reason.append("The selected fault is not active. Please choose another " +
+          "fault.");
+      return false;
+    }
     String arguments = fault.getArguments();
     /**
      * the default value will be null in db.
      */
     if (arguments != null) {
-
+      reason.append("Missing Arguments: ");
       for (String args : arguments.split(";")) {
         if (map.get(args) == null) {
           reason.append(args);
@@ -67,10 +75,11 @@ public class FaultInjector {
 
   /**
    * This is the inject function.
+   *
    * @param fileName the database configuration
    * @return faultInstanceId
    * @throws Exception potential exception
-     */
+   */
   public final String inject(final String fileName) throws Exception {
     DbConnection dbCon = Utils.returnDbconnection(fileName);
     FaultModel fault = FaultModel.getFault(dbCon, faultId);
@@ -105,7 +114,7 @@ public class FaultInjector {
           File authorizedJarFile = new File(location);
           ClassLoader authorizedLoader = URLClassLoader
               .newInstance(new URL[]{authorizedJarFile.toURI().toURL()});
-          String faultName = "fault."+name;
+          String faultName = "fault." + name;
           FaultInterface authorizedPlugin = (FaultInterface) authorizedLoader.loadClass(faultName)
               .getDeclaredConstructor(HashMap.class)
               .newInstance(params);

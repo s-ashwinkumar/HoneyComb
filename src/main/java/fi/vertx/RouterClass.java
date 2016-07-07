@@ -180,7 +180,7 @@ public final class RouterClass {
           responseCode = SUCCESS;
           returnResponse(routingContext, responseCode, response);
         } else {
-          response.put("error", "Missing arguments: " + reason.toString());
+          response.put("error", reason.toString());
           responseCode = BADREQUEST;
           returnResponse(routingContext, responseCode, response);
         }
