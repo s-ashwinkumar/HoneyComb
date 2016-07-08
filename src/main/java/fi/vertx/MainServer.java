@@ -3,8 +3,13 @@ package fi.vertx;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.Json;
+import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+
+import java.io.File;
+import java.util.Set;
 
 
 /**
@@ -34,7 +39,9 @@ final class MainServer {
     // Create an HTTP server which simply returns "Hello World!" to each
     // request.
     Router router = Router.router(Vertx.vertx());
-    router.route().handler(BodyHandler.create());
+    BodyHandler bodyHandler = BodyHandler.create();
+    bodyHandler.setUploadsDirectory("faults");
+    router.route().handler(bodyHandler);
     router.route("/test").blockingHandler(routingContext -> {
       HttpServerResponse response = routingContext.response();
       response.putHeader("content-type", "text/plain");
@@ -50,6 +57,10 @@ final class MainServer {
         false);
 
     router.post("/inject/:faultId").blockingHandler(RouterClass::inject, false);
+
+
+    router.post("/faults/upload").blockingHandler(RouterClass::uploadFault,
+        false);
 
     Vertx.vertx().createHttpServer().requestHandler(router::accept)
         .listen(PORT);

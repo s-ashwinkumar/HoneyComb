@@ -198,7 +198,7 @@ public class FaultModel {
       Exception {
     String sql = "select * from fault where faultID = '" + faultId + "'";
     ResultSet rs = dbCon.getStmt().executeQuery(sql);
-    FaultModel tempObj=null;
+    FaultModel tempObj = null;
     while (rs.next()) {
       tempObj = new FaultModel(rs.getInt("faultID"), rs.getString("name"),
           rs.getString("arguments"), rs.getBoolean("active"), rs.getString
@@ -208,5 +208,40 @@ public class FaultModel {
     return tempObj;
   }
 
+  /**
+   * method to insert a record in db while uploading fault.
+   *
+   * @param dbCon Dbconnection object
+   * @param name  Name of the fault
+   * @param desc  Description of the fault
+   * @param args  arguments for the fault
+   * @return -1 if failure else should ideally return 1 if inserted.
+   */
+  public static void insertFault(DbConnection dbCon, String name, String
+      desc, String args) throws Exception {
+    String query = "insert into fault (active,name,description,location," +
+        "arguments) values (1,'" + name + "', '" + desc + "','faults/" +
+        name + "', " +
+        "'" + args + "')";
+    dbCon.getStmt().executeUpdate(query);
+
+  }
+
+  public static boolean exists(DbConnection dbCon, String name) throws
+      Exception {
+    String sql = "select * from fault where name = '" + name + "'";
+    ResultSet rs = dbCon.getStmt().executeQuery(sql);
+    if (!rs.next()) {
+      /**
+       * No records found, therefore does not exist.
+       */
+      return false;
+    }
+    /**
+     * Some fault exists by the same name.
+     */
+    return true;
+
+  }
 
 }
