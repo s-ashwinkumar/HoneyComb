@@ -31,6 +31,23 @@ public final class RouterClass {
   private static final int BADREQUEST = 400;
 
   /**
+   * Not acceptable, Returned by the Search API when an invalid format is specified in the request.
+   */
+  private static final int NOTACCEPTABLE = 406;
+
+  /**
+   * Forbidden, The request is understood, but it has been refused or access is not allowed.
+   * An accompanying error message will explain why.
+   */
+  private static final int FORBIDDEN = 403;
+
+  /**
+   * Not Found, The URI requested is invalid or the resource requested, such as a user, does not exists.
+   * Also returned when the requested format is not supported by the requested method.
+   */
+  private static final int NOTFOUND = 404;
+
+  /**
    * Test mysql.
    */
   private static final String testMysql = "MySQLTest.properties";
@@ -104,7 +121,7 @@ public final class RouterClass {
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
-      responseCode = ERROR;
+      responseCode = FORBIDDEN;
       returnResponse(routingContext, responseCode, response);
       return;
     }
@@ -124,7 +141,7 @@ public final class RouterClass {
     try {
       if (!Utils.isNumeric(faultId)) {
         response.put("error", "The parameter fault ID is not a number");
-        responseCode = ERROR;
+        responseCode = NOTACCEPTABLE;
         returnResponse(routingContext, responseCode, response);
         return;
       }
@@ -133,7 +150,7 @@ public final class RouterClass {
         DbConnection dbCon = Utils.returnDbconnection(DbConnection.getFileName());
         Integer res = FaultModel.removeFault(faultId, dbCon);
         if (res == 0) {
-          responseCode = ERROR;
+          responseCode = NOTFOUND;
           response.put("error", "No fault for given fault ID.");
         } else {
           responseCode = SUCCESS;
@@ -149,7 +166,7 @@ public final class RouterClass {
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
-      responseCode = ERROR;
+      responseCode = FORBIDDEN;
       returnResponse(routingContext, responseCode, response);
       return;
     }
@@ -173,7 +190,7 @@ public final class RouterClass {
     try {
       if (!Utils.isNumeric(faultId)) {
         response.put("error", "The parameter fault ID is not a number");
-        responseCode = ERROR;
+        responseCode = NOTACCEPTABLE;
         returnResponse(routingContext, responseCode, response);
         return;
       }
@@ -185,8 +202,8 @@ public final class RouterClass {
         FaultModel fault = FaultModel.getFault(dbCon, faultId);
 
         if (fault == null) {
-          response.put("error", "the fault doesn't existed");
-          responseCode = ERROR;
+          response.put("error", "the fault doesn't exist");
+          responseCode = NOTFOUND;
           returnResponse(routingContext, responseCode, response);
           return;
         }
@@ -198,9 +215,10 @@ public final class RouterClass {
           response.put("faultInstanceId", faultInstanceId);
           responseCode = SUCCESS;
           returnResponse(routingContext, responseCode, response);
+          return;
         } else {
           response.put("error", "Missing arguments: " + reason.toString());
-          responseCode = BADREQUEST;
+          responseCode = NOTACCEPTABLE;
           returnResponse(routingContext, responseCode, response);
           return;
         }
@@ -214,7 +232,7 @@ public final class RouterClass {
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
-      responseCode = ERROR;
+      responseCode = FORBIDDEN;
       returnResponse(routingContext, responseCode, response);
       return;
     }
@@ -233,7 +251,7 @@ public final class RouterClass {
     try {
       if (!Utils.isNumeric(faultInstanceId)) {
         response.put("error", "The parameter faultInstanceId is not a number");
-        responseCode = ERROR;
+        responseCode = NOTACCEPTABLE;
         returnResponse(routingContext, responseCode, response);
         return;
       }
@@ -246,9 +264,9 @@ public final class RouterClass {
           returnResponse(routingContext, responseCode, response);
           return;
         } else {
-          response.put("fail", "FaultInstance is already end or not existed");
+          response.put("error", "FaultInstance is already end or not existed");
           response.put("faultInstanceId", faultInstanceId);
-          responseCode = ERROR;
+          responseCode = NOTFOUND;
           returnResponse(routingContext, responseCode, response);
           return;
         }
@@ -261,7 +279,7 @@ public final class RouterClass {
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
-      responseCode = ERROR;
+      responseCode = FORBIDDEN;
       returnResponse(routingContext, responseCode, response);
       return;
     }
