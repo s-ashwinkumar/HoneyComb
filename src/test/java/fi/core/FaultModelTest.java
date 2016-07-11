@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
  * Created by ashwin on 6/19/16.
  */
 public class FaultModelTest {
+
   DbConnection obj;
   @Before
   public void setUp() throws Exception {
@@ -27,6 +28,7 @@ public class FaultModelTest {
         "location varchar(255) NOT NULL,\n" +
         "arguments varchar(500),\n" +
         "active BOOLEAN NOT NULL,\n" +
+        "UNIQUE (name),\n" +
         "PRIMARY KEY (faultID)\n" +
         ");");
     // set auto increment
@@ -93,4 +95,24 @@ public class FaultModelTest {
     assertEquals(1,result);
   }
 
+  @Test
+  public void insertFault() throws Exception {
+    assertFalse(FaultModel.exists(obj,"Testing insert"));
+    FaultModel.insertFault(obj,"Testing insert","Test fault for test",null);
+    assertTrue(FaultModel.exists(obj,"Testing insert"));
+    try{
+      FaultModel.insertFault(obj,"Testing insert","Test fault for test",null);
+    }catch(Exception ex){
+      assertEquals("Duplicate entry 'Testing insert' for key 'name'",ex.getMessage());
+    }
+  }
+
+  @Test
+  public void exists() throws Exception {
+    boolean res;
+    res = FaultModel.exists(obj,"Test Fault");
+    assertTrue(res);
+    res = FaultModel.exists(obj,"Test Fault1");
+    assertFalse(res);
+  }
 }
