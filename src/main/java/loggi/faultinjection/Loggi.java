@@ -64,7 +64,7 @@ public class Loggi {
             System.out.println("Exception thrown  :" + e);
         }
         className = c;
-        logger = Logger.getLogger("honeycomb");
+        logger = Logger.getLogger(s);
     }
 
     /**

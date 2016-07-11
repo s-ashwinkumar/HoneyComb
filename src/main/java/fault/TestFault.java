@@ -56,10 +56,16 @@ public class TestFault extends AbstractFault {
          */
         loggi.log("Hello world");
 
+        if (this.isTerminated())
+            return;
+
         /**
          * log the nothing arguments.
          */
         loggi.log(paramsInstance.get("nothing"));
+
+        if (this.isTerminated())
+            return;
 
 
         /**
