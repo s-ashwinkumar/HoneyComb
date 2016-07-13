@@ -20,3 +20,11 @@
 2016-07-13 16:22:47.550 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
 2016-07-13 16:22:47.563 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
 2016-07-13 16:22:47.563 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!
+2016-07-13 16:24:22.561 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 16:24:22.565 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 16:24:22.577 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 16:24:22.577 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!
+2016-07-13 16:40:28.757 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 16:40:28.762 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 16:40:28.779 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 16:40:28.780 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!

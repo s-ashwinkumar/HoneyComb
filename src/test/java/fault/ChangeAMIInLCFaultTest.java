@@ -34,42 +34,13 @@ public class ChangeAMIInLCFaultTest {
 
     @Before
     public void setUp() {
-//        Ec2Service = mock(Ec2Service.class);
         ec2Service = mockLib.Ec2Service.getEc2Service();
-//        asgService = mock(AsgService.class);
         asgService = mockLib.AsgService.getAsgService();
-//        lc = mockAws(LaunchConfiguration.class);
-//        lc = mockAws.LaunchConfiguration.getLc();
-//        instance = mock(Instance.class);
-//        instance = mockAws.Instance.getInstance();
-//        asg = mockAws(AutoScalingGroup.class);
         asg = mockAws.AutoScalingGroup.getAsg();
         asgName = "asg";
 
         faultyAmiId = "faultyAmiId";
         params = new HashMap<String,String>();
-//        com.amazonaws.services.autoscaling.model.Instance asgInstance =
-//                mockAws(com.amazonaws.services.autoscaling.model.Instance.class);
-
-        // Setting the behavior for mockAws
-//        when(AsgService.getLaunchConfigurationForAutoScalingGroup(asgName)).thenReturn(lc);
-//        when(AsgService.createLaunchConfiguration(any())).thenReturn("ok");
-//        when(lc.getInstanceType()).thenReturn("ok");
-//        when(lc.getKeyName()).thenReturn("ok");
-//        when(lc.getSecurityGroups()).thenReturn(null);
-//        doNothing().when(AsgService).updateLaunchConfigurationInAutoScalingGroup(asgName, "faulty-lc");
-
-//        List<com.amazonaws.services.autoscaling.model.Instance> list = new ArrayList<>();
-//        list.add(asgInstance);
-//        list.add(asgInstance);
-
-//        when(asg.getInstances()).thenReturn(list);
-
-//        when(Ec2Service.describeEC2Instance(anyString())).thenReturn(instance);
-//        InstanceState state = mock(InstanceState.class);
-//        when(instance.getState()).thenReturn(state);
-//        when(state.getName()).thenReturn("running");
-//        doNothing().when(Ec2Service).terminateInstance(anyString());
 
     }
 
