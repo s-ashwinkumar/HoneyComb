@@ -7,10 +7,14 @@ import fi.core.User;
 import fi.core.Utils;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.Json;
+import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by ashwin on 6/3/16.
@@ -92,6 +96,59 @@ public final class RouterClass {
   }
 
   /**
+   * controller method to handle fault upload.
+   * @param routingContext routingcontext object
+   */
+  public static void uploadFault(RoutingContext routingContext) {
+    Set<FileUpload> uploads = routingContext.fileUploads();
+    FileUpload file = uploads.iterator().next();
+    HttpServerRequest request = routingContext.request();
+    HashMap<String, String> response = new HashMap<>();
+    String token = request.getParam("token");
+    File uploadedFault = new File(file.uploadedFileName());
+    try {
+      boolean validUser = User.isValidUser(token, User.getFileName());
+      if (validUser) {
+        String name = request.getParam("name");
+        String desc = request.getParam("description");
+        String args = request.getParam("arguments");
+        if (file == null || name == null || name.equals("") || desc == null
+            || desc.equals("")) {
+          uploadedFault.delete();
+          response.put("error", "Invalid Parameters. Please check the " +
+              "parameters");
+          returnResponse(routingContext, BADREQUEST, response);
+        } else {
+          DbConnection dbCon = Utils.returnDbconnection(DbConnection
+              .getFileName());
+          if (!FaultModel.exists(dbCon, name)) {
+            FaultModel.insertFault(dbCon, name, desc, args);
+            uploadedFault.renameTo(new File("faults/" + name + ".jar"));
+            response.put("success", "Fault uploaded successfully");
+            returnResponse(routingContext, SUCCESS, response);
+          } else {
+            uploadedFault.delete();
+            response.put("Failure", "A fault with same name exists in the " +
+                "system.");
+            returnResponse(routingContext, BADREQUEST, response);
+          }
+
+        }
+
+      } else {
+        uploadedFault.delete();
+        response.put("error", "You are not unauthorized to make this request.");
+        returnResponse(routingContext, ERROR, response);
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      uploadedFault.delete();
+      response.put("error", "Something went wrong.Please try again later");
+      returnResponse(routingContext, ERROR, response);
+    }
+  }
+
+  /**
    * FaultList method responding to the get action.
    *
    * @param routingContext receives routing context from vertx.
@@ -104,7 +161,8 @@ public final class RouterClass {
     try {
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
-        DbConnection dbCon = Utils.returnDbconnection(DbConnection.getFileName());
+        DbConnection dbCon = Utils.returnDbconnection(DbConnection
+            .getFileName());
         List<FaultModel> list = FaultModel.getFaults(dbCon);
         responseCode = SUCCESS;
         dbCon.getConn().close();
@@ -147,7 +205,8 @@ public final class RouterClass {
       }
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
-        DbConnection dbCon = Utils.returnDbconnection(DbConnection.getFileName());
+        DbConnection dbCon = Utils.returnDbconnection(DbConnection
+            .getFileName());
         Integer res = FaultModel.removeFault(faultId, dbCon);
         if (res == 0) {
           responseCode = NOTFOUND;

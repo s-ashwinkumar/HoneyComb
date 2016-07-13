@@ -1,5 +1,7 @@
 package fi.core;
 
+import java.util.HashMap;
+
 /**
  * Created by ashwin on 6/17/16.
  */
@@ -28,7 +30,6 @@ public class Utils {
     }
     return true;
   }
-
 
   /**
    * Util method to get db connection.
