@@ -263,4 +263,8 @@ public class Ec2ServiceImpl implements Ec2Service {
     }
   }
 
+  public void AmazonEC2Setter(AmazonEC2 client){
+    this.client = client;
+  }
+
 }

@@ -189,4 +189,8 @@ public class ElbServiceImpl implements ElbService {
 
   }
 
+  public void AmazonElasticLoadBalancingSetter(AmazonElasticLoadBalancing client){
+    this.client = client;
+  }
+
 }
