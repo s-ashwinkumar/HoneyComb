@@ -58,9 +58,13 @@ public class Loggi {
         if (!file.exists())
             file.createNewFile();
         faultInstanceId = s;
-        faultId = s.substring(FAULTID_POSITION);
+        try {
+            faultId = s.substring(FAULTID_POSITION);
+        } catch (Exception e) {
+            System.out.println("Exception thrown  :" + e);
+        }
         className = c;
-        logger = Logger.getLogger("honeycomb");
+        logger = Logger.getLogger(s);
     }
 
     /**
@@ -72,6 +76,7 @@ public class Loggi {
                 + faultId + "]\t"
                 + "[FaultName = " + className + "]\t"
                 + "fault injection start!");
+        System.out.flush();
     }
 
     /**
@@ -83,6 +88,7 @@ public class Loggi {
                 + faultId + "]\t"
                 + "[FaultName = " + className + "]\t"
                 + s);
+        System.out.flush();
     }
 
     /**
@@ -94,6 +100,7 @@ public class Loggi {
                 + faultId + "]\t"
                 + "[FaultName = " + className + "]\t"
                 + "fault injection finish!");
+        System.out.flush();
     }
 
     /**
@@ -105,6 +112,7 @@ public class Loggi {
                 + faultId + "]\t"
                 + "[FaultName = "
                 + className + "]\t" + s);
+        System.out.flush();
     }
 
     /**
@@ -116,6 +124,7 @@ public class Loggi {
                 + faultId + "]\t"
                 + "[FaultName = "
                 + className + "]\t" + e);
+        System.out.flush();
     }
 
 }

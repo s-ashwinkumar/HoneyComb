@@ -31,7 +31,7 @@ public class TestFault extends AbstractFault {
             AmazonServiceException,
             AmazonClientException,
             HoneyCombException,
-            IOException {
+            IOException, InterruptedException {
         String className = this.getClass().getSimpleName();
         /**
          * construct the loggi
@@ -44,15 +44,28 @@ public class TestFault extends AbstractFault {
          */
         loggi.start();
 
+        Thread.sleep(10000);
+        /**
+         * terminate here.
+         */
+        if (this.isTerminated())
+            return;
+
         /**
          * log the "hello world".
          */
-        loggi.log("hello world");
+        loggi.log("Hello world");
+
+        if (this.isTerminated())
+            return;
 
         /**
          * log the nothing arguments.
          */
         loggi.log(paramsInstance.get("nothing"));
+
+        if (this.isTerminated())
+            return;
 
 
         /**

@@ -8,10 +8,18 @@ import java.util.HashMap;
 
 public abstract class AbstractFault implements FaultInterface {
   private HashMap<String, String> params;
+  private boolean isTerminated = false;
 
   public AbstractFault(HashMap<String, String> params) {
     this.params = params;
   }
 
+  public void terminate() {
+    isTerminated = true;
+  }
+
+  public boolean isTerminated() {
+    return isTerminated;
+  }
 
 }

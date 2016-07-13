@@ -31,6 +31,23 @@ public final class RouterClass {
   private static final int BADREQUEST = 400;
 
   /**
+   * Not acceptable, Returned by the Search API when an invalid format is specified in the request.
+   */
+  private static final int NOTACCEPTABLE = 406;
+
+  /**
+   * Forbidden, The request is understood, but it has been refused or access is not allowed.
+   * An accompanying error message will explain why.
+   */
+  private static final int FORBIDDEN = 403;
+
+  /**
+   * Not Found, The URI requested is invalid or the resource requested, such as a user, does not exists.
+   * Also returned when the requested format is not supported by the requested method.
+   */
+  private static final int NOTFOUND = 404;
+
+  /**
    * Test mysql.
    */
   private static final String testMysql = "MySQLTest.properties";
@@ -71,6 +88,7 @@ public final class RouterClass {
       responseCode = ERROR;
     }
     returnResponse(routingContext, responseCode, response);
+    return;
   }
 
   /**
@@ -91,18 +109,21 @@ public final class RouterClass {
         responseCode = SUCCESS;
         dbCon.getConn().close();
         returnResponse(routingContext, responseCode, list);
+        return;
 
       } else {
         response.put("error", "You are not unauthorized to make this request.");
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
+        return;
       }
 
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
-      responseCode = ERROR;
+      responseCode = FORBIDDEN;
       returnResponse(routingContext, responseCode, response);
+      return;
     }
   }
 
@@ -120,15 +141,16 @@ public final class RouterClass {
     try {
       if (!Utils.isNumeric(faultId)) {
         response.put("error", "The parameter fault ID is not a number");
-        responseCode = ERROR;
+        responseCode = NOTACCEPTABLE;
         returnResponse(routingContext, responseCode, response);
+        return;
       }
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
         DbConnection dbCon = Utils.returnDbconnection(DbConnection.getFileName());
         Integer res = FaultModel.removeFault(faultId, dbCon);
         if (res == 0) {
-          responseCode = ERROR;
+          responseCode = NOTFOUND;
           response.put("error", "No fault for given fault ID.");
         } else {
           responseCode = SUCCESS;
@@ -144,10 +166,12 @@ public final class RouterClass {
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
-      responseCode = ERROR;
+      responseCode = FORBIDDEN;
       returnResponse(routingContext, responseCode, response);
+      return;
     }
     returnResponse(routingContext, responseCode, response);
+    return;
 
   }
 
@@ -166,12 +190,24 @@ public final class RouterClass {
     try {
       if (!Utils.isNumeric(faultId)) {
         response.put("error", "The parameter fault ID is not a number");
-        responseCode = ERROR;
+        responseCode = NOTACCEPTABLE;
         returnResponse(routingContext, responseCode, response);
+        return;
       }
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
         StringBuilder reason = new StringBuilder();
+
+        DbConnection dbCon = Utils.returnDbconnection(Mysql);
+        FaultModel fault = FaultModel.getFault(dbCon, faultId);
+
+        if (fault == null) {
+          response.put("error", "the fault doesn't exist");
+          responseCode = NOTFOUND;
+          returnResponse(routingContext, responseCode, response);
+          return;
+        }
+
         FaultInjector injector = new FaultInjector(faultId, request.params());
         if (injector.validate(reason, Mysql)) {
           faultInstanceId = injector.inject(Mysql);
@@ -179,22 +215,73 @@ public final class RouterClass {
           response.put("faultInstanceId", faultInstanceId);
           responseCode = SUCCESS;
           returnResponse(routingContext, responseCode, response);
+          return;
         } else {
           response.put("error", "Missing arguments: " + reason.toString());
-          responseCode = BADREQUEST;
+          responseCode = NOTACCEPTABLE;
           returnResponse(routingContext, responseCode, response);
+          return;
         }
 
       } else {
         response.put("error", "You are not unauthorized to make this request.");
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
+        return;
       }
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
-      responseCode = ERROR;
+      responseCode = FORBIDDEN;
       returnResponse(routingContext, responseCode, response);
+      return;
+    }
+  }
+
+  /**
+   * terminate a injection thread
+   * @param routingContext faultInstanceId
+     */
+  public static void termination(RoutingContext routingContext) {
+    HttpServerRequest request = routingContext.request();
+    HashMap<String, String> response = new HashMap<>();
+    String token = request.getParam("token");
+    String faultInstanceId = request.getParam("faultInstanceId");
+    int responseCode;
+    try {
+      if (!Utils.isNumeric(faultInstanceId)) {
+        response.put("error", "The parameter faultInstanceId is not a number");
+        responseCode = NOTACCEPTABLE;
+        returnResponse(routingContext, responseCode, response);
+        return;
+      }
+      boolean validUser = User.isValidUser(token, User.getFileName());
+      if (validUser) {
+        if(FaultInjector.terminateFault(faultInstanceId) == 0) {
+          response.put("success", "Fault instance is terminated by user now");
+          response.put("faultInstanceId", faultInstanceId);
+          responseCode = SUCCESS;
+          returnResponse(routingContext, responseCode, response);
+          return;
+        } else {
+          response.put("error", "FaultInstance is already end or not existed");
+          response.put("faultInstanceId", faultInstanceId);
+          responseCode = NOTFOUND;
+          returnResponse(routingContext, responseCode, response);
+          return;
+        }
+      } else {
+        response.put("error", "You are not unauthorized to make this request.");
+        responseCode = ERROR;
+        returnResponse(routingContext, responseCode, response);
+        return;
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      response.put("error", "Something went wrong.Please try again later");
+      responseCode = FORBIDDEN;
+      returnResponse(routingContext, responseCode, response);
+      return;
     }
   }
 
@@ -212,5 +299,4 @@ public final class RouterClass {
         .putHeader("content-type", "application/json; charset=utf-8")
         .end(Json.encodePrettily(response));
   }
-
 }
