@@ -45,6 +45,13 @@ public class AsgServiceImpl implements AsgService {
     ec2Service = new Ec2ServiceImpl(faultInstanceId);
   }
 
+  public AsgServiceImpl(String faultInstanceId, AmazonAutoScaling client, Ec2Service ec2Service ) throws IOException {
+    this.faultInstanceId = faultInstanceId;
+    logger = new Loggi(faultInstanceId,AsgServiceImpl.class.getName());
+    this.client = client;
+    this.ec2Service = ec2Service;
+  }
+
 
   @Override
   public AutoScalingGroup getAutoScalingGroup(String asgName)
@@ -415,6 +422,14 @@ public class AsgServiceImpl implements AsgService {
     req.withAutoScalingGroupName(asgName);
     client.deleteAutoScalingGroup(req);
 
+  }
+
+  public void AmazonAutoScalingSetter(AmazonAutoScaling client){
+    this.client = client;
+  }
+
+  public void Ec2ServiceSetter(Ec2Service ec2Service){
+    this.ec2Service = ec2Service;
   }
 
 }

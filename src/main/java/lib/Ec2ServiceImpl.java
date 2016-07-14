@@ -42,6 +42,12 @@ public class Ec2ServiceImpl implements Ec2Service {
     logger = new Loggi(faultInstanceId,Ec2ServiceImpl.class.getName());
   }
 
+  public Ec2ServiceImpl(String faultInstanceId, AmazonEC2 client) throws IOException{
+    this.faultInstanceId = faultInstanceId;
+    logger = new Loggi(faultInstanceId,Ec2ServiceImpl.class.getName());
+    this.client = client;
+  }
+
   @Override
   public Image describeAmi(String amiId) throws AmazonServiceException,
       AmazonClientException {
@@ -261,6 +267,10 @@ public class Ec2ServiceImpl implements Ec2Service {
       throw new IllegalArgumentException("EC2 Instance with id = "
           + instanceId + " not found. Caused by: " + exception);
     }
+  }
+
+  public void AmazonEC2Setter(AmazonEC2 client){
+    this.client = client;
   }
 
 }

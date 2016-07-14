@@ -1,0 +1,46 @@
+2016-07-13 15:22:37.933 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 15:22:37.947 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 15:39:45.136 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 15:39:45.142 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 15:39:45.150 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 15:39:45.150 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!
+2016-07-13 15:53:50.021 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 15:53:50.026 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 15:53:50.036 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 15:53:50.038 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!
+2016-07-13 16:07:15.445 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 16:07:15.451 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 16:07:15.462 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 16:07:15.463 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!
+2016-07-13 16:14:20.282 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 16:14:20.287 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 16:14:20.303 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 16:14:20.304 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!
+2016-07-13 16:22:47.542 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 16:22:47.550 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 16:22:47.563 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 16:22:47.563 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!
+2016-07-13 16:24:22.561 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 16:24:22.565 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 16:24:22.577 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 16:24:22.577 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!
+2016-07-13 16:40:28.757 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 16:40:28.762 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 16:40:28.779 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 16:40:28.780 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!
+2016-07-13 16:42:30.322 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 16:42:30.326 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 16:42:30.335 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 16:42:30.335 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!
+2016-07-13 16:42:56.558 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 16:42:56.561 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 16:42:56.575 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 16:42:56.580 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!
+2016-07-13 16:43:13.744 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 16:43:13.749 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 16:43:13.757 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 16:43:13.757 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!
+2016-07-13 16:45:06.401 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection start!
+2016-07-13 16:45:06.416 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG
+2016-07-13 16:45:06.442 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	Faulty LaunchConfiguration with wrong AMI updated. Terminating instance with id = null for spawning new instance with faulty LC...
+2016-07-13 16:45:06.443 EDT	INFO	[FaultInstanceId = asdfjasldfkjasdf;]	[FaultId = sdf;]	[FaultName = fault.ChangeAmiInLcFault]	fault injection finish!

@@ -27,7 +27,7 @@ public class ElbServiceImpl implements ElbService {
 
   static Loggi logger;
   private String faultInstanceId;
-  AmazonElasticLoadBalancing client = AmazonClientFactory.getAmazonElasticLoadBalancingClient();
+  AmazonElasticLoadBalancing client;
 
   /**
    * A constructor of this class.
@@ -36,6 +36,15 @@ public class ElbServiceImpl implements ElbService {
   public ElbServiceImpl(String faultInstanceId) throws IOException {
     this.faultInstanceId = faultInstanceId;
     logger = new Loggi(faultInstanceId,ElbServiceImpl.class.getName());
+    client = AmazonClientFactory.getAmazonElasticLoadBalancingClient();
+
+  }
+
+
+  public ElbServiceImpl(String faultInstanceId, AmazonElasticLoadBalancing client) throws IOException {
+    this.faultInstanceId = faultInstanceId;
+    logger = new Loggi(faultInstanceId,ElbServiceImpl.class.getName());
+    this.client = client;
 
   }
   /**
@@ -187,6 +196,10 @@ public class ElbServiceImpl implements ElbService {
     req.withLoadBalancerNames(elbName).withTags(tagToRemove);
     client.removeTags(req);
 
+  }
+
+  public void AmazonElasticLoadBalancingSetter(AmazonElasticLoadBalancing client){
+    this.client = client;
   }
 
 }

@@ -25,8 +25,7 @@ public class InstanceUnavailableFaultTest {
     public void setUp(){
         instanceName = "hello";
         params = new HashMap<String,String>();
-        ec2Service = mock(Ec2Service.class);
-        doNothing().when(ec2Service).terminateInstance(anyString());
+        ec2Service = mockLib.Ec2Service.getEc2Service();
     }
 
 
