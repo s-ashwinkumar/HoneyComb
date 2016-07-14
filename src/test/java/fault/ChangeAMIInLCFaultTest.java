@@ -4,7 +4,6 @@ import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
 import com.amazonaws.services.autoscaling.model.CreateLaunchConfigurationRequest;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.autoscaling.model.LaunchConfiguration;
-import com.amazonaws.services.ec2.model.InstanceState;
 import lib.AsgService;
 import lib.Ec2Service;
 import org.junit.Before;

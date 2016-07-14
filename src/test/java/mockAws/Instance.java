@@ -15,6 +15,7 @@ public class Instance {
     instance = mock(com.amazonaws.services.ec2.model.Instance.class);
     com.amazonaws.services.ec2.model.InstanceState state = mockAws.InstanceState.getInstanceState();
     when(instance.getState()).thenReturn(state);
+    when(instance.getInstanceId()).thenReturn("1234");
     return instance;
   }
 }
