@@ -26,17 +26,20 @@ public class AmazonElasticLoadBalancing {
         .DescribeInstanceHealthResult.getDescribeInstanceHealthResult();
     when(loadBalancer.describeInstanceHealth(any())).thenReturn(describeInstanceHealthResult);
 
-    doNothing().when(loadBalancer).configureHealthCheck(any());
+    when(loadBalancer.configureHealthCheck(any())).thenReturn(null);
 
-    doNothing().when(loadBalancer).addTags(any());
+//    doNothing().when(loadBalancer).configureHealthCheck(any());
+    when(loadBalancer.addTags(any())).thenReturn(null);
+//    doNothing().when(loadBalancer).addTags(any());
 
     List<TagDescription> tagDescriptions = new ArrayList<>();
     TagDescription tagDescription = mock(TagDescription.class);
     tagDescriptions.add(tagDescription);
 
-    when(loadBalancer.describeTags(any()).getTagDescriptions()).thenReturn(tagDescriptions);
+//    when(loadBalancer.describeTags(any()).getTagDescriptions()).thenReturn(tagDescriptions);
 
-    doNothing().when(loadBalancer).removeTags(any());
+//    doNothing().when(loadBalancer).removeTags(any());
+    when(loadBalancer.removeTags(any())).thenReturn(null);
     return loadBalancer;
   }
 

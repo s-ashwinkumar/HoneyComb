@@ -12,18 +12,18 @@ import java.util.HashMap;
 /**
  * Created by wilsoncao on 7/7/16.
  */
-public class ChangeElbHealthCheckTargetFault extends AbstractFault {
+public class ChangeELBHealthCheckTargetFault extends AbstractFault {
   private String faultInstanceId;
   private String faultyHealthCheckTarget;
   private String asgName;
   private static Loggi logger;
 
-  public ChangeElbHealthCheckTargetFault(HashMap<String,String> params) throws IOException {
+  public ChangeELBHealthCheckTargetFault(HashMap<String,String> params) throws IOException {
     super(params);
     this.faultInstanceId = params.get("faultInstanceId");
     this.asgName = params.get("asgName");
     this.faultyHealthCheckTarget = params.get("faultyHealthCheckTarget");
-    logger = new Loggi(faultInstanceId,ChangeElbHealthCheckTargetFault.class.getName());
+    logger = new Loggi(faultInstanceId, ChangeELBHealthCheckTargetFault.class.getName());
   }
 
   @Override
