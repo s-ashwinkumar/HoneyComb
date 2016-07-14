@@ -32,7 +32,7 @@ public class ApplicationNotInstalledFault extends AbstractFault {
     asgName = params.get("asgName");
     sshKeyFilePath = params.get("sshKeyFilePath");
     this.faultInstanceId = params.get("faultInstanceId");
-    logger = new Loggi(faultInstanceId,ElbUnavailableFault.class.getName());
+    logger = new Loggi(faultInstanceId,ApplicationNotInstalledFault.class.getName());
   }
 
   public void start() throws Exception{

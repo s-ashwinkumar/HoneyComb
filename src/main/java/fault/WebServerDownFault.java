@@ -31,7 +31,7 @@ public class WebServerDownFault extends AbstractFault{
     this.faultInstanceId = params.get("faultInstanceId");
     this.sshKeyFilePath = params.get("sshKeyFilePath");
     this.asgName = params.get("asgName");
-    logger = new Loggi(faultInstanceId,ElbUnavailableFault.class.getName());
+    logger = new Loggi(faultInstanceId,WebServerDownFault.class.getName());
   }
 
   public void start() throws Exception{

@@ -26,7 +26,7 @@ public class LaunchPendingFault extends AbstractFault {
     super(params);
     this.asgName = params.get("asgName");
     this.faultInstanceId = params.get("faultInstanceId");
-    logger = new Loggi(faultInstanceId,ElbUnavailableFault.class.getName());
+    logger = new Loggi(faultInstanceId,LaunchPendingFault.class.getName());
   }
 
   public void start() throws Exception{

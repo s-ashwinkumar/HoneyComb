@@ -23,7 +23,7 @@ public class ChangeElbHealthCheckTargetFault extends AbstractFault {
     this.faultInstanceId = params.get("faultInstanceId");
     this.asgName = params.get("asgName");
     this.faultyHealthCheckTarget = params.get("faultyHealthCheckTarget");
-    logger = new Loggi(faultInstanceId,ElbUnavailableFault.class.getName());
+    logger = new Loggi(faultInstanceId,ChangeElbHealthCheckTargetFault.class.getName());
   }
 
   @Override

@@ -29,7 +29,7 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
     this.asgName = params.get("asgName");
     this.faultySecurityGroupName = params.get("faultySecurityGroupName");
     this.faultInstanceId = params.get("faultInstanceId");
-    logger = new Loggi(faultInstanceId,ElbUnavailableFault.class.getName());
+    logger = new Loggi(faultInstanceId,ChangeSecurityGroupInLcFault.class.getName());
   }
 
   public void start() throws Exception{

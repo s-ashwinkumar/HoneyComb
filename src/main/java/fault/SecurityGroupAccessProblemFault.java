@@ -23,7 +23,7 @@ public class SecurityGroupAccessProblemFault extends AbstractFault{
     this.asgName = params.get("asgName");
     this.faultInstanceId = params.get("faultInstanceId");
     this.failedSecurityGroupName = params.get("failedSecurityGroupName");
-    logger = new Loggi(faultInstanceId,ElbUnavailableFault.class.getName());
+    logger = new Loggi(faultInstanceId,SecurityGroupAccessProblemFault.class.getName());
   }
 
   public void start() throws Exception{
