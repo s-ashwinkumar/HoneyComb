@@ -5,6 +5,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.StaticHandler;
 
 
 /**
@@ -40,6 +41,8 @@ final class MainServer {
       response.putHeader("content-type", "text/plain");
       response.end("yes");
     }, false);
+
+    router.route("/*").handler(StaticHandler.create());  //for the front end
 
     router.post("/login").blockingHandler(RouterClass::login, false);
 
