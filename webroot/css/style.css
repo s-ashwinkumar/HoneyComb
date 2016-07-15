@@ -2,3 +2,7 @@
     margin-top: 100px;
     margin-bottom: 100px;
 }
+.honeyAlert {
+	word-wrap: break-word; 
+	word-break: normal;
+}
