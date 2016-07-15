@@ -8,7 +8,7 @@
     <title>Fault injector -- honeycomb</title>
 
     <meta name="description" content="honeycomb faultinjector api demo">
-    <meta name="author" content="mingye Yang">
+    <meta name="author" content="honeycomb team">
 
     <!-- <meta http-equiv="cache-control" content="max-age=0" />
 	<meta http-equiv="cache-control" content="no-cache" />
@@ -37,6 +37,7 @@
   				<strong>Instruction</strong>
 				  <p> 1. Please successfully login before do other API test.</p>
 				  <p> 2. You can use the log results to check the fault injection log.</p>
+				  <p> 3. check the API document <a id="docHoney" href="https://github.com/s-ashwinkumar/HoneyComb/wiki/API-Documents">here</a>.</p>
 			</div>
 
 			<div class="tabbable" id="tabs-773901">
@@ -44,7 +45,7 @@
 					<li class="active">
 						<a href="#panel-648183" data-toggle="tab">API</a>
 					</li>
-					<li>
+					<li id="seeLog">
 						<a href="#panel-220695" data-toggle="tab">Log results</a>
 					</li>
 				</ul>
@@ -80,6 +81,73 @@
 								</button>
 							</form>
 							<br> <br />
+
+							<h3><strong>Remove Fault API</strong> </h3>
+							<p></p>
+							<form role="form" class="form-inline" id ="remove-form">
+								<div class="form-group">
+									<label for="faultId1">
+									faultId
+									</label>
+									<input  class="form-control" id="faultId1" placeholder="faultId">
+								</div>
+								<button type="submit" class="btn btn-default">
+									Inactive This Fault
+								</button>
+							</form>
+							<br> <br />
+
+							<h3><strong>Inject Fault API</strong> </h3>
+							<p></p>
+							<div class="alert alert-warning">
+									<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  									<strong>Format</strong>
+				  					<p> The arguments input format should like asgName=1-av;elbName=bcda</p>
+				  					<p> Don't input extra space between ; or =, and don't input extra " or "</p>
+							</div>
+							<form role="form" class="form-inline" id ="inject-form">
+								<div class="form-group">
+									<label for="faultId2">
+									faultId
+									</label>
+									<input  class="form-control" id="faultId2" placeholder="faultId">
+								</div>
+								
+								<div class="form-group">
+  									<label for="arguments">arguments:</label>
+  									<textarea class="form-control" rows="5" id="arguments"></textarea>
+								</div>
+								<button type="submit" class="btn btn-default">
+									Inject This Fault
+								</button>
+							</form>
+							<br> <br />
+
+							<h3><strong>Terminate Injection API</strong> </h3>
+							<p></p>
+							<form role="form" class="form-inline" id ="terminate-form">
+								<div class="form-group">
+									<label for="faultInstanceId">
+									faultInstanceId
+									</label>
+									<input  class="form-control" id="faultInstanceId" placeholder="faultInstanceId">
+								</div>
+								
+								<button type="submit" class="btn btn-default">
+									Terminate This FaultInstanceId
+								</button>
+							</form>
+							<br> <br />
+
+							<h3><strong>Upload New Fault</strong> </h3>
+							<p></p>
+							<form role="form" class="form-inline" id ="upload-form">
+								<button type="submit" class="btn btn-default">
+									Upload This Fault
+								</button>
+							</form>
+							<br> <br />
+
 						</div>
 
 						<div class="col-md-6">
@@ -92,9 +160,8 @@
 						</div>
 					</div>
 					<div class="tab-pane" id="panel-220695">
-						<p>
-							Howdy, I'm in Section 2.
-						</p>
+						<div id="logss">
+						</div>
 					</div>
 				</div>
 			</div>

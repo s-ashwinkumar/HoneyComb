@@ -44,6 +44,8 @@ final class MainServer {
 
     router.post("/login").blockingHandler(RouterClass::login, false);
 
+    router.get("/logs").blockingHandler(RouterClass::logs, false);
+
     router.get("/faults/list").blockingHandler(RouterClass::faultList,
         false);
 

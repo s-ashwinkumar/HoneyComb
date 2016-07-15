@@ -1,4 +1,3 @@
-// Empty JS for your own code to be here
 $(function() {
 
 	/*$.get( "http://localhost:8080/test", function( response ) {
@@ -38,7 +37,7 @@ $(function() {
                     username: user,
                     password: pass
                 },
-                async: false,
+                async: true,
                 error: function(request) {
                     console.log( request ); // server response
 
@@ -67,13 +66,13 @@ $(function() {
 
                     output += "<strong>200</strong>\n";
 
-                    output += syntaxHighlight(data);
+                    output += syntaxHighlight(JSON.stringify(data, undefined, 4));
 
                     output += "</div>";
 
                     $("#response").prepend(output);
 
-                    $.cookie("token", data.Token, { expires: 7 }); // Sample 2
+                    $.cookie("HoneyCombToken", data.Token, { expires: 7 }); // Sample 2
                 }
             });
   		return false;
@@ -87,9 +86,9 @@ $(function() {
                 type: "GET",
                 url:"/faults/list",
                 data: {
-                    token: $.cookie("token")
+                    token: $.cookie("HoneyCombToken")
                 },
-                async: false,
+                async: true,
                 error: function(request) {
                     console.log( request ); // server response
 
@@ -144,7 +143,211 @@ $(function() {
         return false;
     });
 
+    $("#remove-form").submit(function() {
+        var faultId = $("#remove-form input#faultId1").val();
+        $.ajax({
+                cache: false,
+                type: "DELETE",
+                url:"/faults",
+                data: {
+                    faultId: faultId,
+                    token: $.cookie("HoneyCombToken")
+                },
+                async: true,
+                error: function(request) {
+                    console.log( request ); // server response
+
+                    var output = "<div class=\"alert alert-danger alert-dismissable honeyAlert\">";
+
+                    output += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">×</button>";
+
+                    output += "<h4> Error </h4>";
+
+                    output += "<strong>" + request.status + "</strong>\n";
+
+                    output += syntaxHighlight(request.responseText);
+
+                    output += "</div>";
+
+                    $("#response").prepend(output);
+
+                },
+                success: function(data) {
+                    console.log( data); // server response
+                    var output = "<div class=\"alert alert-success alert-dismissable honeyAlert\">";
+
+                    output += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">×</button>";
+
+                    output += "<h4> Success </h4>";
+
+                    output += "<strong>200</strong>\n";
+
+                    output += syntaxHighlight(JSON.stringify(data, undefined, 4));
+
+                    output += "</div>";
+
+                    $("#response").prepend(output);
+                }
+            });
+        return false;
+    });
+
+     $("#inject-form").submit(function() {
+        var faultId = $("#inject-form input#faultId2").val();
+        var rawString = $("#inject-form textarea#arguments").val();
+
+        var arguments = {};
+        arguments.token = $.cookie("HoneyCombToken");
+
+        if (rawString.length != 0) {
+            var arr = rawString.split(';');
+
+            for (var i in arr) 
+            {
+                var temp = arr[i].split('=');
+                arguments[temp[0]] = temp[1];
+            }
+        }
+
+        $.ajax({
+                cache: false,
+                type: "POST",
+                url:"/inject/" + faultId,
+                dataType: "json",
+                data: arguments,
+                async: true,
+                error: function(request) {
+                    console.log( request ); // server response
+
+                    var output = "<div class=\"alert alert-danger alert-dismissable honeyAlert\">";
+
+                    output += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">×</button>";
+
+                    output += "<h4> Error </h4>";
+
+                    output += "<strong>" + request.status + "</strong>\n";
+
+                    output += syntaxHighlight(request.responseText);
+
+                    output += "</div>";
+
+                    $("#response").prepend(output);
+
+                },
+                success: function(data) {
+                    console.log( data); // server response
+                    var output = "<div class=\"alert alert-success alert-dismissable honeyAlert\">";
+
+                    output += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">×</button>";
+
+                    output += "<h4> Success </h4>";
+
+                    output += "<strong>200</strong>\n";
+
+                    output += syntaxHighlight(JSON.stringify(data, undefined, 4));
+
+                    output += "</div>";
+
+                    $("#response").prepend(output);
+                }
+            });
+        return false;
+    });
+
+    $("#terminate-form").submit(function() {
+        var faultInstanceId = $("#terminate-form input#faultInstanceId").val();
+        $.ajax({
+                cache: false,
+                type: "POST",
+                url:"/terminate/" + faultInstanceId,
+                data: {
+                    token: $.cookie("HoneyCombToken")
+                },
+                async: true,
+                error: function(request) {
+                    console.log( request ); // server response
+
+                    var output = "<div class=\"alert alert-danger alert-dismissable honeyAlert\">";
+
+                    output += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">×</button>";
+
+                    output += "<h4> Error </h4>";
+
+                    output += "<strong>" + request.status + "</strong>\n";
+
+                    output += syntaxHighlight(request.responseText);
+
+                    output += "</div>";
+
+                    $("#response").prepend(output);
+
+                },
+                success: function(data) {
+                    console.log( data); // server response
+                    var output = "<div class=\"alert alert-success alert-dismissable honeyAlert\">";
+
+                    output += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">×</button>";
+
+                    output += "<h4> Success </h4>";
+
+                    output += "<strong>200</strong>\n";
+
+                    output += syntaxHighlight(JSON.stringify(data, undefined, 4));
+
+                    output += "</div>";
+
+                    $("#response").prepend(output);
+                }
+            });
+        return false;
+    });
+
     $("#responseClean").click(function() {
             $("#response").empty();
+    });
+
+    $("li#seeLog").on('click', function() {
+        $.ajax({
+                cache: false,
+                type: "GET",
+                url:"/logs",
+                data: {
+                    token: $.cookie("HoneyCombToken")
+                },
+                async: true,
+                error: function(request) {
+                    console.log( request ); // server response
+
+                    var output = "<div class=\"alert alert-danger alert-dismissable honeyAlert\">";
+
+                    output += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">×</button>";
+
+                    output += "<h4> Error </h4>";
+
+                    output += "<strong>" + request.status + "</strong>\n";
+
+                    output += syntaxHighlight(request.responseText);
+
+                    output += "</div>";
+
+                    $("#logss").html(output);
+
+                },
+                success: function(data) {
+                    console.log( data); // server response
+                    var output = "<div class=\"alert alert-success alert-dismissable honeyAlert\">";
+
+                    output += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">×</button>";
+
+                    output += "<h4> Log </h4>";
+
+                    output += data.logs;
+
+
+                    output += "</div>";
+
+                    $("#logss").html(output);
+                }
+            });
     });
 });

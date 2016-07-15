@@ -13,3 +13,7 @@
 .boolean { color: blue; }
 .null { color: magenta; }
 .key { color: red; }
+
+#docHoney {
+	color: red;
+}
