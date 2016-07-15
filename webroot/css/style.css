@@ -5,4 +5,11 @@
 .honeyAlert {
 	word-wrap: break-word; 
 	word-break: normal;
+	white-space: pre-wrap;
 }
+
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
