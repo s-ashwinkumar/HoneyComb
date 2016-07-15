@@ -42,8 +42,6 @@ final class MainServer {
       response.end("yes");
     }, false);
 
-    router.route("/*").handler(StaticHandler.create());  //for the front end
-
     router.post("/login").blockingHandler(RouterClass::login, false);
 
     router.get("/faults/list").blockingHandler(RouterClass::faultList,
@@ -55,6 +53,8 @@ final class MainServer {
     router.post("/inject/:faultId").blockingHandler(RouterClass::inject, false);
 
     router.post("/terminate/:faultInstanceId").blockingHandler(RouterClass::termination, false);
+
+    router.route("/*").handler(StaticHandler.create());  //for the front end
 
     Vertx.vertx().createHttpServer().requestHandler(router::accept)
         .listen(PORT);
