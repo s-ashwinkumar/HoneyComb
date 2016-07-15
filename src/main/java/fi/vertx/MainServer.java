@@ -7,6 +7,7 @@ import io.vertx.core.json.Json;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.StaticHandler;
 
 import java.io.File;
 import java.util.Set;
@@ -50,6 +51,8 @@ final class MainServer {
 
     router.post("/login").blockingHandler(RouterClass::login, false);
 
+    router.get("/logs").blockingHandler(RouterClass::logs, false);
+
     router.get("/faults/list").blockingHandler(RouterClass::faultList,
         false);
 
@@ -62,6 +65,7 @@ final class MainServer {
 
     router.post("/faults/upload").blockingHandler(RouterClass::uploadFault,
         false);
+    router.route("/*").handler(StaticHandler.create());  //for the front end
 
     Vertx.vertx().createHttpServer().requestHandler(router::accept)
         .listen(PORT);

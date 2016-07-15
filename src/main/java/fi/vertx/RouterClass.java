@@ -10,9 +10,10 @@ import io.vertx.core.json.Json;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -145,6 +146,52 @@ public final class RouterClass {
       uploadedFault.delete();
       response.put("error", "Something went wrong.Please try again later");
       returnResponse(routingContext, ERROR, response);
+    }
+  }
+
+  /**
+   *
+   * Read the Logs, it's only used for the Demo website.
+   * @param routingContext receives routing context from vertx.
+     */
+  static void logs(final RoutingContext routingContext) {
+    HttpServerRequest request = routingContext.request();
+    HashMap<String, String> response = new HashMap<>();
+    String token = request.getParam("token");
+    int responseCode;
+    try {
+      boolean validUser = User.isValidUser(token, User.getFileName());
+      if (validUser) {
+        File file = new File("src/main/resources/log");
+        String  thisLine = null;
+        StringBuilder sb = new StringBuilder("");
+        FileReader fileReader = new FileReader(file);
+        BufferedReader br = new BufferedReader(fileReader);
+        while ((thisLine = br.readLine()) != null) {
+          sb.append(thisLine + "\n");
+        }
+        br.close();
+
+        //System.out.println(sb.toString());
+
+        response.put("logs", sb.toString());
+        responseCode = SUCCESS;
+        returnResponse(routingContext, responseCode, response);
+        return;
+
+      } else {
+        response.put("error", "You are not unauthorized to make this request.");
+        responseCode = ERROR;
+        returnResponse(routingContext, responseCode, response);
+        return;
+      }
+
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      response.put("error", "Something went wrong.Please try again later");
+      responseCode = FORBIDDEN;
+      returnResponse(routingContext, responseCode, response);
+      return;
     }
   }
 
