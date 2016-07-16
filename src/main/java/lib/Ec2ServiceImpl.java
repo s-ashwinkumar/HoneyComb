@@ -29,6 +29,8 @@ import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
  *
  */
 public class Ec2ServiceImpl implements Ec2Service {
+
+
   private String faultInstanceId;
   static Loggi logger;
   AmazonEC2 client = AmazonClientFactory.getAmazonEC2Client();
@@ -46,6 +48,14 @@ public class Ec2ServiceImpl implements Ec2Service {
     this.faultInstanceId = faultInstanceId;
     logger = new Loggi(faultInstanceId,Ec2ServiceImpl.class.getName());
     this.client = client;
+  }
+
+  public AmazonEC2 getClient() {
+    return client;
+  }
+
+  public String getFaultInstanceId() {
+    return faultInstanceId;
   }
 
   @Override

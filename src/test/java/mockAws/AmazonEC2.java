@@ -12,7 +12,7 @@ import static org.mockito.Mockito.any;
  * Created by wilsoncao on 7/13/16.
  */
 public class AmazonEC2 {
-  private static com.amazonaws.services.ec2.AmazonEC2 amazonEC2;
+  public static com.amazonaws.services.ec2.AmazonEC2 amazonEC2;
   public static com.amazonaws.services.ec2.AmazonEC2 getAmazonEC2(){
     amazonEC2 = mock(com.amazonaws.services.ec2.AmazonEC2.class);
     com.amazonaws.services.ec2.model.DescribeImagesResult describeImagesRes = mockAws
