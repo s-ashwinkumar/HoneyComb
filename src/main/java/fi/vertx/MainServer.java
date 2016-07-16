@@ -65,6 +65,10 @@ final class MainServer {
 
     router.post("/faults/upload").blockingHandler(RouterClass::uploadFault,
         false);
+
+    router.post("/faults/update").blockingHandler(RouterClass::updateFault,
+        false);
+    
     router.route("/*").handler(StaticHandler.create());  //for the front end
 
     Vertx.vertx().createHttpServer().requestHandler(router::accept)

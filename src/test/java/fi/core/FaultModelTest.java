@@ -88,18 +88,41 @@ public class FaultModelTest {
   @Test
   public void removeFaultTest() throws Exception {
     List<FaultModel> res = FaultModel.getFaults(obj);
-    int id = ((FaultModel)res.toArray()[0]).getFaultId();
-    int result = FaultModel.removeFault("99999",obj);
+    FaultModel oldFault,newFault;
+    Integer id = ((FaultModel)res.toArray()[0]).getFaultId();
+    // checking non existing fault
+    int result = FaultModel.updateFault("99999",obj,false,null,null);
     assertEquals(0,result);
-    result = FaultModel.removeFault(id+"",obj);
+    oldFault = FaultModel.getFault(obj,id.toString());
+    result = FaultModel.updateFault(id.toString(),obj, false,null,null);
     assertEquals(1,result);
+    newFault = FaultModel.getFault(obj,id.toString());
+    assertEquals(oldFault.getArguments(),newFault.getArguments());
+    assertEquals(oldFault.getDescription(),newFault.getDescription());
+    oldFault = newFault;
+    result = FaultModel.updateFault(id.toString(),obj, false,"new description",
+        null);
+    assertEquals(1,result);
+    newFault = FaultModel.getFault(obj,id.toString());
+    assertEquals(oldFault.getArguments(),newFault.getArguments());
+    assertNotEquals(oldFault.getDescription(),newFault.getDescription());
+    assertEquals(newFault.getDescription(),"new description");
+    oldFault = newFault;
+    result = FaultModel.updateFault(id.toString(),obj, false,null,
+        "new arguments");
+    assertEquals(1,result);
+    newFault = FaultModel.getFault(obj,id.toString());
+    assertNotEquals(oldFault.getArguments(),newFault.getArguments());
+    assertEquals(oldFault.getDescription(),newFault.getDescription());
+    assertEquals(newFault.getArguments(),"new arguments");
+
   }
 
   @Test
   public void insertFault() throws Exception {
-    assertFalse(FaultModel.exists(obj,"Testing insert"));
+    assertNull(FaultModel.getFaultByName(obj,"Testing insert"));
     FaultModel.insertFault(obj,"Testing insert","Test fault for test",null);
-    assertTrue(FaultModel.exists(obj,"Testing insert"));
+    assertNotNull(FaultModel.getFaultByName(obj,"Testing insert"));
     try{
       FaultModel.insertFault(obj,"Testing insert","Test fault for test",null);
     }catch(Exception ex){
@@ -109,10 +132,10 @@ public class FaultModelTest {
 
   @Test
   public void exists() throws Exception {
-    boolean res;
-    res = FaultModel.exists(obj,"Test Fault");
-    assertTrue(res);
-    res = FaultModel.exists(obj,"Test Fault1");
-    assertFalse(res);
+    FaultModel res;
+    res = FaultModel.getFaultByName(obj,"Test Fault");
+    assertNotNull(res);
+    res = FaultModel.getFaultByName(obj,"Test Fault1");
+    assertNull(res);
   }
 }

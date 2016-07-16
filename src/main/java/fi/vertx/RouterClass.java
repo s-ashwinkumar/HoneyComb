@@ -36,19 +36,23 @@ public final class RouterClass {
   private static final int BADREQUEST = 400;
 
   /**
-   * Not acceptable, Returned by the Search API when an invalid format is specified in the request.
+   * Not acceptable, Returned by the Search API when an invalid format is
+   * specified in the request.
    */
   private static final int NOTACCEPTABLE = 406;
 
   /**
-   * Forbidden, The request is understood, but it has been refused or access is not allowed.
+   * Forbidden, The request is understood, but it has been refused or access
+   * is not allowed.
    * An accompanying error message will explain why.
    */
   private static final int FORBIDDEN = 403;
 
   /**
-   * Not Found, The URI requested is invalid or the resource requested, such as a user, does not exists.
-   * Also returned when the requested format is not supported by the requested method.
+   * Not Found, The URI requested is invalid or the resource requested, such
+   * as a user, does not exists.
+   * Also returned when the requested format is not supported by the
+   * requested method.
    */
   private static final int NOTFOUND = 404;
 
@@ -98,6 +102,7 @@ public final class RouterClass {
 
   /**
    * controller method to handle fault upload.
+   *
    * @param routingContext routingcontext object
    */
   public static void uploadFault(RoutingContext routingContext) {
@@ -122,7 +127,7 @@ public final class RouterClass {
         } else {
           DbConnection dbCon = Utils.returnDbconnection(DbConnection
               .getFileName());
-          if (!FaultModel.exists(dbCon, name)) {
+          if (FaultModel.getFaultByName(dbCon, name) == null) {
             FaultModel.insertFault(dbCon, name, desc, args);
             uploadedFault.renameTo(new File("faults/" + name + ".jar"));
             response.put("success", "Fault uploaded successfully");
@@ -138,7 +143,7 @@ public final class RouterClass {
 
       } else {
         uploadedFault.delete();
-        response.put("error", "You are not unauthorized to make this request.");
+        response.put("error", "You are not authorized to make this request.");
         returnResponse(routingContext, ERROR, response);
       }
     } catch (Exception ex) {
@@ -150,10 +155,76 @@ public final class RouterClass {
   }
 
   /**
+   * controller method to handle fault update.
+   * has optional params of desc and arguments.
    *
+   * @param routingContext routingcontext object
+   */
+  public static void updateFault(RoutingContext routingContext) {
+    Set<FileUpload> uploads = routingContext.fileUploads();
+    FileUpload file = uploads.iterator().next();
+    HttpServerRequest request = routingContext.request();
+    HashMap<String, String> response = new HashMap<>();
+    String token = request.getParam("token");
+    File uploadedFault = new File(file.uploadedFileName());
+    try {
+      boolean validUser = User.isValidUser(token, User.getFileName());
+      if (validUser) {
+        String name = request.getParam("name");
+        String desc = request.getParam("description");
+        String args = request.getParam("arguments");
+        FaultModel fault = null;
+        if (file == null) {
+          uploadedFault.delete();
+          response.put("error", "Invalid Parameters,upload file missing.");
+          returnResponse(routingContext, BADREQUEST, response);
+        } else {
+          DbConnection dbCon = Utils.returnDbconnection(DbConnection
+              .getFileName());
+          fault = FaultModel.getFaultByName(dbCon, name);
+          if (fault != null) {
+            if (fault.getActive()) {
+              uploadedFault.delete();
+              response.put("Failure", "The existing fault needs to be " +
+                  "disabled first. Please disable and then update the fault.");
+              returnResponse(routingContext, BADREQUEST, response);
+            } else {
+              File oldFile = new File("faults/" + name + ".jar");
+              oldFile.delete();
+              uploadedFault.renameTo(new File("faults/" + name + ".jar"));
+              FaultModel.updateFault(fault.getFaultId().toString(), dbCon,
+                  true, desc, args);
+              response.put("success", "Fault uploaded successfully");
+              returnResponse(routingContext, SUCCESS, response);
+            }
+
+          } else {
+            uploadedFault.delete();
+            response.put("Failure", "A fault with same name does not exist " +
+                "in the system. Please use the upload feature.");
+            returnResponse(routingContext, BADREQUEST, response);
+          }
+
+        }
+
+      } else {
+        uploadedFault.delete();
+        response.put("error", "You are not authorized to make this request.");
+        returnResponse(routingContext, ERROR, response);
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      uploadedFault.delete();
+      response.put("error", "Something went wrong.Please try again later");
+      returnResponse(routingContext, ERROR, response);
+    }
+  }
+
+  /**
    * Read the Logs, it's only used for the Demo website.
+   *
    * @param routingContext receives routing context from vertx.
-     */
+   */
   static void logs(final RoutingContext routingContext) {
     HttpServerRequest request = routingContext.request();
     HashMap<String, String> response = new HashMap<>();
@@ -163,7 +234,7 @@ public final class RouterClass {
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
         File file = new File("src/main/resources/log");
-        String  thisLine = null;
+        String thisLine = null;
         StringBuilder sb = new StringBuilder("");
         FileReader fileReader = new FileReader(file);
         BufferedReader br = new BufferedReader(fileReader);
@@ -180,7 +251,7 @@ public final class RouterClass {
         return;
 
       } else {
-        response.put("error", "You are not unauthorized to make this request.");
+        response.put("error", "You are not authorized to make this request.");
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
         return;
@@ -217,7 +288,7 @@ public final class RouterClass {
         return;
 
       } else {
-        response.put("error", "You are not unauthorized to make this request.");
+        response.put("error", "You are not authorized to make this request.");
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
         return;
@@ -254,7 +325,7 @@ public final class RouterClass {
       if (validUser) {
         DbConnection dbCon = Utils.returnDbconnection(DbConnection
             .getFileName());
-        Integer res = FaultModel.removeFault(faultId, dbCon);
+        Integer res = FaultModel.updateFault(faultId, dbCon, false, null, null);
         if (res == 0) {
           responseCode = NOTFOUND;
           response.put("error", "No fault for given fault ID.");
@@ -265,7 +336,7 @@ public final class RouterClass {
         }
         dbCon.getConn().close();
       } else {
-        response.put("error", "You are not unauthorized to make this request.");
+        response.put("error", "You are not authorized to make this request.");
         responseCode = ERROR;
       }
 
@@ -330,7 +401,7 @@ public final class RouterClass {
         }
 
       } else {
-        response.put("error", "You are not unauthorized to make this request.");
+        response.put("error", "You are not authorized to make this request.");
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
         return;
@@ -346,8 +417,9 @@ public final class RouterClass {
 
   /**
    * terminate a injection thread
+   *
    * @param routingContext faultInstanceId
-     */
+   */
   public static void termination(RoutingContext routingContext) {
     HttpServerRequest request = routingContext.request();
     HashMap<String, String> response = new HashMap<>();
@@ -363,7 +435,7 @@ public final class RouterClass {
       }
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
-        if(FaultInjector.terminateFault(faultInstanceId) == 0) {
+        if (FaultInjector.terminateFault(faultInstanceId) == 0) {
           response.put("success", "Fault instance is terminated by user now");
           response.put("faultInstanceId", faultInstanceId);
           responseCode = SUCCESS;
@@ -377,7 +449,7 @@ public final class RouterClass {
           return;
         }
       } else {
-        response.put("error", "You are not unauthorized to make this request.");
+        response.put("error", "You are not authorized to make this request.");
         responseCode = ERROR;
         returnResponse(routingContext, responseCode, response);
         return;

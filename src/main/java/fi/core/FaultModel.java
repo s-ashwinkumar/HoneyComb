@@ -188,9 +188,16 @@ public class FaultModel {
    * @param id id of the fault to be deactivated
    * @return integer number of records updated
    */
-  public static Integer removeFault(String id, DbConnection dbCon) throws
+  public static Integer updateFault(String id, DbConnection dbCon, Boolean
+      status, String description, String arguments)
+      throws
       Exception {
-    String query = "update fault set active=0 where faultID=" + id;
+    String query = "update fault set active="+status;
+    if(description != null)
+      query += ", description='"+description+"'";
+    if(arguments != null)
+      query += ", arguments='"+arguments+"'";
+    query += " where faultID=" + id;
     return dbCon.getStmt().executeUpdate(query);
   }
 
@@ -227,20 +234,18 @@ public class FaultModel {
 
   }
 
-  public static boolean exists(DbConnection dbCon, String name) throws
+  public static FaultModel getFaultByName(DbConnection dbCon, String name) throws
       Exception {
     String sql = "select * from fault where name = '" + name + "'";
     ResultSet rs = dbCon.getStmt().executeQuery(sql);
-    if (!rs.next()) {
-      /**
-       * No records found, therefore does not exist.
-       */
-      return false;
+    FaultModel tempObj = null;
+    while (rs.next()) {
+      tempObj = new FaultModel(rs.getInt("faultID"), rs.getString("name"),
+          rs.getString("arguments"), rs.getBoolean("active"), rs.getString
+          ("location"), rs.getString("description"));
     }
-    /**
-     * Some fault exists by the same name.
-     */
-    return true;
+    rs.close();
+    return tempObj;
 
   }
 
