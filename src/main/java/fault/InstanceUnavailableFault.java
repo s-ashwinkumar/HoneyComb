@@ -36,11 +36,13 @@ public class InstanceUnavailableFault extends AbstractFault {
     logger.start();
 
     logger.log("Terminating instance with id = "
-            + instanceId + " ...");
+        + instanceId + " ...");
     if (ec2Service == null) {
       ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
     }
     // Terminate the instance
+    if (this.isTerminated())
+      return;
     ec2Service.terminateInstance(instanceId);
 
     logger.finish();

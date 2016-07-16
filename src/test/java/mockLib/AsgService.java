@@ -1,5 +1,6 @@
 package mockLib;
 
+import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
 import com.amazonaws.services.autoscaling.model.LaunchConfiguration;
 
 import static org.mockito.Matchers.any;
@@ -19,6 +20,8 @@ public class AsgService {
     LaunchConfiguration lc = mockAws.LaunchConfiguration.getLc();
     when(asgService.getLaunchConfigurationForAutoScalingGroup(anyString())).thenReturn(lc);
     when(asgService.createLaunchConfiguration(any())).thenReturn("ok");
+    AutoScalingGroup asg = mockAws.AutoScalingGroup.getAsg();
+    when(asgService.getAutoScalingGroup(any())).thenReturn(asg);
     doNothing().when(asgService).updateLaunchConfigurationInAutoScalingGroup(anyString(), anyString());
     return asgService;
   }

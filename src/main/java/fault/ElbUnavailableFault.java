@@ -56,15 +56,20 @@ public class ElbUnavailableFault extends AbstractFault {
       elb = AmazonClientFactory.getAmazonElasticLoadBalancingClient();
     }
 
+    if (this.isTerminated())
+      return;
     // Check for ELB existence
     if (elbService.describeLoadBalancer(elbName) == null) {
       throw new HoneyCombException("No Load Balancer with name = "
-              + elbName + " can be found");
+          + elbName + " can be found");
     }
 
-
+    if (this.isTerminated())
+      return;
     DeleteLoadBalancerRequest req = new DeleteLoadBalancerRequest().withLoadBalancerName(elbName);
 
+    if (this.isTerminated())
+      return;
     elb.deleteLoadBalancer(req);
     // Log the fault injected
     logger.log("Fault injected: successfully delete Load Balancer with name = " + elbName);

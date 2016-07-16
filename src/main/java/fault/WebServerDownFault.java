@@ -35,6 +35,7 @@ public class WebServerDownFault extends AbstractFault{
   }
 
   public void start() throws Exception{
+    logger.start();
     // Get the Services
     AsgService asgService = ServiceFactory.getAsgService(this.faultInstanceId);
     Ec2Service ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
@@ -46,6 +47,9 @@ public class WebServerDownFault extends AbstractFault{
       throw new HoneyCombException("Invalid ASG name provided");
     }
 
+
+    if (this.isTerminated())
+      return;
     // Get the list of "running" EC2 Instances in the ASG
     // (i.e. the EC2 instances which has state "running")
     List<Instance> ec2RunningInstances = new ArrayList<Instance>();
@@ -56,7 +60,8 @@ public class WebServerDownFault extends AbstractFault{
         ec2RunningInstances.add(ec2Instance);
       }
     }
-
+    if (this.isTerminated())
+      return;
     // If the ASG has any "running" instances
     if (!ec2RunningInstances.isEmpty()) {
       // Randomize an Instance to inject fault
@@ -66,7 +71,8 @@ public class WebServerDownFault extends AbstractFault{
       // Log the fault injection
       logger.log("Injecting fault: take down Apache Web Server on EC2 Instance with ID = " +
           instanceToInject.getInstanceId());
-
+      if (this.isTerminated())
+        return;
       // Inject fault: Take down Web Server on Instance (stop Apache Web Server)
       try {
         List<String> sshCommands = new ArrayList<String>();
@@ -80,6 +86,7 @@ public class WebServerDownFault extends AbstractFault{
 
       // Delay for 30s for ELB to detect the failure
       Thread.sleep(30000);
+      logger.finish();
     }
   }
 }

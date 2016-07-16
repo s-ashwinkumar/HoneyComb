@@ -77,13 +77,20 @@ public class ChangeAmiInLcFault extends AbstractFault {
     // and with name "faulty-lc"
     CreateLaunchConfigurationRequest req = new CreateLaunchConfigurationRequest();
     req.withImageId(faultyAmiId)
-            .withInstanceType(lc.getInstanceType())
-            .withKeyName(lc.getKeyName())
-            .withLaunchConfigurationName("faulty-lc")
-            .withSecurityGroups(lc.getSecurityGroups());
+        .withInstanceType(lc.getInstanceType())
+        .withKeyName(lc.getKeyName())
+        .withLaunchConfigurationName("faulty-lc")
+        .withSecurityGroups(lc.getSecurityGroups());
+
+    if (this.isTerminated())
+      return;
+
     asgService.createLaunchConfiguration(req);
 
     // Update the ASG to use the new faulty LC
+    if (this.isTerminated())
+      return;
+
     asgService.updateLaunchConfigurationInAutoScalingGroup(asgName, "faulty-lc");
 
 
@@ -97,6 +104,8 @@ public class ChangeAmiInLcFault extends AbstractFault {
       throw new HoneyCombException("Invalid ASG name provided");
     }
 
+    if (this.isTerminated())
+      return;
     // Get the list of "online" EC2 Instances in the ASG
     // (i.e. the EC2 instances which has state "pending" or "running")
     List<Instance> ec2RunningInstances = new ArrayList<Instance>();
@@ -104,11 +113,13 @@ public class ChangeAmiInLcFault extends AbstractFault {
     for (com.amazonaws.services.autoscaling.model.Instance asgInstance : asgInstances) {
       Instance ec2Instance = ec2Service.describeEC2Instance(asgInstance.getInstanceId());
       if (ec2Instance.getState().getName().equals("pending")
-              || ec2Instance.getState().getName().equals("running")) {
+          || ec2Instance.getState().getName().equals("running")) {
         ec2RunningInstances.add(ec2Instance);
       }
     }
 
+    if (this.isTerminated())
+      return;
     // If the ASG has any "online" instances
     if (!ec2RunningInstances.isEmpty()) {
 
@@ -118,9 +129,9 @@ public class ChangeAmiInLcFault extends AbstractFault {
 
       // Log the action
       logger.log("Faulty LaunchConfiguration with wrong AMI updated. "
-              + "Terminating instance with id = "
-              + instanceToInject.getInstanceId()
-              + " for spawning new instance with faulty LC...");
+          + "Terminating instance with id = "
+          + instanceToInject.getInstanceId()
+          + " for spawning new instance with faulty LC...");
 
       // Terminate the instance
       ec2Service.terminateInstance(instanceToInject.getInstanceId());

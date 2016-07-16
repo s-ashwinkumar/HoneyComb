@@ -27,15 +27,19 @@ public class SecurityGroupAccessProblemFault extends AbstractFault{
   }
 
   public void start() throws Exception{
+    logger.start();
     Ec2Service ec2Service = ServiceFactory.getEc2Service(this.faultInstanceId);
 
     // Log the fault injection
     logger.log("Injecting fault: Security Group access problem fault to all instances");
 
+    if (this.isTerminated())
+      return;
     // Inject fault: Security Group access problem (change SG Inbound rules)
     ec2Service.revokeSecurityGroupInboundRule(failedSecurityGroupName, "tcp", 80, "0.0.0.0/0");
 
     // Delay for 30s for ELB to detect the failure
     Thread.sleep(30000);
+    logger.finish();
   }
 }

@@ -16,6 +16,8 @@ public class ChangeELBHealthCheckTargetFault extends AbstractFault {
   private String faultInstanceId;
   private String faultyHealthCheckTarget;
   private String asgName;
+  private AsgService asgService;
+  private ElbService elbService;
   private static Loggi logger;
 
   public ChangeELBHealthCheckTargetFault(HashMap<String,String> params) throws IOException {
@@ -28,10 +30,19 @@ public class ChangeELBHealthCheckTargetFault extends AbstractFault {
 
   @Override
   public void start() throws Exception {
-    // Get the services
-    AsgService asgService = ServiceFactory.getAsgService(faultInstanceId);
-    ElbService elbService = ServiceFactory.getElbService(faultInstanceId);
 
+    logger.start();
+    // Get the services
+    if (asgService == null) {
+      asgService = ServiceFactory.getAsgService(faultInstanceId);
+    }
+    if (elbService == null) {
+      elbService = ServiceFactory.getElbService(faultInstanceId);
+    }
+
+
+    if (this.isTerminated())
+      return;
     // Log the fault injection
     logger.log("Injecting fault: Change the ELB Health Check target");
 
@@ -41,12 +52,16 @@ public class ChangeELBHealthCheckTargetFault extends AbstractFault {
       throw new HoneyCombException("Invalid ASG name provided");
     }
 
+    if (this.isTerminated())
+      return;
     // Get the ELB associated with the ASG
     if (asg.getLoadBalancerNames().isEmpty()) {
       throw new HoneyCombException("The ASG has no ELB attached");
     }
     String elbName = asg.getLoadBalancerNames().get(0);
 
+    if (this.isTerminated())
+      return;
     // Update the ELB Health Check target
     try {
       elbService.updateElbHealthCheckTarget(elbName, faultyHealthCheckTarget);
@@ -57,5 +72,15 @@ public class ChangeELBHealthCheckTargetFault extends AbstractFault {
 
     // Delay for ELB to become unhealthy
     Thread.sleep(30000);
+
+    logger.finish();
+  }
+
+  public void asgServiceSetter(AsgService asgService){
+    this.asgService = asgService;
+  }
+
+  public void elbServiceSetter(ElbService elbService){
+    this.elbService = elbService;
   }
 }

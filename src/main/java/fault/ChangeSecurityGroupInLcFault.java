@@ -33,6 +33,7 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
   }
 
   public void start() throws Exception{
+    logger.start();
     // Get the services
     Ec2Service ec2Service = ServiceFactory.getEc2Service(this.faultInstanceId);
     AsgService asgService = ServiceFactory.getAsgService(this.faultInstanceId);
@@ -41,11 +42,15 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
     logger.log("Injecting fault: Attach new LaunchConfiguration with different Security Group to the ASG");
 
     // Grab the current Launch Configuration
+    if (this.isTerminated())
+      return;
     LaunchConfiguration lc = asgService.getLaunchConfigurationForAutoScalingGroup(asgName);
     if (lc == null) {
       throw new HoneyCombException("LC or ASG do not exist");
     }
 
+    if (this.isTerminated())
+      return;
     // Create a new LaunchConfiguration based on the current LC with the faulty SG Name
     // and with name "faulty-lc"
     CreateLaunchConfigurationRequest req = new CreateLaunchConfigurationRequest();
@@ -56,6 +61,8 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
         withSecurityGroups(faultySecurityGroupName);
     asgService.createLaunchConfiguration(req);
 
+    if (this.isTerminated())
+      return;
     // Update the ASG to use the new faulty LC
     asgService.updateLaunchConfigurationInAutoScalingGroup(asgName, "faulty-lc");
 
@@ -68,6 +75,8 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
       throw new HoneyCombException("Invalid ASG name provided");
     }
 
+    if (this.isTerminated())
+      return;
     // Get the list of "online" EC2 Instances in the ASG
     // (i.e. the EC2 instances which has state "pending" or "running")
     List<Instance> ec2RunningInstances = new ArrayList<Instance>();
@@ -80,6 +89,8 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
       }
     }
 
+    if (this.isTerminated())
+      return;
     // If the ASG has any "online" instances
     if (!ec2RunningInstances.isEmpty()) {
 
@@ -95,8 +106,8 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
       ec2Service.terminateInstance(instanceToInject.getInstanceId());
 
       // Delay for 5 minutes (ASG EC2 Health Check time) for ASG to spawn new faulty instance
-      Thread.sleep(5 * 60 * 1000);
-
+      Thread.sleep(30 * 1000);
+      logger.finish();
     }
   }
 }

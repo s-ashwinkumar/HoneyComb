@@ -24,6 +24,9 @@ public class ApplicationNotInstalledFault extends AbstractFault {
   private String faultInstanceId;
   private String asgName;
   private static Loggi logger;
+  private AsgService asgService;
+  private Ec2Service ec2Service;
+  private SshService sshService;
 
   public ApplicationNotInstalledFault(HashMap<String,String> params) throws IOException{
 
@@ -36,10 +39,19 @@ public class ApplicationNotInstalledFault extends AbstractFault {
   }
 
   public void start() throws Exception{
+
+    logger.start();
+
     // Get the Services
-    AsgService asgService = ServiceFactory.getAsgService(faultInstanceId);
-    Ec2Service ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
-    SshService sshService = ServiceFactory.getSshService(faultInstanceId);
+    if(asgService == null) {
+      asgService = ServiceFactory.getAsgService(faultInstanceId);
+    }
+    if(ec2Service == null) {
+      ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
+    }
+    if(sshService == null) {
+      sshService = ServiceFactory.getSshService(faultInstanceId);
+    }
 
     // Get the AutoScalingGroup with given Name
     AutoScalingGroup asg = asgService.getAutoScalingGroup(asgName);
@@ -47,6 +59,8 @@ public class ApplicationNotInstalledFault extends AbstractFault {
       throw new HoneyCombException("Invalid ASG name provided");
     }
 
+    if (this.isTerminated())
+      return;
     // Get the list of "running" EC2 Instances in the ASG
     // (i.e. the EC2 instances which has state "running")
     List<Instance> ec2RunningInstances = new ArrayList<Instance>();
@@ -58,6 +72,8 @@ public class ApplicationNotInstalledFault extends AbstractFault {
       }
     }
 
+    if (this.isTerminated())
+      return;
     // If the ASG has any "running" instances
     if (!ec2RunningInstances.isEmpty()) {
       // Randomize an Instance to inject fault
@@ -69,6 +85,8 @@ public class ApplicationNotInstalledFault extends AbstractFault {
           instanceToInject.getInstanceId());
 
       // Inject fault: Uninstall Application on Instance (uninstall Wordpress)
+      if (this.isTerminated())
+        return;
       try {
         List<String> sshCommands = new ArrayList<String>();
         sshCommands.add("rm -rf /var/www/html/*");
@@ -81,6 +99,21 @@ public class ApplicationNotInstalledFault extends AbstractFault {
 
       // Delay for 30s for ELB to detect the failure
       Thread.sleep(30000);
+
+      logger.finish();
     }
   }
+
+  public void asgServiceSetter(AsgService asgService) {
+    this.asgService = asgService;
+  }
+
+  public void ec2ServiceSetter(Ec2Service ec2Service){
+    this.ec2Service = ec2Service;
+  }
+
+  public void sshServiceSetter(SshService sshService){
+    this.sshService = sshService;
+  }
+
 }
