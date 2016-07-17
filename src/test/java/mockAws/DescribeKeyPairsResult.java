@@ -1,5 +1,6 @@
 package mockAws;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.model.KeyPairInfo;
 
 import java.util.ArrayList;
@@ -19,6 +20,22 @@ public class DescribeKeyPairsResult {
     List<KeyPairInfo> keyPairs = new ArrayList<>();
     keyPairs.add(info);
     when(describeKeyPairsResult.getKeyPairs()).thenReturn(keyPairs);
+    return describeKeyPairsResult;
+  }
+
+  public static com.amazonaws.services.ec2.model.DescribeKeyPairsResult
+  getDescribeKeyPairsResultWithEmptyKeyPairs(){
+    describeKeyPairsResult = mock(com.amazonaws.services.ec2.model.DescribeKeyPairsResult.class);
+    List<KeyPairInfo> keyPairs = new ArrayList<>();
+    when(describeKeyPairsResult.getKeyPairs()).thenReturn(keyPairs);
+    return describeKeyPairsResult;
+  }
+
+  public static com.amazonaws.services.ec2.model.DescribeKeyPairsResult
+  getDescribeKeyPairsResultWithException(){
+    describeKeyPairsResult = mock(com.amazonaws.services.ec2.model.DescribeKeyPairsResult.class);
+    when(describeKeyPairsResult.getKeyPairs()).thenThrow
+        (AmazonServiceException.class);
     return describeKeyPairsResult;
   }
 }

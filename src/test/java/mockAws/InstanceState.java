@@ -14,4 +14,11 @@ public class InstanceState {
     when(state.getName()).thenReturn("running");
     return state;
   }
+
+  public static com.amazonaws.services.ec2.model.InstanceState
+  getInstanceStateWithAlternatingState(){
+    state  = mock(com.amazonaws.services.ec2.model.InstanceState.class);
+    when(state.getName()).thenReturn("Stopped","running");
+    return state;
+  }
 }

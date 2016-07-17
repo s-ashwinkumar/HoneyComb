@@ -40,11 +40,9 @@ public class AmazonEC2 {
 
     doNothing().when(amazonEC2).authorizeSecurityGroupIngress(any());
 
-    RunInstancesResult res = mock(RunInstancesResult.class);
-    Reservation t = mock(Reservation.class);
-    Instance instance = mockAws.Instance.getInstance();
-    when(t.getInstances().get(0)).thenReturn(instance);
-    when(res.getReservation()).thenReturn(t);
+    com.amazonaws.services.ec2.model.RunInstancesResult res = mock(com.amazonaws.services.ec2.model.RunInstancesResult.class);
+    RunInstancesResult.runInstancesResult = RunInstancesResult
+        .getrunInstancesResultWithAlternatingInstanceState();
     when(amazonEC2.runInstances(any())).thenReturn(res);
 
     doNothing().when(amazonEC2).terminateInstances(any());
