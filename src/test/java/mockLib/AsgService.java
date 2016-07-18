@@ -5,6 +5,7 @@ import com.amazonaws.services.autoscaling.model.LaunchConfiguration;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -23,6 +24,7 @@ public class AsgService {
     AutoScalingGroup asg = mockAws.AutoScalingGroup.getAsg();
     when(asgService.getAutoScalingGroup(any())).thenReturn(asg);
     doNothing().when(asgService).updateLaunchConfigurationInAutoScalingGroup(anyString(), anyString());
+    when(asgService.getAutoScalingGroup(matches("null"))).thenReturn(null);
     return asgService;
   }
 }

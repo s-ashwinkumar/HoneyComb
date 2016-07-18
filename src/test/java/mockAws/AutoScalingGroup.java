@@ -18,6 +18,10 @@ public class AutoScalingGroup {
     list.add(AsgInstance.getInstance());
     list.add(AsgInstance.getInstance());
     when(asg.getInstances()).thenReturn(list);
+
+    List<String> lbs = new ArrayList<>();
+    lbs.add("lb");
+    when(asg.getLoadBalancerNames()).thenReturn(lbs);
     return asg;
   }
 }
