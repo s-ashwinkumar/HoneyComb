@@ -234,6 +234,9 @@ public final class RouterClass {
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
         File file = new File("src/main/resources/log");
+        if (!file.exists())
+          file.createNewFile();
+        
         String thisLine = null;
         StringBuilder sb = new StringBuilder("");
         FileReader fileReader = new FileReader(file);
