@@ -394,7 +394,8 @@ public final class RouterClass {
           returnResponse(routingContext, responseCode, response);
           return;
         } else {
-          response.put("error", "Missing arguments: " + reason.toString());
+
+          response.put("error", reason.toString());
           responseCode = NOTACCEPTABLE;
           returnResponse(routingContext, responseCode, response);
           return;
