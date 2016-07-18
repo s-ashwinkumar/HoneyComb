@@ -64,11 +64,6 @@ public class FaultInjectorTest {
         obj.getStmt().execute("Insert into fault (name,description,location," +
                 "arguments,active) values ('TestFault','test for fault injection'," +
                 "'faults/TestFault.jar','nothing',true);");
-
-        //insert ChangeAMIInLCFFault.jar
-        obj.getStmt().execute("Insert into fault (name,description,location," +
-                "arguments,active) values ('Fault','test for fault injection package'," +
-                "'faults/fault-1.0-SNAPSHOT.jar', null ,true);");
     }
 
     @After
@@ -125,15 +120,6 @@ public class FaultInjectorTest {
         assertTrue(object3.validate(reason, testMysql));
         assertEquals("",reason.toString());
 
-        //validate another fault for the package
-        faultId = "10002";
-
-        FaultInjector object4 = new FaultInjector(faultId, map);
-        assertTrue(object3.validate(reason, testMysql));
-        assertEquals("",reason.toString());
-
-
-        String faultInstanceId = object4.inject(testMysql);
 
     }
 

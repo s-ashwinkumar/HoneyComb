@@ -23,6 +23,9 @@ public class WebServerDownFault extends AbstractFault{
   private String sshKeyFilePath;
   private static Loggi logger;
   private String asgName;
+  private AsgService asgService;
+  private Ec2Service ec2Service;
+  private SshService sshService;
 
   public WebServerDownFault(HashMap<String,String> params) throws IOException {
 
@@ -37,9 +40,17 @@ public class WebServerDownFault extends AbstractFault{
   public void start() throws Exception{
     logger.start();
     // Get the Services
-    AsgService asgService = ServiceFactory.getAsgService(this.faultInstanceId);
-    Ec2Service ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
-    SshService sshService = ServiceFactory.getSshService(faultInstanceId);
+    if(asgService == null) {
+      asgService = ServiceFactory.getAsgService(this.faultInstanceId);
+    }
+
+    if(ec2Service == null) {
+      ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
+    }
+
+    if(sshService == null) {
+      sshService = ServiceFactory.getSshService(faultInstanceId);
+    }
 
     // Get the AutoScalingGroup with given Name
     AutoScalingGroup asg = asgService.getAutoScalingGroup(asgName);
@@ -88,5 +99,17 @@ public class WebServerDownFault extends AbstractFault{
       Thread.sleep(30000);
       logger.finish();
     }
+  }
+
+  public void asgServiceSetter(AsgService asgService){
+    this.asgService = asgService;
+  }
+
+  public void ec2ServiceSetter(Ec2Service ec2Service){
+    this.ec2Service = ec2Service;
+  }
+
+  public void sshServiceSetter(SshService sshService){
+    this.sshService = sshService;
   }
 }

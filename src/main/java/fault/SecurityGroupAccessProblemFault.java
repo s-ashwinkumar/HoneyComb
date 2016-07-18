@@ -16,6 +16,7 @@ public class SecurityGroupAccessProblemFault extends AbstractFault{
   private String asgName;
   private static Loggi logger;
   private String failedSecurityGroupName;
+  private Ec2Service ec2Service;
 
   public SecurityGroupAccessProblemFault(HashMap<String,String> params) throws IOException {
 
@@ -28,7 +29,8 @@ public class SecurityGroupAccessProblemFault extends AbstractFault{
 
   public void start() throws Exception{
     logger.start();
-    Ec2Service ec2Service = ServiceFactory.getEc2Service(this.faultInstanceId);
+    if(ec2Service == null)
+      ec2Service = ServiceFactory.getEc2Service(this.faultInstanceId);
 
     // Log the fault injection
     logger.log("Injecting fault: Security Group access problem fault to all instances");
@@ -41,5 +43,9 @@ public class SecurityGroupAccessProblemFault extends AbstractFault{
     // Delay for 30s for ELB to detect the failure
     Thread.sleep(30000);
     logger.finish();
+  }
+
+  public void ec2ServiceSetter(Ec2Service ec2Service){
+    this.ec2Service = ec2Service;
   }
 }

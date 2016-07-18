@@ -23,6 +23,8 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
   private String faultySecurityGroupName;
   private static Loggi logger;
   private String faultInstanceId;
+  private Ec2Service ec2Service;
+  private AsgService asgService;
 
   public ChangeSecurityGroupInLcFault(HashMap<String,String> params) throws IOException{
     super(params);
@@ -35,8 +37,13 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
   public void start() throws Exception{
     logger.start();
     // Get the services
-    Ec2Service ec2Service = ServiceFactory.getEc2Service(this.faultInstanceId);
-    AsgService asgService = ServiceFactory.getAsgService(this.faultInstanceId);
+    if(ec2Service == null) {
+      ec2Service = ServiceFactory.getEc2Service(this.faultInstanceId);
+    }
+
+    if(asgService == null) {
+      asgService = ServiceFactory.getAsgService(this.faultInstanceId);
+    }
 
     // Log the fault injection
     logger.log("Injecting fault: Attach new LaunchConfiguration with different Security Group to the ASG");
@@ -109,5 +116,13 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
       Thread.sleep(30 * 1000);
       logger.finish();
     }
+  }
+
+  public void ec2ServiceSetter(Ec2Service ec2Service){
+    this.ec2Service = ec2Service;
+  }
+
+  public void asgServiceSetter(AsgService asgService){
+    this.asgService = asgService;
   }
 }
