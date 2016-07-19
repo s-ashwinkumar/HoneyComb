@@ -58,4 +58,17 @@ public class DescribeInstancesResult {
     when(describeInstancesResult.getReservations()).thenReturn(reservations);
     return describeInstancesResult;
   }
+
+  public static com.amazonaws.services.ec2.model.DescribeInstancesResult
+  getDescribeInstancesResultWithGivenInstance(Instance instance){
+    describeInstancesResult = mock(com.amazonaws.services.ec2.model.DescribeInstancesResult.class);
+    Reservation reservation = mock(Reservation.class);
+    List<Reservation> reservations = new ArrayList<>();
+    List<Instance> instances = new ArrayList<>();
+    instances.add(instance);
+    when(reservation.getInstances()).thenReturn(instances);
+    reservations.add(reservation);
+    when(describeInstancesResult.getReservations()).thenReturn(reservations);
+    return describeInstancesResult;
+  }
 }

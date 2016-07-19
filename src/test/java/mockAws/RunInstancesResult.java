@@ -23,7 +23,9 @@ public class RunInstancesResult {
     Reservation t = mock(Reservation.class);
     com.amazonaws.services.ec2.model.Instance instance = mockAws.Instance
         .getInstance();
-    when(t.getInstances().get(0)).thenReturn(instance);
+    List<com.amazonaws.services.ec2.model.Instance> instances = new ArrayList();
+    instances.add(instance);
+    when(t.getInstances()).thenReturn(instances);
     when(runInstancesResult.getReservation()).thenReturn(t);
 
     return runInstancesResult;

@@ -1,5 +1,6 @@
 package lib;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.model.*;
 import com.amazonaws.services.ec2.model.Instance;
 import mockAws.*;
@@ -320,18 +321,55 @@ public class Ec2ServiceImplTest {
       assertEquals("No parameter for EC2 Instance provided", ex.getMessage());
     }
 
-//    AmazonEC2 ec2Obj = new AmazonEC2();
-//    ec2Obj.amazonEC2 = mock(com.amazonaws.services.ec2.AmazonEC2.class);
-//    com.amazonaws.services.ec2.model.RunInstancesResult runInstanceResult =
-//        mock(com.amazonaws.services.ec2.model.RunInstancesResult.class);
-//    RunInstancesResult.runInstancesResult = RunInstancesResult
-//        .getrunInstancesResultWithAlternatingInstanceState();
-//    when(ec2Obj.amazonEC2.runInstances(any())).thenReturn(RunInstancesResult.runInstancesResult);
-//    when(obj.describeEC2Instance(any())).thenReturn(RunInstancesResult
-//        .runInstancesResult.getReservation().getInstances().get(0));
-//    obj = new Ec2ServiceImpl("testinstanceidwithrandomstr", ec2Obj.amazonEC2);
+    AmazonEC2 ec2Obj = new AmazonEC2();
+
+    ec2Obj.amazonEC2 = mock(com.amazonaws.services.ec2.AmazonEC2.class);
+    com.amazonaws.services.ec2.model.RunInstancesResult runInstanceResult =
+        mock(com.amazonaws.services.ec2.model.RunInstancesResult.class);
+    RunInstancesResult.runInstancesResult = RunInstancesResult
+        .getrunInstancesResultWithAlternatingInstanceState();
+    com.amazonaws.services.ec2.model.DescribeInstancesResult
+        describeIinstancesRes = mockAws.DescribeInstancesResult
+        .getDescribeInstancesResultWithGivenInstance(RunInstancesResult
+            .runInstancesResult.getReservation().getInstances().get(0));
+    when(ec2Obj.amazonEC2.describeInstances(any())).thenReturn
+        (describeIinstancesRes);
+    when(ec2Obj.amazonEC2.runInstances(any())).thenReturn(RunInstancesResult.runInstancesResult);
+
+
+    obj = new Ec2ServiceImpl("testinstanceidwithrandomstr", ec2Obj.amazonEC2);
 //    result = obj.runInstance(mock(RunInstancesRequest.class));
 //    assertEquals("1234",result);
 
+      Thread.currentThread().interrupt();
+      result = obj.runInstance(mock(RunInstancesRequest.class));
+      assertNull(result);
+  }
+
+  @Test
+  public void terminateInstance() throws Exception {
+    //blank null scenarios
+    String result;
+    try {
+      obj.terminateInstance(null);
+    } catch (Exception ex) {
+      assertEquals("No Instance ID provided for termination", ex.getMessage());
+    }
+
+    AmazonEC2 ec2Obj = new AmazonEC2();
+    ec2Obj.amazonEC2 = mock(com.amazonaws.services.ec2.AmazonEC2.class);
+    when(ec2Obj.amazonEC2.terminateInstances(any())).thenReturn(null);
+    obj = new Ec2ServiceImpl("testinstanceidwithrandomstr", ec2Obj.amazonEC2);
+    obj.terminateInstance("testinstanceidwithrandomstr");
+
+    when(ec2Obj.amazonEC2.terminateInstances(any())).thenThrow
+        (AmazonServiceException.class);
+    obj = new Ec2ServiceImpl("testinstanceidwithrandomstr", ec2Obj.amazonEC2);
+    try{
+      obj.terminateInstance("testinstanceidwithrandomstr");
+    } catch(Exception ex){
+      assertTrue(ex.getMessage().contains("EC2 Instance with id = " +
+          "testinstanceidwithrandomstr not found. Caused by"));
+    }
   }
 }

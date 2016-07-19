@@ -70,7 +70,6 @@ public class FaultInjector {
      * the default value will be null in db.
      */
     if (arguments != null) {
-      reason.append("Missing argument(s): ");
       for (String args : arguments.split(";")) {
         if (map.get(args) == null) {
           reason.append(args);

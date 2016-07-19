@@ -240,7 +240,6 @@ public class Ec2ServiceImpl implements Ec2Service {
     }
 
     // Invoke API to create and run new EC2 Instance
-    System.out.println(client.runInstances(params));
     Instance instance = client.runInstances(params).getReservation().getInstances().get(0);
     String instanceId = instance.getInstanceId();
 
