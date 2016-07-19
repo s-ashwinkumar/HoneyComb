@@ -338,12 +338,9 @@ public class Ec2ServiceImplTest {
 
 
     obj = new Ec2ServiceImpl("testinstanceidwithrandomstr", ec2Obj.amazonEC2);
-//    result = obj.runInstance(mock(RunInstancesRequest.class));
-//    assertEquals("1234",result);
+    result = obj.runInstance(mock(RunInstancesRequest.class));
+    assertEquals("1234",result);
 
-      Thread.currentThread().interrupt();
-      result = obj.runInstance(mock(RunInstancesRequest.class));
-      assertNull(result);
   }
 
   @Test
