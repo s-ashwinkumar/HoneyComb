@@ -42,11 +42,9 @@ public final class RouterClass {
   private static final int NOTACCEPTABLE = 406;
 
   /**
-   * Forbidden, The request is understood, but it has been refused or access
-   * is not allowed.
-   * An accompanying error message will explain why.
+   * The server is unavailable currently.
    */
-  private static final int FORBIDDEN = 403;
+  private static final int SERVICE_UNAVAILABLE = 503;
 
   /**
    * Not Found, The URI requested is invalid or the resource requested, such
@@ -110,6 +108,7 @@ public final class RouterClass {
     FileUpload file = uploads.iterator().next();
     HttpServerRequest request = routingContext.request();
     HashMap<String, String> response = new HashMap<>();
+
     String token = request.getParam("token");
     File uploadedFault = new File(file.uploadedFileName());
     try {
@@ -121,7 +120,7 @@ public final class RouterClass {
         if (file == null || name == null || name.equals("") || desc == null
             || desc.equals("")) {
           uploadedFault.delete();
-          response.put("error", "Invalid Parameters. Please check the " +
+          response.put("error", "Invalid request. Please check the " +
               "parameters");
           returnResponse(routingContext, BADREQUEST, response);
         } else {
@@ -134,7 +133,7 @@ public final class RouterClass {
             returnResponse(routingContext, SUCCESS, response);
           } else {
             uploadedFault.delete();
-            response.put("Failure", "A fault with same name exists in the " +
+            response.put("error", "A fault with same name exists in the " +
                 "system.");
             returnResponse(routingContext, BADREQUEST, response);
           }
@@ -174,9 +173,9 @@ public final class RouterClass {
         String desc = request.getParam("description");
         String args = request.getParam("arguments");
         FaultModel fault = null;
-        if (file == null) {
+        if (file == null || name == null || name.equals("")) {
           uploadedFault.delete();
-          response.put("error", "Invalid Parameters,upload file missing.");
+          response.put("error", "Invalid request.Please check the parameters.");
           returnResponse(routingContext, BADREQUEST, response);
         } else {
           DbConnection dbCon = Utils.returnDbconnection(DbConnection
@@ -185,8 +184,9 @@ public final class RouterClass {
           if (fault != null) {
             if (fault.getActive()) {
               uploadedFault.delete();
-              response.put("Failure", "The existing fault needs to be " +
-                  "disabled first. Please disable and then update the fault.");
+              response.put("error", "Fault active. The existing fault needs " +
+                  "to be " +
+                  "disabled in order to be updated.");
               returnResponse(routingContext, BADREQUEST, response);
             } else {
               File oldFile = new File("faults/" + name + ".jar");
@@ -194,13 +194,13 @@ public final class RouterClass {
               uploadedFault.renameTo(new File("faults/" + name + ".jar"));
               FaultModel.updateFault(fault.getFaultId().toString(), dbCon,
                   true, desc, args);
-              response.put("success", "Fault uploaded successfully");
+              response.put("success", "Fault updated successfully");
               returnResponse(routingContext, SUCCESS, response);
             }
 
           } else {
             uploadedFault.delete();
-            response.put("Failure", "A fault with same name does not exist " +
+            response.put("error", "A fault with same name does not exist " +
                 "in the system. Please use the upload feature.");
             returnResponse(routingContext, BADREQUEST, response);
           }
@@ -236,7 +236,7 @@ public final class RouterClass {
         File file = new File("src/main/resources/log");
         if (!file.exists())
           file.createNewFile();
-        
+
         String thisLine = null;
         StringBuilder sb = new StringBuilder("");
         FileReader fileReader = new FileReader(file);
@@ -263,7 +263,7 @@ public final class RouterClass {
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
-      responseCode = FORBIDDEN;
+      responseCode = SERVICE_UNAVAILABLE;
       returnResponse(routingContext, responseCode, response);
       return;
     }
@@ -300,18 +300,18 @@ public final class RouterClass {
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
-      responseCode = FORBIDDEN;
+      responseCode = SERVICE_UNAVAILABLE;
       returnResponse(routingContext, responseCode, response);
       return;
     }
   }
 
   /**
-   * Routing method for removing a fault.
+   * Routing method for deactivating a fault.
    *
    * @param routingContext receives routing context from vertx.
    */
-  static void removeFault(final RoutingContext routingContext) {
+  static void deactivateFault(final RoutingContext routingContext) {
     HttpServerRequest request = routingContext.request();
     HashMap<String, String> response = new HashMap<>();
     String faultId = request.getParam("faultId");
@@ -331,11 +331,13 @@ public final class RouterClass {
         Integer res = FaultModel.updateFault(faultId, dbCon, false, null, null);
         if (res == 0) {
           responseCode = NOTFOUND;
-          response.put("error", "No fault for given fault ID.");
+          response.put("error", "There is no fault in the system for the " +
+              "given fault ID" +
+              ".");
         } else {
           responseCode = SUCCESS;
-          response.put("response", "Fault " + faultId + " has been marked "
-              + "unusable in the system");
+          response.put("response", "Fault " + faultId + " has been " +
+              "deactivated");
         }
         dbCon.getConn().close();
       } else {
@@ -346,7 +348,57 @@ public final class RouterClass {
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
-      responseCode = FORBIDDEN;
+      responseCode = SERVICE_UNAVAILABLE;
+      returnResponse(routingContext, responseCode, response);
+      return;
+    }
+    returnResponse(routingContext, responseCode, response);
+    return;
+
+  }
+
+  /**
+   * Routing method for reactivating a fault.
+   *
+   * @param routingContext receives routing context from vertx.
+   */
+  static void reactivateFault(final RoutingContext routingContext) {
+    HttpServerRequest request = routingContext.request();
+    HashMap<String, String> response = new HashMap<>();
+    String faultId = request.getParam("faultId");
+    String token = request.getParam("token");
+    int responseCode;
+    try {
+      if (!Utils.isNumeric(faultId)) {
+        response.put("error", "The parameter fault ID is not a number");
+        responseCode = NOTACCEPTABLE;
+        returnResponse(routingContext, responseCode, response);
+        return;
+      }
+      boolean validUser = User.isValidUser(token, User.getFileName());
+      if (validUser) {
+        DbConnection dbCon = Utils.returnDbconnection(DbConnection
+            .getFileName());
+        Integer res = FaultModel.updateFault(faultId, dbCon, true, null, null);
+        if (res == 0) {
+          responseCode = NOTFOUND;
+          response.put("error", "There is no fault in the system for the " +
+              "given fault ID.");
+        } else {
+          responseCode = SUCCESS;
+          response.put("response", "Fault " + faultId + " has been " +
+              "reactivated");
+        }
+        dbCon.getConn().close();
+      } else {
+        response.put("error", "You are not authorized to make this request.");
+        responseCode = ERROR;
+      }
+
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      response.put("error", "Something went wrong.Please try again later");
+      responseCode = SERVICE_UNAVAILABLE;
       returnResponse(routingContext, responseCode, response);
       return;
     }
@@ -369,7 +421,7 @@ public final class RouterClass {
     int responseCode;
     try {
       if (!Utils.isNumeric(faultId)) {
-        response.put("error", "The parameter fault ID is not a number");
+        response.put("error", "The parameter fault ID is not a number.");
         responseCode = NOTACCEPTABLE;
         returnResponse(routingContext, responseCode, response);
         return;
@@ -382,7 +434,7 @@ public final class RouterClass {
         FaultModel fault = FaultModel.getFault(dbCon, faultId);
 
         if (fault == null) {
-          response.put("error", "the fault doesn't exist");
+          response.put("error", "The requested fault doesn't exist.");
           responseCode = NOTFOUND;
           returnResponse(routingContext, responseCode, response);
           return;
@@ -391,7 +443,7 @@ public final class RouterClass {
         FaultInjector injector = new FaultInjector(faultId, request.params());
         if (injector.validate(reason, Mysql)) {
           faultInstanceId = injector.inject(Mysql);
-          response.put("success", "Fault start injection");
+          response.put("success", "Fault injection initiated.");
           response.put("faultInstanceId", faultInstanceId);
           responseCode = SUCCESS;
           returnResponse(routingContext, responseCode, response);
@@ -413,7 +465,7 @@ public final class RouterClass {
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
-      responseCode = FORBIDDEN;
+      responseCode = SERVICE_UNAVAILABLE;
       returnResponse(routingContext, responseCode, response);
       return;
     }
@@ -440,13 +492,15 @@ public final class RouterClass {
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
         if (FaultInjector.terminateFault(faultInstanceId) == 0) {
-          response.put("success", "Fault instance is terminated by user now");
+          response.put("success", "The requested fault instance has been " +
+              "terminated.");
           response.put("faultInstanceId", faultInstanceId);
           responseCode = SUCCESS;
           returnResponse(routingContext, responseCode, response);
           return;
         } else {
-          response.put("error", "FaultInstance is already end or not existed");
+          response.put("error", "Fault instance does not exist or has already" +
+              " finished execution.");
           response.put("faultInstanceId", faultInstanceId);
           responseCode = NOTFOUND;
           returnResponse(routingContext, responseCode, response);
@@ -461,7 +515,7 @@ public final class RouterClass {
     } catch (Exception ex) {
       ex.printStackTrace();
       response.put("error", "Something went wrong.Please try again later");
-      responseCode = FORBIDDEN;
+      responseCode = SERVICE_UNAVAILABLE;
       returnResponse(routingContext, responseCode, response);
       return;
     }

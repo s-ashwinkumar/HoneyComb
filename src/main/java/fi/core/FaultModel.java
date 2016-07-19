@@ -193,9 +193,9 @@ public class FaultModel {
       throws
       Exception {
     String query = "update fault set active="+status;
-    if(description != null)
+    if(description != null && !description.trim().equals(""))
       query += ", description='"+description+"'";
-    if(arguments != null)
+    if(arguments != null && !arguments.trim().equals(""))
       query += ", arguments='"+arguments+"'";
     query += " where faultID=" + id;
     return dbCon.getStmt().executeUpdate(query);

@@ -56,7 +56,11 @@ final class MainServer {
     router.get("/faults/list").blockingHandler(RouterClass::faultList,
         false);
 
-    router.delete("/faults").blockingHandler(RouterClass::removeFault,
+    router.post("/faults/deactivate").blockingHandler
+        (RouterClass::deactivateFault,
+        false);
+
+    router.post("/faults/reactivate").blockingHandler(RouterClass::reactivateFault,
         false);
 
     router.post("/inject/:faultId").blockingHandler(RouterClass::inject, false);

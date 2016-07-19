@@ -17,3 +17,21 @@
 #docHoney {
 	color: red;
 }
+
+.lmargin {
+	margin-left: 20px;
+}
+
+label.required:after {
+	content: " *"; color: red;
+}
+
+.file {
+  visibility: hidden;
+  position: absolute;
+}
+
+.aws {
+	width: 800px;
+	height: 500px;
+}
