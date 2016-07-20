@@ -31,7 +31,5 @@ label.required:after {
   position: absolute;
 }
 
-.aws {
-	width: 800px;
-	height: 500px;
-}
+.panel-default >.panel-heading {
+    background-color: lightblue
