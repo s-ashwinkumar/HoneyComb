@@ -450,7 +450,7 @@ public final class RouterClass {
           return;
         } else {
 
-          response.put("error", reason.toString());
+          response.put("error", "missing argument: " + reason.toString());
           responseCode = NOTACCEPTABLE;
           returnResponse(routingContext, responseCode, response);
           return;

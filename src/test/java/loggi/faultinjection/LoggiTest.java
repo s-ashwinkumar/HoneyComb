@@ -1,21 +1,65 @@
 package loggi.faultinjection;
 
+import fi.core.DbConnection;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.PropertyConfigurator;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Properties;
 import java.util.TimeZone;
 
 /**
  * Created by joe on 16/6/1.
  */
 public class LoggiTest {
+
+    @Before
+    public void setUp() throws Exception {
+
+        // for the test log purpose
+        File oldName = new File("src/main/resources/log_test");
+
+        if (!oldName.exists())
+            oldName.createNewFile();
+
+        Properties props = new Properties();
+        try {
+            InputStream configStream = getClass().getClassLoader().getResourceAsStream("log4j.properties");
+            props.load(configStream);
+            configStream.close();
+        } catch (IOException e) {
+            System.out.println("Errornot laod configuration file ");
+        }
+
+        props.setProperty("log4j.appender.file.File","src/main/resources/log_test");
+        LogManager.resetConfiguration();
+        PropertyConfigurator.configure(props);
+
+
+    }
+
+    @After
+    public void tearDown ()throws Exception {
+        Properties props = new Properties();
+        try {
+            InputStream configStream = getClass().getClassLoader().getResourceAsStream("log4j.properties");
+            props.load(configStream);
+            configStream.close();
+        } catch (IOException e) {
+            System.out.println("Errornot laod configuration file ");
+        }
+
+        props.setProperty("log4j.appender.file.File","src/main/resources/log");
+        LogManager.resetConfiguration();
+        PropertyConfigurator.configure(props);
+    }
 
     /**
      * tdd start
@@ -24,7 +68,7 @@ public class LoggiTest {
 
     @Test
     public void testStart() throws Exception {
-        File file = new File("src/main/resources/log");
+        File file = new File("src/main/resources/log_test");
 
         String className = this.getClass().getSimpleName();
         //                       faultInstanceId + className;
@@ -63,11 +107,11 @@ public class LoggiTest {
                 //secondly I will compare the content inside the log with the expected content after loggi.start()
                 StringBuilder answer = new StringBuilder("");
                 answer.append(sdf.format(date));
-                answer.append("\t");
-                answer.append("INFO\t");
-                answer.append("[FaultInstanceId = 123456789112300001]\t");
-                answer.append("[FaultId = 00001]\t");
-                answer.append("[FaultName = LoggiTest]\t");
+                answer.append("    ");
+                answer.append("INFO    ");
+                answer.append("[FaultInstanceId = 123456789112300001]    ");
+                answer.append("[FaultId = 00001]    ");
+                answer.append("[FaultName = LoggiTest]    ");
                 answer.append("fault injection start!");
 
                 //in order to compare I need to delete million second
@@ -85,7 +129,7 @@ public class LoggiTest {
 
     @Test
     public void testLog() throws Exception {
-        File file = new File("src/main/resources/log");
+        File file = new File("src/main/resources/log_test");
         String className = this.getClass().getSimpleName();
         //                       faultInstanceId + className;
         Loggi loggi = new Loggi("123456789112300001", className);
@@ -120,11 +164,11 @@ public class LoggiTest {
                 //secondly I will compare the content inside the log with the expected content after loggi.start()
                 StringBuilder answer = new StringBuilder("");
                 answer.append(sdf.format(date));
-                answer.append("\t");
-                answer.append("INFO\t");
-                answer.append("[FaultInstanceId = 123456789112300001]\t");
-                answer.append("[FaultId = 00001]\t");
-                answer.append("[FaultName = LoggiTest]\t");
+                answer.append("    ");
+                answer.append("INFO    ");
+                answer.append("[FaultInstanceId = 123456789112300001]    ");
+                answer.append("[FaultId = 00001]    ");
+                answer.append("[FaultName = LoggiTest]    ");
                 answer.append("Hello World!");
 
                 //in order to compare I need to delete million second
@@ -142,7 +186,7 @@ public class LoggiTest {
 
     @Test
     public void testFinish() throws Exception {
-        File file = new File("src/main/resources/log");
+        File file = new File("src/main/resources/log_test");
 
         String className = this.getClass().getSimpleName();
         //                       faultInstanceId + className;
@@ -181,11 +225,11 @@ public class LoggiTest {
                 //secondly I will compare the content inside the log with the expected content after loggi.start()
                 StringBuilder answer = new StringBuilder("");
                 answer.append(sdf.format(date));
-                answer.append("\t");
-                answer.append("INFO\t");
-                answer.append("[FaultInstanceId = 123456789112300001]\t");
-                answer.append("[FaultId = 00001]\t");
-                answer.append("[FaultName = LoggiTest]\t");
+                answer.append("    ");
+                answer.append("INFO    ");
+                answer.append("[FaultInstanceId = 123456789112300001]    ");
+                answer.append("[FaultId = 00001]    ");
+                answer.append("[FaultName = LoggiTest]    ");
                 answer.append("fault injection finish!");
 
                 //in order to compare I need to delete million second
@@ -203,7 +247,7 @@ public class LoggiTest {
 
     @Test
     public void testError() throws Exception {
-        File file = new File("src/main/resources/log");
+        File file = new File("src/main/resources/log_test");
         String className = this.getClass().getSimpleName();
         //                       faultInstanceId + className;
         Loggi loggi = new Loggi("123456789112300001", className);
@@ -238,11 +282,11 @@ public class LoggiTest {
                 //secondly I will compare the content inside the log with the expected content after loggi.start()
                 StringBuilder answer = new StringBuilder("");
                 answer.append(sdf.format(date));
-                answer.append("\t");
-                answer.append("ERROR\t");
-                answer.append("[FaultInstanceId = 123456789112300001]\t");
-                answer.append("[FaultId = 00001]\t");
-                answer.append("[FaultName = LoggiTest]\t");
+                answer.append("    ");
+                answer.append("ERROR    ");
+                answer.append("[FaultInstanceId = 123456789112300001]    ");
+                answer.append("[FaultId = 00001]    ");
+                answer.append("[FaultName = LoggiTest]    ");
                 answer.append("Bad Aws Request");
 
                 //in order to compare I need to delete million second
@@ -260,7 +304,7 @@ public class LoggiTest {
 
     @Test
     public void testErrorException() throws Exception {
-        File file = new File("src/main/resources/log");
+        File file = new File("src/main/resources/log_test");
         String className = this.getClass().getSimpleName();
         //                       faultInstanceId + className;
         Loggi loggi = new Loggi("123456789112300001", className);
@@ -309,11 +353,11 @@ public class LoggiTest {
                 //secondly I will compare the content inside the log with the expected content after loggi.start()
                 StringBuilder answer = new StringBuilder("");
                 answer.append(sdf.format(date));
-                answer.append("\t");
-                answer.append("ERROR\t");
-                answer.append("[FaultInstanceId = 123456789112300001]\t");
-                answer.append("[FaultId = 00001]\t");
-                answer.append("[FaultName = LoggiTest]\t");
+                answer.append("    ");
+                answer.append("ERROR    ");
+                answer.append("[FaultInstanceId = 123456789112300001]    ");
+                answer.append("[FaultId = 00001]    ");
+                answer.append("[FaultName = LoggiTest]    ");
                 answer.append("java.io.FileNotFoundException: src/main/resources/notExisted (No such file or directory)");
 
                 //in order to compare I need to delete million second
@@ -336,10 +380,12 @@ public class LoggiTest {
     //improve the coverage, test When log file is not existed
     @Test
     public void testFile() throws Exception {
-        File file = new File("src/main/resources/log");
+        File file = new File("src/main/resources/log_test");
+
         if (file.exists()) {
             file.deleteOnExit();
         }
+
         String className = this.getClass().getSimpleName();
         //                       faultInstanceId + className;
         Loggi loggi = new Loggi("123456789112300001", className);
@@ -377,11 +423,11 @@ public class LoggiTest {
                 //secondly I will compare the content inside the log with the expected content after loggi.start()
                 StringBuilder answer = new StringBuilder("");
                 answer.append(sdf.format(date));
-                answer.append("\t");
-                answer.append("INFO\t");
-                answer.append("[FaultInstanceId = 123456789112300001]\t");
-                answer.append("[FaultId = 00001]\t");
-                answer.append("[FaultName = LoggiTest]\t");
+                answer.append("    ");
+                answer.append("INFO    ");
+                answer.append("[FaultInstanceId = 123456789112300001]    ");
+                answer.append("[FaultId = 00001]    ");
+                answer.append("[FaultName = LoggiTest]    ");
                 answer.append("fault injection start!");
 
                 //in order to compare I need to delete million second
