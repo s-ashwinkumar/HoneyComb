@@ -7,7 +7,9 @@ import com.amazonaws.services.autoscaling.model.LaunchConfiguration;
 import lib.AsgService;
 import lib.Ec2Service;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 
 
@@ -29,6 +31,8 @@ public class ChangeAMIInLCFaultTest {
     private static AutoScalingGroup asg;
     private static HashMap<String,String> params;
 
+    @Rule
+    public ExpectedException thrown= ExpectedException.none();
 
 
     @Before
@@ -60,6 +64,20 @@ public class ChangeAMIInLCFaultTest {
         inOrder.verify(asgService).createLaunchConfiguration(any());
         inOrder.verify(asgService).updateLaunchConfigurationInAutoScalingGroup(asgName, "faulty-lc");
         inOrder.verify(ec2Service).terminateInstance(anyString());
+
+
+    }
+
+    @Test
+    public void faultTestNull() throws Exception{
+        HashMap<String,String> params = new HashMap<>();
+        params.put("asgName",asgName);
+        params.put("faultyAmiId",faultyAmiId);
+        params.put("faultInstanceId", "asdfjasldfkjasdf;");
+        ChangeAmiInLcFault fault = new ChangeAmiInLcFault(params);
+        thrown.expect(HoneyCombException.class);
+        fault.start();
+
 
 
     }

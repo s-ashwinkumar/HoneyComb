@@ -40,8 +40,8 @@ public class SecurityGroupAccessProblemFault extends AbstractFault{
     // Inject fault: Security Group access problem (change SG Inbound rules)
     ec2Service.revokeSecurityGroupInboundRule(failedSecurityGroupName, "tcp", 80, "0.0.0.0/0");
 
-    // Delay for 30s for ELB to detect the failure
-    Thread.sleep(30000);
+    // Delay for 10s for ELB to detect the failure
+    Thread.sleep(10000);
     logger.finish();
   }
 

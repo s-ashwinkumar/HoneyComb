@@ -60,4 +60,14 @@ public class ELBUnavailableFaultTest {
         fault.start();
 
     }
+
+    @Test
+    public void faultTestNull() throws Exception{
+        params.put("elbName","true");
+        params.put("faultInstanceId", "asdfjasldfkjasdf;");
+        ElbUnavailableFault fault = new ElbUnavailableFault(params);
+        thrown.expect(HoneyCombException.class);
+        fault.start();
+    }
+
 }

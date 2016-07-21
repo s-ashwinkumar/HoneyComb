@@ -20,6 +20,8 @@ public class LaunchPendingFault extends AbstractFault {
   private String faultInstanceId;
   private String asgName;
   private static Loggi logger;
+  private AsgService asgService;
+  private Ec2Service ec2Service;
 
   public LaunchPendingFault(HashMap<String,String> params) throws IOException {
 
@@ -31,8 +33,10 @@ public class LaunchPendingFault extends AbstractFault {
 
   public void start() throws Exception{
 // Get the Services
-    AsgService asgService = ServiceFactory.getAsgService(faultInstanceId);
-    Ec2Service ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
+    if( asgService == null)
+      asgService = ServiceFactory.getAsgService(faultInstanceId);
+    if (ec2Service == null)
+      ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
 
     // Get the AutoScalingGroup with given Name
     AutoScalingGroup asg = asgService.getAutoScalingGroup(asgName);
@@ -68,5 +72,13 @@ public class LaunchPendingFault extends AbstractFault {
           instanceToInject.getInstanceId(), "launch_status", "pending");
 
     }
+  }
+
+  public void asgServiceSetter(AsgService asgService){
+    this.asgService = asgService;
+  }
+
+  public void ec2ServiceSetter(Ec2Service ec2Service){
+    this.ec2Service = ec2Service;
   }
 }

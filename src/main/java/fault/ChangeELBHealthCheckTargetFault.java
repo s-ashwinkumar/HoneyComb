@@ -71,7 +71,7 @@ public class ChangeELBHealthCheckTargetFault extends AbstractFault {
     }
 
     // Delay for ELB to become unhealthy
-    Thread.sleep(30000);
+    Thread.sleep(10000);
 
     logger.finish();
   }

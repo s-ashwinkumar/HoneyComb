@@ -112,8 +112,8 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
       // Terminate the instance
       ec2Service.terminateInstance(instanceToInject.getInstanceId());
 
-      // Delay for 5 minutes (ASG EC2 Health Check time) for ASG to spawn new faulty instance
-      Thread.sleep(30 * 1000);
+      // Delay for 10 seconds (ASG EC2 Health Check time) for ASG to spawn new faulty instance
+      Thread.sleep(10 * 1000);
       logger.finish();
     }
   }

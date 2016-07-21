@@ -95,8 +95,8 @@ public class WebServerDownFault extends AbstractFault{
             instanceToInject.getInstanceId() + ". Caused by: " + e);
       }
 
-      // Delay for 30s for ELB to detect the failure
-      Thread.sleep(30000);
+      // Delay for 10s for ELB to detect the failure
+      Thread.sleep(10000);
       logger.finish();
     }
   }

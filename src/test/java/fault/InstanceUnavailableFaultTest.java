@@ -5,7 +5,9 @@ import lib.AsgService;
 import lib.Ec2Service;
 import lib.ElbService;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 
 import java.util.HashMap;
@@ -20,6 +22,9 @@ public class InstanceUnavailableFaultTest {
     private String instanceName;
     private HashMap<String,String> params;
     private Ec2Service ec2Service;
+
+    @Rule
+    public ExpectedException thrown= ExpectedException.none();
 
     @Before
     public void setUp(){
@@ -42,6 +47,17 @@ public class InstanceUnavailableFaultTest {
         InOrder inOrder = inOrder(ec2Service);
 
         inOrder.verify(ec2Service).terminateInstance(anyString());
+
+    }
+    @Test
+    public void faultTestNull() throws Exception{
+        HashMap<String,String> params = new HashMap<>();
+        params.put("instanceId",instanceName);
+        params.put("faultInstanceId", "asdfjasldfkjasdf;");
+        InstanceUnavailableFault fault = new InstanceUnavailableFault(params);
+        thrown.expect(Exception.class);
+        fault.start();
+
 
     }
 }

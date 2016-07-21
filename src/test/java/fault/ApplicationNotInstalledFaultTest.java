@@ -4,7 +4,9 @@ import lib.AsgService;
 import lib.Ec2Service;
 import lib.SshService;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 
 import static org.mockito.Mockito.*;
@@ -19,6 +21,9 @@ public class ApplicationNotInstalledFaultTest {
   private String asgName = "abc";
   private String sshKeyFilePath = "/hello/world";
   private HashMap<String,String> params;
+
+  @Rule
+  public ExpectedException thrown= ExpectedException.none();
 
   @Test
   public void faultTest() throws Exception{
@@ -40,6 +45,22 @@ public class ApplicationNotInstalledFaultTest {
     inOrder.verify(asgService).getAutoScalingGroup(any());
     inOrder.verify(ec2Service,atLeast(1)).describeEC2Instance(any());
     inOrder.verify(sshService).executeSshCommands(any(),any(),any(),any());
+
+  }
+
+  @Test
+  public void faultTestNull() throws Exception{
+    params = new HashMap<String,String>();
+    params.put("sshUser",sshUser);
+    params.put("asgName",asgName);
+    params.put("sshKeyFilePath",sshKeyFilePath);
+    params.put("faultInstanceId","asdfjasldfkjasdf");
+    ApplicationNotInstalledFault fault = new ApplicationNotInstalledFault(params);
+    SshService sshService = mockLib.SshService.getSshService();
+    AsgService asgService = mockLib.AsgService.getAsgService();
+    Ec2Service ec2Service = mockLib.Ec2Service.getEc2Service();
+    thrown.expect(HoneyCombException.class);
+    fault.start();
 
 
   }
