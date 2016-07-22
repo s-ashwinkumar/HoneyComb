@@ -18,12 +18,17 @@ import java.util.List;
  *
  */
 public class SshServiceImpl implements SshService {
+
   private String faultInstanceId;
   static Loggi logger;
 
   public SshServiceImpl(String faultInstanceId) throws IOException {
     this.faultInstanceId = faultInstanceId;
     logger = new Loggi(faultInstanceId,SshServiceImpl.class.getName());
+  }
+
+  public String getFaultInstanceId() {
+    return faultInstanceId;
   }
 
   @Override
