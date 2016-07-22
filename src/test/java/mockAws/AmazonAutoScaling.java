@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
  * Created by wilsoncao on 7/13/16.
  */
 public class AmazonAutoScaling {
-  private static com.amazonaws.services.autoscaling.AmazonAutoScaling client;
+  public static com.amazonaws.services.autoscaling.AmazonAutoScaling client;
 
   public static com.amazonaws.services.autoscaling.AmazonAutoScaling getClient(){
     client = mock(com.amazonaws.services.autoscaling.AmazonAutoScaling.class);

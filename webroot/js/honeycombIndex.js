@@ -23,15 +23,8 @@ $(function() {
             return '<span class="' + cls + '">' + match + '</span>';
         });
     }
-
-    $(window).scroll(function(){
-        if($(window).scrollTop() > 212)
-            $("#result-div").css({"margin-top": ($(window).scrollTop()-209) + "px", "margin-left":($(window).scrollLeft()) + "px"});
-        else
-            $("#result-div").css({"margin-top": "0px", "margin-left":($(window).scrollLeft()) + "px"});
-    });
-
-	$("#login-form").submit(function() {
+    
+$("#login-form").submit(function() {
         var user = $("#login-form input#username").val();
         var pass = $("#login-form input#password").val();
   		//alert(uesrname);

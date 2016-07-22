@@ -29,6 +29,8 @@ import com.amazonaws.services.ec2.model.Instance;
  *
  */
 public class AsgServiceImpl implements AsgService {
+
+
   private String faultInstanceId;
   private static Loggi logger;
   private AmazonAutoScaling client;
@@ -52,7 +54,17 @@ public class AsgServiceImpl implements AsgService {
     this.ec2Service = ec2Service;
   }
 
+  public String getFaultInstanceId() {
+    return faultInstanceId;
+  }
 
+  public AmazonAutoScaling getClient() {
+    return client;
+  }
+
+  public Ec2Service getEc2Service() {
+    return ec2Service;
+  }
   @Override
   public AutoScalingGroup getAutoScalingGroup(String asgName)
       throws AmazonServiceException, AmazonClientException {

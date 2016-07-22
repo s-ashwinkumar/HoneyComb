@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
  * Created by wilsoncao on 7/16/16.
  */
 public class SshService {
-  private static lib.SshService sshService;
+  public static lib.SshService sshService;
   public static lib.SshService getSshService(){
     sshService = mock(lib.SshService.class);
     try {

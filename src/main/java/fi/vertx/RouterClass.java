@@ -169,29 +169,28 @@ public final class RouterClass {
     try {
       boolean validUser = User.isValidUser(token, User.getFileName());
       if (validUser) {
-        String name = request.getParam("name");
+        String faultId = request.getParam("faultId");
         String desc = request.getParam("description");
         String args = request.getParam("arguments");
         FaultModel fault = null;
-        if (file == null || name == null || name.equals("")) {
+        if (file == null || faultId == null || faultId.equals("")) {
           uploadedFault.delete();
           response.put("error", "Invalid request.Please check the parameters.");
           returnResponse(routingContext, BADREQUEST, response);
         } else {
           DbConnection dbCon = Utils.returnDbconnection(DbConnection
               .getFileName());
-          fault = FaultModel.getFaultByName(dbCon, name);
+          fault = FaultModel.getFault(dbCon, faultId);
           if (fault != null) {
             if (fault.getActive()) {
               uploadedFault.delete();
               response.put("error", "Fault active. The existing fault needs " +
-                  "to be " +
-                  "disabled in order to be updated.");
+                  "to be disabled in order to be updated.");
               returnResponse(routingContext, BADREQUEST, response);
             } else {
-              File oldFile = new File("faults/" + name + ".jar");
+              File oldFile = new File("faults/" + fault.getName() + ".jar");
               oldFile.delete();
-              uploadedFault.renameTo(new File("faults/" + name + ".jar"));
+              uploadedFault.renameTo(new File("faults/" + fault.getName() + ".jar"));
               FaultModel.updateFault(fault.getFaultId().toString(), dbCon,
                   true, desc, args);
               response.put("success", "Fault updated successfully");
@@ -200,8 +199,8 @@ public final class RouterClass {
 
           } else {
             uploadedFault.delete();
-            response.put("error", "A fault with same name does not exist " +
-                "in the system. Please use the upload feature.");
+            response.put("error", "A fault with given fault id  does not " +
+                "exist in the system. Please use the upload feature.");
             returnResponse(routingContext, BADREQUEST, response);
           }
 
