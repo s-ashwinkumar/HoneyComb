@@ -3,7 +3,7 @@
 *.jar
 !faults/*.jar
 .DS_Store
-log
+src/main/resources/log
 *.iml*
 *.idea*
 target*

@@ -3,21 +3,21 @@ package fi.core;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.CaseInsensitiveMap;
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.CaseInsensitiveHeaders;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.PropertyConfigurator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import static java.nio.file.StandardCopyOption.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.SynchronousQueue;
 
 import static org.junit.Assert.*;
@@ -32,6 +32,7 @@ public class FaultInjectorTest {
      */
     private static final String testMysql = "MySQLTest.properties";
 
+
     /**
      * mysql
      */
@@ -40,6 +41,27 @@ public class FaultInjectorTest {
     DbConnection obj;
     @Before
     public void setUp() throws Exception {
+        // for the test log purpose
+        File oldName = new File("src/main/resources/log_test");
+
+        if (!oldName.exists())
+            oldName.createNewFile();
+
+        Properties props = new Properties();
+        try {
+            InputStream configStream = getClass().getClassLoader().getResourceAsStream("log4j.properties");
+            props.load(configStream);
+            configStream.close();
+        } catch (IOException e) {
+            System.out.println("Errornot laod configuration file ");
+        }
+
+        props.setProperty("log4j.appender.file.File","src/main/resources/log_test");
+        LogManager.resetConfiguration();
+        PropertyConfigurator.configure(props);
+
+
+
         obj = new DbConnection();
         obj.setConn("MySQLTest.properties");
         obj.setStmt(obj.getConn().createStatement());
@@ -64,10 +86,29 @@ public class FaultInjectorTest {
         obj.getStmt().execute("Insert into fault (name,description,location," +
                 "arguments,active) values ('TestFault','test for fault injection'," +
                 "'faults/TestFault.jar','nothing',true);");
+        obj.getConn().close();
     }
 
     @After
     public void tearDown ()throws Exception {
+        // restore the log file
+        Properties props = new Properties();
+        try {
+            InputStream configStream = getClass().getClassLoader().getResourceAsStream("log4j.properties");
+            props.load(configStream);
+            configStream.close();
+        } catch (IOException e) {
+            System.out.println("Errornot laod configuration file ");
+        }
+
+        props.setProperty("log4j.appender.file.File","src/main/resources/log");
+        LogManager.resetConfiguration();
+        PropertyConfigurator.configure(props);
+
+        obj = new DbConnection();
+        obj.setConn("MySQLTest.properties");
+        obj.setStmt(obj.getConn().createStatement());
+
         obj.getStmt().execute("drop table fault;");
         obj.getConn().close();
     }
@@ -171,7 +212,7 @@ public class FaultInjectorTest {
          */
         boolean isExist = false;
         Thread.sleep(15000);
-        File file = new File("src/main/resources/log");
+        File file = new File("src/main/resources/log_test");
 
         try{
             //firstly, we make sure we have the log file
@@ -254,7 +295,7 @@ public class FaultInjectorTest {
          */
         boolean isExist = false;
         Thread.sleep(10000);
-        File file = new File("src/main/resources/log");
+        File file = new File("src/main/resources/log_test");
 
         try{
             //firstly, we make sure we have the log file

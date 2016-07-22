@@ -72,9 +72,9 @@ public class Loggi {
      * you should call this at the start of a fault injection.
      */
     public final void start() {
-        logger.info("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
-                + faultId + "]\t"
-                + "[FaultName = " + className + "]\t"
+        logger.info("[FaultInstanceId = " + faultInstanceId + "]    [FaultId = "
+                + faultId + "]    "
+                + "[FaultName = " + className + "]    "
                 + "fault injection start!");
         System.out.flush();
     }
@@ -84,9 +84,9 @@ public class Loggi {
      * @param s is the message you want to store.
      */
     public final void log(final String s) {
-        logger.info("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
-                + faultId + "]\t"
-                + "[FaultName = " + className + "]\t"
+        logger.info("[FaultInstanceId = " + faultInstanceId + "]    [FaultId = "
+                + faultId + "]    "
+                + "[FaultName = " + className + "]    "
                 + s);
         System.out.flush();
     }
@@ -96,9 +96,9 @@ public class Loggi {
      * you should call this at the end of a fault injection.
      */
     public final void finish() {
-        logger.info("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
-                + faultId + "]\t"
-                + "[FaultName = " + className + "]\t"
+        logger.info("[FaultInstanceId = " + faultInstanceId + "]    [FaultId = "
+                + faultId + "]    "
+                + "[FaultName = " + className + "]    "
                 + "fault injection finish!");
         System.out.flush();
     }
@@ -108,10 +108,10 @@ public class Loggi {
      * @param s is the error message.
      */
     public final void error(final String s) {
-        logger.error("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
-                + faultId + "]\t"
+        logger.error("[FaultInstanceId = " + faultInstanceId + "]    [FaultId = "
+                + faultId + "]    "
                 + "[FaultName = "
-                + className + "]\t" + s);
+                + className + "]    " + s);
         System.out.flush();
     }
 
@@ -120,10 +120,10 @@ public class Loggi {
      * @param e is the error exception.
      */
     public final void error(final Exception e) {
-        logger.error("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
-                + faultId + "]\t"
+        logger.error("[FaultInstanceId = " + faultInstanceId + "]    [FaultId = "
+                + faultId + "]    "
                 + "[FaultName = "
-                + className + "]\t" + e);
+                + className + "]    " + e);
         System.out.flush();
     }
 

@@ -183,6 +183,6 @@ class InjectionThread implements Runnable {
   public void terminate() {
     this.fault.terminate();
     FaultInjector.faultInstances.remove(faultInstanceId);
-    loggi.log("terminate by users");
+    loggi.log("terminated by users");
   }
 }
