@@ -16,7 +16,6 @@ public class InstanceUnavailableFault extends AbstractFault {
   private Ec2Service ec2Service;
   private String instanceId;
   private static Loggi logger;
-  private String faultInstanceId;
 
   /**
    * Constructor of this class.
@@ -26,8 +25,7 @@ public class InstanceUnavailableFault extends AbstractFault {
   public InstanceUnavailableFault(HashMap<String, String> params) throws IOException {
     super(params);
     this.instanceId = params.get("instanceId");
-    faultInstanceId = params.get("faultInstanceId");
-    logger = new Loggi(params.get("faultInstanceId"),InstanceUnavailableFault.class.getName());
+    logger = new Loggi(faultInstanceId,InstanceUnavailableFault.class.getName());
   }
 
   @Override

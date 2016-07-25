@@ -17,7 +17,6 @@ import java.util.List;
  * Created by wilsoncao on 7/7/16.
  */
 public class LaunchPendingFault extends AbstractFault {
-  private String faultInstanceId;
   private String asgName;
   private static Loggi logger;
   private AsgService asgService;
@@ -27,7 +26,6 @@ public class LaunchPendingFault extends AbstractFault {
 
     super(params);
     this.asgName = params.get("asgName");
-    this.faultInstanceId = params.get("faultInstanceId");
     logger = new Loggi(faultInstanceId,LaunchPendingFault.class.getName());
   }
 

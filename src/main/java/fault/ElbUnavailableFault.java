@@ -20,7 +20,6 @@ public class ElbUnavailableFault extends AbstractFault {
   //  static final Logger logger = LogManager.getLogger(ElbUnavailableFault.class.getName());
 
   private String elbName;
-  private String faultInstanceId;
   private ElbService elbService;
   private AmazonElasticLoadBalancing elb;
   private static Loggi logger;
@@ -32,7 +31,6 @@ public class ElbUnavailableFault extends AbstractFault {
   public ElbUnavailableFault(HashMap<String, String> params) throws IOException {
     super(params);
     this.elbName = params.get("elbName");
-    this.faultInstanceId = params.get("faultInstanceId");
     logger = new Loggi(faultInstanceId,ElbUnavailableFault.class.getName());
 
   }

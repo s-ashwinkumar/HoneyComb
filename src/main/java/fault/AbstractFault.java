@@ -9,8 +9,10 @@ import java.util.HashMap;
 public abstract class AbstractFault implements FaultInterface {
   private HashMap<String, String> params;
   private boolean isTerminated = false;
+  protected String faultInstanceId;
 
   public AbstractFault(HashMap<String, String> params) {
+    this.faultInstanceId = params.get("faultInstanceId");
     this.params = params;
   }
 

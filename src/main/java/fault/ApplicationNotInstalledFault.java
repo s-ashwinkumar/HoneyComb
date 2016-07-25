@@ -21,7 +21,6 @@ import java.util.List;
 public class ApplicationNotInstalledFault extends AbstractFault {
   private String sshUser;
   private String sshKeyFilePath;
-  private String faultInstanceId;
   private String asgName;
   private static Loggi logger;
   private AsgService asgService;
@@ -34,7 +33,6 @@ public class ApplicationNotInstalledFault extends AbstractFault {
     sshUser = params.get("sshUser");
     asgName = params.get("asgName");
     sshKeyFilePath = params.get("sshKeyFilePath");
-    this.faultInstanceId = params.get("faultInstanceId");
     logger = new Loggi(faultInstanceId,ApplicationNotInstalledFault.class.getName());
   }
 

@@ -22,7 +22,6 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
   private String asgName;
   private String faultySecurityGroupName;
   private static Loggi logger;
-  private String faultInstanceId;
   private Ec2Service ec2Service;
   private AsgService asgService;
 
@@ -30,7 +29,6 @@ public class ChangeSecurityGroupInLcFault extends AbstractFault {
     super(params);
     this.asgName = params.get("asgName");
     this.faultySecurityGroupName = params.get("faultySecurityGroupName");
-    this.faultInstanceId = params.get("faultInstanceId");
     logger = new Loggi(faultInstanceId,ChangeSecurityGroupInLcFault.class.getName());
   }
 

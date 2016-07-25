@@ -24,10 +24,7 @@ import java.util.List;
 public class ChangeAmiInLcFault extends AbstractFault {
 
   private static Loggi logger;
-  //  static final Logger logger = LogManager.getLogger(ChangeAmiInLcFault.class.getName());
-
   private String faultyAmiId;
-  private String faultInstanceId;
   private String asgName;
   private Ec2Service ec2Service;
   private AsgService asgService;
@@ -41,7 +38,6 @@ public class ChangeAmiInLcFault extends AbstractFault {
     super(params);
     this.asgName = params.get("asgName");
     this.faultyAmiId = params.get("faultyAmiId");
-    this.faultInstanceId = params.get("faultInstanceId");
     logger = new Loggi(faultInstanceId,ChangeAmiInLcFault.class.getName());
   }
 

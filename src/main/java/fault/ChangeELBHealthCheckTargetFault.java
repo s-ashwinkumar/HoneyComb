@@ -13,7 +13,6 @@ import java.util.HashMap;
  * Created by wilsoncao on 7/7/16.
  */
 public class ChangeELBHealthCheckTargetFault extends AbstractFault {
-  private String faultInstanceId;
   private String faultyHealthCheckTarget;
   private String asgName;
   private AsgService asgService;
@@ -22,7 +21,6 @@ public class ChangeELBHealthCheckTargetFault extends AbstractFault {
 
   public ChangeELBHealthCheckTargetFault(HashMap<String,String> params) throws IOException {
     super(params);
-    this.faultInstanceId = params.get("faultInstanceId");
     this.asgName = params.get("asgName");
     this.faultyHealthCheckTarget = params.get("faultyHealthCheckTarget");
     logger = new Loggi(faultInstanceId, ChangeELBHealthCheckTargetFault.class.getName());
