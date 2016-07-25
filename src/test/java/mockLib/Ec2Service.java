@@ -13,7 +13,7 @@ import static org.mockito.Matchers.any;
  * Created by wilsoncao on 7/13/16.
  */
 public class Ec2Service {
-  private static lib.Ec2Service ec2Service;
+  public static lib.Ec2Service ec2Service;
 
   public static lib.Ec2Service getEc2Service(){
     ec2Service = mock(lib.Ec2Service.class);

@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
  * Created by wilsoncao on 7/13/16.
  */
 public class AsgService {
-  private static lib.AsgService asgService;
+  public static lib.AsgService asgService;
 
   public static lib.AsgService getAsgService(){
     asgService = mock(lib.AsgService.class);

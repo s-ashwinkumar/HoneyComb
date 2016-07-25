@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
  * Created by wilsoncao on 7/13/16.
  */
 public class ElbService {
-  private static lib.ElbService elbService;
+  public static lib.ElbService elbService;
 
   public static lib.ElbService getElbService(){
     elbService = mock(lib.ElbService.class);

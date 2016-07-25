@@ -14,7 +14,8 @@ import static org.mockito.Mockito.when;
  * Created by wilsoncao on 7/13/16.
  */
 public class AmazonElasticLoadBalancing {
-  private static com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing loadBalancer;
+  public static com.amazonaws.services.elasticloadbalancing
+      .AmazonElasticLoadBalancing loadBalancer;
 
   public static com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing getLoadBalancer(){
     loadBalancer = mock(com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing.class);

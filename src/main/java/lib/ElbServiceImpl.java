@@ -40,6 +40,13 @@ public class ElbServiceImpl implements ElbService {
 
   }
 
+  public String getFaultInstanceId() {
+    return faultInstanceId;
+  }
+
+  public AmazonElasticLoadBalancing getClient() {
+    return client;
+  }
 
   public ElbServiceImpl(String faultInstanceId, AmazonElasticLoadBalancing client) throws IOException {
     this.faultInstanceId = faultInstanceId;

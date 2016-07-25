@@ -1,0 +1,55 @@
+-- MySQL dump 10.13  Distrib 5.5.49, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: honeycomb
+-- ------------------------------------------------------
+-- Server version	5.5.49-0ubuntu0.14.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `fault`
+--
+
+DROP TABLE IF EXISTS `fault`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fault` (
+  `faultID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `description` text,
+  `location` varchar(255) NOT NULL,
+  `arguments` varchar(500) DEFAULT NULL,
+  `active` tinyint(1) NOT NULL,
+  PRIMARY KEY (`faultID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10010 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `fault`
+--
+
+LOCK TABLES `fault` WRITE;
+/*!40000 ALTER TABLE `fault` DISABLE KEYS */;
+INSERT INTO `fault` VALUES (10000,'TestFault','Description of test fault, this fault can be used to test termination','faults/TestFault.jar','nothing',1),(10001,'ChangeAmiInLcFault','Change ami for an ASG group','faults/ChangeAmiInLcFault.jar','asgName;faultyAmiId',1),(10002,'ElbUnavailableFault','Cannot create an asg when ELB is deleted','faults/ElbUnavailableFault.jar','asgName;elbName',1),(10003,'InstanceUnavailableFault','Delete an instance','faults/InstanceUnavailableFault.jar','instanceId',1),(10004,'WebServerDownFault','take down Apache Web Server on one EC2 Instance from ASG.','faults/WebServerDownFault.jar','sshUser;sshKeyFilePath;asgName',1),(10005,'ApplicationNotInstalledFault','The deployment process deploy every instance with WordPress installed. The fault get the AutoScalingGroup name and delete the application from one of the instance.','faults/ApplicationNotInstalledFault.jar','sshUser;sshKeyFilePath;asgName',1),(10006,'ChangeELBHealthCheckTargetFault','Change the ASG health check URL from the load balancer which is attach to the ASG.','faults/ChangeELBHealthCheckTargetFault.jar','asgName;faultyHealthCheckTarget',1),(10007,'ChangeSecurityGroupInLcFault','Attach new LaunchConfiguration with different Security Group to the ASG.','faults/ChangeSecurityGroupInLcFault.jar','asgName;faultySecurityGroupName',1),(10008,'SecurityGroupAccessProblemFault','Security Group access problem fault to all instances.','faults/SecurityGroupAccessProblemFault.jar','asgName;failedSecurityGroupName',1),(10009,'LaunchPendingFault','Tags a fault as launch pending. NOTE : This only adds a tag and does not actually take it to pending status as it is not possible.','faults/LaunchPendingFault','asgName;faultInstanceId',1);
+/*!40000 ALTER TABLE `fault` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2016-07-21 23:28:15

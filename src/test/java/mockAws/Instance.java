@@ -2,6 +2,8 @@ package mockAws;
 
 import com.amazonaws.services.ec2.model.InstanceState;
 
+import java.util.Date;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -27,5 +29,13 @@ public class Instance {
     when(instance.getInstanceId()).thenReturn("1234");
     return instance;
   }
+
+  public static com.amazonaws.services.ec2.model.Instance
+  getInstanceWithGivenLaunchTime(Date time){
+    instance = mock(com.amazonaws.services.ec2.model.Instance.class);
+    when(instance.getLaunchTime()).thenReturn(time);
+    return instance;
+  }
+
 
 }
