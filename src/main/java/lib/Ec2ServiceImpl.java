@@ -74,7 +74,7 @@ public class Ec2ServiceImpl implements Ec2Service {
     try {
       images = client.describeImages(req).getImages();
     } catch (AmazonServiceException exception) {
-      logger.log("The AMI with id = " + amiId + " cannot be found. Caused by: " + exception);
+      logger.error("The AMI with id = " + amiId + " cannot be found. Caused by: " + exception);
       return null;
     }
 
@@ -103,7 +103,7 @@ public class Ec2ServiceImpl implements Ec2Service {
     try {
       reservations = client.describeInstances(req).getReservations();
     } catch (AmazonServiceException exception) {
-      logger.log("The EC2 Instance with id = " + instanceId
+      logger.error("The EC2 Instance with id = " + instanceId
           + " cannot be found. Caused by: " + exception.getErrorMessage());
       return null;
     }
@@ -154,7 +154,7 @@ public class Ec2ServiceImpl implements Ec2Service {
     try {
       keyPairs = client.describeKeyPairs(req).getKeyPairs();
     } catch (AmazonServiceException exception) {
-      logger.log("The Key Pair with name = " + keyPairName
+      logger.error("The Key Pair with name = " + keyPairName
           + " cannot be found. Caused by: " + exception);
       return null;
     }
@@ -184,7 +184,7 @@ public class Ec2ServiceImpl implements Ec2Service {
     try {
       sgs = client.describeSecurityGroups(req).getSecurityGroups();
     } catch (AmazonServiceException exception) {
-      logger.log("The Security Group with name = "
+      logger.error("The Security Group with name = "
           + securityGroupName + " cannot be found. Caused by: " + exception);
       return null;
     }

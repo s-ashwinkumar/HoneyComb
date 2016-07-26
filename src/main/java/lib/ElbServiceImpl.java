@@ -74,7 +74,7 @@ public class ElbServiceImpl implements ElbService {
     try {
       elbs = client.describeLoadBalancers(req).getLoadBalancerDescriptions();
     } catch (AmazonServiceException exception) {
-      logger.log("The ELB with name = " + elbName + " cannot be found. Caused by: " + exception);
+      logger.error("The ELB with name = " + elbName + " cannot be found. Caused by: " + exception);
       return null;
     }
 
@@ -104,7 +104,7 @@ public class ElbServiceImpl implements ElbService {
     try {
       instances = client.describeInstanceHealth(req).getInstanceStates();
     } catch (AmazonServiceException exception) {
-      logger.log("The ELB with name = " + elbName + " cannot be found. Caused by: " + exception);
+      logger.error("The ELB with name = " + elbName + " cannot be found. Caused by: " + exception);
       return null;
     }
 
@@ -171,7 +171,7 @@ public class ElbServiceImpl implements ElbService {
     try {
       tagDescriptions = client.describeTags(req).getTagDescriptions();
     } catch (AmazonServiceException exception) {
-      logger.log("ELB with name = " + elbName + " cannot be found. Caused by: " + exception);
+      logger.error("ELB with name = " + elbName + " cannot be found. Caused by: " + exception);
       return null;
     }
 

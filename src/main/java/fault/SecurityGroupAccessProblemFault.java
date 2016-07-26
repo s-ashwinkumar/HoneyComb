@@ -12,7 +12,6 @@ import java.util.HashMap;
  * Created by wilsoncao on 7/7/16.
  */
 public class SecurityGroupAccessProblemFault extends AbstractFault{
-  private String asgName;
   private static Loggi logger;
   private String failedSecurityGroupName;
   private Ec2Service ec2Service;
@@ -20,7 +19,6 @@ public class SecurityGroupAccessProblemFault extends AbstractFault{
   public SecurityGroupAccessProblemFault(HashMap<String,String> params) throws IOException {
 
     super(params);
-    this.asgName = params.get("asgName");
     this.failedSecurityGroupName = params.get("failedSecurityGroupName");
     logger = new Loggi(faultInstanceId,SecurityGroupAccessProblemFault.class.getName());
   }

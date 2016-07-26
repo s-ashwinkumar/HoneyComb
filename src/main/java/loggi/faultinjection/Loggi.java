@@ -13,7 +13,7 @@ import java.io.IOException;
  * The format will be as below:
  * 2016-06-01 19:18:16:000 timeZone INFO
  * [FaultInstanceId = 123456789112300001]
- * [FaultId = 00001]    [faultName = “LaunchConfiguration”]    Message
+ * [FaultId = 00001]    [faultName = "LaunchConfiguration"]    Message
  *
  * You can use as below:
  * Loggi loggi = new Loggi("123456789112300001", className);
