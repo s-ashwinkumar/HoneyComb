@@ -1,16 +1,10 @@
 package fi.vertx;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.Json;
-import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
-
-import java.io.File;
-import java.util.Set;
 
 
 /**
@@ -58,21 +52,23 @@ final class MainServer {
 
     router.post("/faults/deactivate").blockingHandler
         (RouterClass::deactivateFault,
-        false);
+            false);
 
-    router.post("/faults/reactivate").blockingHandler(RouterClass::reactivateFault,
+    router.post("/faults/reactivate").blockingHandler
+        (RouterClass::reactivateFault,
         false);
 
     router.post("/inject/:faultId").blockingHandler(RouterClass::inject, false);
 
-    router.post("/terminate/:faultInstanceId").blockingHandler(RouterClass::termination, false);
+    router.post("/terminate/:faultInstanceId").blockingHandler
+        (RouterClass::termination, false);
 
     router.post("/faults/upload").blockingHandler(RouterClass::uploadFault,
         false);
 
     router.post("/faults/update").blockingHandler(RouterClass::updateFault,
         false);
-    
+
     router.route("/*").handler(StaticHandler.create());  //for the front end
 
     Vertx.vertx().createHttpServer().requestHandler(router::accept)

@@ -9,16 +9,17 @@ import static org.mockito.Mockito.when;
 public class InstanceState {
   private static com.amazonaws.services.ec2.model.InstanceState state;
 
-  public static com.amazonaws.services.ec2.model.InstanceState getInstanceState(){
-    state  = mock(com.amazonaws.services.ec2.model.InstanceState.class);
+  public static com.amazonaws.services.ec2.model.InstanceState
+  getInstanceState() {
+    state = mock(com.amazonaws.services.ec2.model.InstanceState.class);
     when(state.getName()).thenReturn("running");
     return state;
   }
 
   public static com.amazonaws.services.ec2.model.InstanceState
-  getInstanceStateWithAlternatingState(){
-    state  = mock(com.amazonaws.services.ec2.model.InstanceState.class);
-    when(state.getName()).thenReturn("Stopped","running");
+  getInstanceStateWithAlternatingState() {
+    state = mock(com.amazonaws.services.ec2.model.InstanceState.class);
+    when(state.getName()).thenReturn("Stopped", "running");
     return state;
   }
 }

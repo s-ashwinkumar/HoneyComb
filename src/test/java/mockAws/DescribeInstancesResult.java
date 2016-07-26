@@ -2,8 +2,8 @@ package mockAws;
 
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.ec2.model.*;
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.Reservation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +15,13 @@ import static org.mockito.Mockito.when;
  * Created by wilsoncao on 7/13/16.
  */
 public class DescribeInstancesResult {
-  private static com.amazonaws.services.ec2.model.DescribeInstancesResult describeInstancesResult;
+  private static com.amazonaws.services.ec2.model.DescribeInstancesResult
+      describeInstancesResult;
+
   public static com.amazonaws.services.ec2.model.DescribeInstancesResult
-  getDescribeInstancesResultWithInstances(){
-    describeInstancesResult = mock(com.amazonaws.services.ec2.model.DescribeInstancesResult.class);
+  getDescribeInstancesResultWithInstances() {
+    describeInstancesResult = mock(com.amazonaws.services.ec2.model
+        .DescribeInstancesResult.class);
     Reservation reservation = mock(Reservation.class);
     List<Reservation> reservations = new ArrayList<>();
     List<Instance> instances = new ArrayList<>();
@@ -31,16 +34,18 @@ public class DescribeInstancesResult {
   }
 
   public static com.amazonaws.services.ec2.model.DescribeInstancesResult
-  getDescribeInstancesResultWithoutReservation(){
-    describeInstancesResult = mock(com.amazonaws.services.ec2.model.DescribeInstancesResult.class);
+  getDescribeInstancesResultWithoutReservation() {
+    describeInstancesResult = mock(com.amazonaws.services.ec2.model
+        .DescribeInstancesResult.class);
     List<Reservation> reservations = new ArrayList<>();
     when(describeInstancesResult.getReservations()).thenReturn(reservations);
     return describeInstancesResult;
   }
 
   public static com.amazonaws.services.ec2.model.DescribeInstancesResult
-  getDescribeInstancesResultWithoutException(){
-    describeInstancesResult = mock(com.amazonaws.services.ec2.model.DescribeInstancesResult.class);
+  getDescribeInstancesResultWithoutException() {
+    describeInstancesResult = mock(com.amazonaws.services.ec2.model
+        .DescribeInstancesResult.class);
     List<Reservation> reservations = new ArrayList<>();
     when(describeInstancesResult.getReservations()).thenThrow
         (AmazonServiceException.class);
@@ -48,8 +53,9 @@ public class DescribeInstancesResult {
   }
 
   public static com.amazonaws.services.ec2.model.DescribeInstancesResult
-  getDescribeInstancesResult(){
-    describeInstancesResult = mock(com.amazonaws.services.ec2.model.DescribeInstancesResult.class);
+  getDescribeInstancesResult() {
+    describeInstancesResult = mock(com.amazonaws.services.ec2.model
+        .DescribeInstancesResult.class);
     Reservation reservation = mock(Reservation.class);
     List<Reservation> reservations = new ArrayList<>();
     List<Instance> instances = new ArrayList<>();
@@ -60,8 +66,9 @@ public class DescribeInstancesResult {
   }
 
   public static com.amazonaws.services.ec2.model.DescribeInstancesResult
-  getDescribeInstancesResultWithGivenInstance(Instance instance){
-    describeInstancesResult = mock(com.amazonaws.services.ec2.model.DescribeInstancesResult.class);
+  getDescribeInstancesResultWithGivenInstance(Instance instance) {
+    describeInstancesResult = mock(com.amazonaws.services.ec2.model
+        .DescribeInstancesResult.class);
     Reservation reservation = mock(Reservation.class);
     List<Reservation> reservations = new ArrayList<>();
     List<Instance> instances = new ArrayList<>();

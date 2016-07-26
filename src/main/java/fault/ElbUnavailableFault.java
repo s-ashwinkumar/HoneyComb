@@ -3,7 +3,8 @@ package fault;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing;
-import com.amazonaws.services.elasticloadbalancing.model.DeleteLoadBalancerRequest;
+import com.amazonaws.services.elasticloadbalancing.model
+    .DeleteLoadBalancerRequest;
 import lib.AmazonClientFactory;
 import lib.ElbService;
 import lib.ServiceFactory;
@@ -17,7 +18,8 @@ import java.util.HashMap;
  */
 public class ElbUnavailableFault extends AbstractFault {
 
-  //  static final Logger logger = LogManager.getLogger(ElbUnavailableFault.class.getName());
+  //  static final Logger logger = LogManager.getLogger(ElbUnavailableFault
+  // .class.getName());
 
   private String elbName;
   private ElbService elbService;
@@ -26,20 +28,23 @@ public class ElbUnavailableFault extends AbstractFault {
 
   /**
    * Constructor for the class.
+   *
    * @param params A HashMap as a parameter.
    */
-  public ElbUnavailableFault(HashMap<String, String> params) throws IOException {
+  public ElbUnavailableFault(HashMap<String, String> params) throws
+      IOException {
     super(params);
     this.elbName = params.get("elbName");
-    logger = new Loggi(faultInstanceId,ElbUnavailableFault.class.getName());
+    logger = new Loggi(faultInstanceId, ElbUnavailableFault.class.getName());
 
   }
 
   /**
    * A method that implements the interface
+   *
    * @throws AmazonServiceException thrown by AWS API.
-   * @throws AmazonClientException thrown by AWS API.
-   * @throws HoneyCombException thrown by AWS API.
+   * @throws AmazonClientException  thrown by AWS API.
+   * @throws HoneyCombException     thrown by AWS API.
    */
   @Override
   public void start() throws Exception {
@@ -50,7 +55,7 @@ public class ElbUnavailableFault extends AbstractFault {
       elbService = ServiceFactory.getElbService(faultInstanceId);
     }
 
-    if (elb == null){
+    if (elb == null) {
       elb = AmazonClientFactory.getAmazonElasticLoadBalancingClient();
     }
 
@@ -64,13 +69,15 @@ public class ElbUnavailableFault extends AbstractFault {
 
     if (this.isTerminated())
       return;
-    DeleteLoadBalancerRequest req = new DeleteLoadBalancerRequest().withLoadBalancerName(elbName);
+    DeleteLoadBalancerRequest req = new DeleteLoadBalancerRequest()
+        .withLoadBalancerName(elbName);
 
     if (this.isTerminated())
       return;
     elb.deleteLoadBalancer(req);
     // Log the fault injected
-    logger.log("Fault injected: successfully delete Load Balancer with name = " + elbName);
+    logger.log("Fault injected: successfully delete Load Balancer with name =" +
+        " " + elbName);
     // Tag the Load Balancer with: <"elb_experiment_status", "unavailable">
     // to mark it as Unavailable
     // elbService.tagElb(elbName, "elb_experiment_status", "unavailable");
@@ -87,7 +94,7 @@ public class ElbUnavailableFault extends AbstractFault {
     this.elbService = elbService;
   }
 
-  public void elbSetter(AmazonElasticLoadBalancing elb){
+  public void elbSetter(AmazonElasticLoadBalancing elb) {
     this.elb = elb;
   }
 

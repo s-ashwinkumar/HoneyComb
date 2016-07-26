@@ -19,11 +19,13 @@ public class ChangeELBHealthCheckTargetFault extends AbstractFault {
   private ElbService elbService;
   private static Loggi logger;
 
-  public ChangeELBHealthCheckTargetFault(HashMap<String,String> params) throws IOException {
+  public ChangeELBHealthCheckTargetFault(HashMap<String, String> params)
+      throws IOException {
     super(params);
     this.asgName = params.get("asgName");
     this.faultyHealthCheckTarget = params.get("faultyHealthCheckTarget");
-    logger = new Loggi(faultInstanceId, ChangeELBHealthCheckTargetFault.class.getName());
+    logger = new Loggi(faultInstanceId, ChangeELBHealthCheckTargetFault.class
+        .getName());
   }
 
   @Override
@@ -65,7 +67,8 @@ public class ChangeELBHealthCheckTargetFault extends AbstractFault {
       elbService.updateElbHealthCheckTarget(elbName, faultyHealthCheckTarget);
     } catch (IllegalArgumentException e) {
       throw new HoneyCombException(
-          "Failed to update Health Check target of ELB " + elbName + ". Caused by: " + e);
+          "Failed to update Health Check target of ELB " + elbName + ". " +
+              "Caused by: " + e);
     }
 
     // Delay for ELB to become unhealthy
@@ -74,11 +77,11 @@ public class ChangeELBHealthCheckTargetFault extends AbstractFault {
     logger.finish();
   }
 
-  public void asgServiceSetter(AsgService asgService){
+  public void asgServiceSetter(AsgService asgService) {
     this.asgService = asgService;
   }
 
-  public void elbServiceSetter(ElbService elbService){
+  public void elbServiceSetter(ElbService elbService) {
     this.elbService = elbService;
   }
 }

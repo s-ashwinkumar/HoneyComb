@@ -192,11 +192,11 @@ public class FaultModel {
       status, String description, String arguments)
       throws
       Exception {
-    String query = "update fault set active="+status;
-    if(description != null && !description.trim().equals(""))
-      query += ", description='"+description+"'";
-    if(arguments != null && !arguments.trim().equals(""))
-      query += ", arguments='"+arguments+"'";
+    String query = "update fault set active=" + status;
+    if (description != null && !description.trim().equals(""))
+      query += ", description='" + description + "'";
+    if (arguments != null && !arguments.trim().equals(""))
+      query += ", arguments='" + arguments + "'";
     query += " where faultID=" + id;
     return dbCon.getStmt().executeUpdate(query);
   }
@@ -242,7 +242,8 @@ public class FaultModel {
 
   }
 
-  public static FaultModel getFaultByName(DbConnection dbCon, String name) throws
+  public static FaultModel getFaultByName(DbConnection dbCon, String name)
+      throws
       Exception {
     String sql = "select * from fault where name = '" + name + "'";
     ResultSet rs = dbCon.getStmt().executeQuery(sql);

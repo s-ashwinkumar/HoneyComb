@@ -17,7 +17,8 @@ public class ServiceFactory {
    *
    * @return an AsgService object.
    */
-  public static AsgService getAsgService(String faultInstanceId) throws IOException {
+  public static AsgService getAsgService(String faultInstanceId) throws
+      IOException {
     AsgService = new AsgServiceImpl(faultInstanceId);
     return AsgService;
   }
@@ -27,7 +28,8 @@ public class ServiceFactory {
    *
    * @return an Ec2Service object.
    */
-  public static Ec2Service getEc2Service(String faultInstanceId) throws IOException  {
+  public static Ec2Service getEc2Service(String faultInstanceId) throws
+      IOException {
     Ec2Service = new Ec2ServiceImpl(faultInstanceId);
     return Ec2Service;
   }
@@ -37,7 +39,8 @@ public class ServiceFactory {
    *
    * @return an ElbService object.
    */
-  public static ElbService getElbService(String faultInstanceId) throws IOException  {
+  public static ElbService getElbService(String faultInstanceId) throws
+      IOException {
     ElbService = new ElbServiceImpl(faultInstanceId);
     return ElbService;
   }
@@ -48,7 +51,8 @@ public class ServiceFactory {
    *
    * @return an SshService object.
    */
-  public static SshService getSshService(String faultInstanceId) throws IOException  {
+  public static SshService getSshService(String faultInstanceId) throws
+      IOException {
     SshService = new SshServiceImpl(faultInstanceId);
     return SshService;
   }

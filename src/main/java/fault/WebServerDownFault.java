@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by wilsoncao on 7/7/16.
  */
-public class WebServerDownFault extends AbstractFault{
+public class WebServerDownFault extends AbstractFault {
   private String sshUser;
   private String sshKeyFilePath;
   private static Loggi logger;
@@ -26,27 +26,27 @@ public class WebServerDownFault extends AbstractFault{
   private Ec2Service ec2Service;
   private SshService sshService;
 
-  public WebServerDownFault(HashMap<String,String> params) throws IOException {
+  public WebServerDownFault(HashMap<String, String> params) throws IOException {
 
     super(params);
     this.sshUser = params.get("sshUser");
     this.sshKeyFilePath = params.get("sshKeyFilePath");
     this.asgName = params.get("asgName");
-    logger = new Loggi(faultInstanceId,WebServerDownFault.class.getName());
+    logger = new Loggi(faultInstanceId, WebServerDownFault.class.getName());
   }
 
-  public void start() throws Exception{
+  public void start() throws Exception {
     logger.start();
     // Get the Services
-    if(asgService == null) {
+    if (asgService == null) {
       asgService = ServiceFactory.getAsgService(this.faultInstanceId);
     }
 
-    if(ec2Service == null) {
+    if (ec2Service == null) {
       ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
     }
 
-    if(sshService == null) {
+    if (sshService == null) {
       sshService = ServiceFactory.getSshService(faultInstanceId);
     }
 
@@ -62,9 +62,12 @@ public class WebServerDownFault extends AbstractFault{
     // Get the list of "running" EC2 Instances in the ASG
     // (i.e. the EC2 instances which has state "running")
     List<Instance> ec2RunningInstances = new ArrayList<Instance>();
-    List<com.amazonaws.services.autoscaling.model.Instance> asgInstances = asg.getInstances();
-    for (com.amazonaws.services.autoscaling.model.Instance asgInstance : asgInstances) {
-      Instance ec2Instance = ec2Service.describeEC2Instance(asgInstance.getInstanceId());
+    List<com.amazonaws.services.autoscaling.model.Instance> asgInstances =
+        asg.getInstances();
+    for (com.amazonaws.services.autoscaling.model.Instance asgInstance :
+        asgInstances) {
+      Instance ec2Instance = ec2Service.describeEC2Instance(asgInstance
+          .getInstanceId());
       if (ec2Instance.getState().getName().equals("running")) {
         ec2RunningInstances.add(ec2Instance);
       }
@@ -78,7 +81,8 @@ public class WebServerDownFault extends AbstractFault{
       Instance instanceToInject = ec2RunningInstances.get(0);
 
       // Log the fault injection
-      logger.log("Injecting fault: take down Apache Web Server on EC2 Instance with ID = " +
+      logger.log("Injecting fault: take down Apache Web Server on EC2 " +
+          "Instance with ID = " +
           instanceToInject.getInstanceId());
       if (this.isTerminated())
         return;
@@ -87,9 +91,11 @@ public class WebServerDownFault extends AbstractFault{
         List<String> sshCommands = new ArrayList<String>();
         sshCommands.add("sudo /etc/init.d/httpd stop");
         sshService.executeSshCommands(
-            instanceToInject.getPublicIpAddress(), sshUser, sshKeyFilePath, sshCommands);
+            instanceToInject.getPublicIpAddress(), sshUser, sshKeyFilePath,
+            sshCommands);
       } catch (IOException e) {
-        throw new HoneyCombException("Unable to inject fault to Instance ID = " +
+        throw new HoneyCombException("Unable to inject fault to Instance ID =" +
+            " " +
             instanceToInject.getInstanceId() + ". Caused by: " + e);
       }
 
@@ -99,15 +105,15 @@ public class WebServerDownFault extends AbstractFault{
     }
   }
 
-  public void asgServiceSetter(AsgService asgService){
+  public void asgServiceSetter(AsgService asgService) {
     this.asgService = asgService;
   }
 
-  public void ec2ServiceSetter(Ec2Service ec2Service){
+  public void ec2ServiceSetter(Ec2Service ec2Service) {
     this.ec2Service = ec2Service;
   }
 
-  public void sshServiceSetter(SshService sshService){
+  public void sshServiceSetter(SshService sshService) {
     this.sshService = sshService;
   }
 }

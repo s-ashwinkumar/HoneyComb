@@ -1,10 +1,8 @@
 package fault;
 
-import lib.AsgService;
 import lib.Ec2Service;
 import lib.ServiceFactory;
 import loggi.faultinjection.Loggi;
-
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,13 +17,16 @@ public class InstanceUnavailableFault extends AbstractFault {
 
   /**
    * Constructor of this class.
+   *
    * @param params A HashMap object.
    * @throws IOException If we can't get the class name, throw this exception
    */
-  public InstanceUnavailableFault(HashMap<String, String> params) throws IOException {
+  public InstanceUnavailableFault(HashMap<String, String> params) throws
+      IOException {
     super(params);
     this.instanceId = params.get("instanceId");
-    logger = new Loggi(faultInstanceId,InstanceUnavailableFault.class.getName());
+    logger = new Loggi(faultInstanceId, InstanceUnavailableFault.class
+        .getName());
   }
 
   @Override

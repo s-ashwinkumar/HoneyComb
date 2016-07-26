@@ -5,14 +5,17 @@ import com.amazonaws.services.autoscaling.model.Instance;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 /**
  * Created by wilsoncao on 7/13/16.
  */
 public class AutoScalingGroup {
   public static com.amazonaws.services.autoscaling.model.AutoScalingGroup asg;
 
-  public static com.amazonaws.services.autoscaling.model.AutoScalingGroup getAsg(){
+  public static com.amazonaws.services.autoscaling.model.AutoScalingGroup
+  getAsg() {
     asg = mock(com.amazonaws.services.autoscaling.model.AutoScalingGroup.class);
     List<Instance> list = new ArrayList<>();
     list.add(AsgInstance.getInstance());
@@ -27,7 +30,7 @@ public class AutoScalingGroup {
   }
 
   public static com.amazonaws.services.autoscaling.model.AutoScalingGroup
-  getAsgWithNoInstance(){
+  getAsgWithNoInstance() {
     asg = mock(com.amazonaws.services.autoscaling.model.AutoScalingGroup.class);
     List<Instance> list = new ArrayList<>();
     when(asg.getInstances()).thenReturn(list);

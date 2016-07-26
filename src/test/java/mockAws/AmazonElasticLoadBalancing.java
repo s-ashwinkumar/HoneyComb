@@ -1,14 +1,12 @@
 package mockAws;
 
-import com.amazonaws.services.elasticloadbalancing.model.*;
+import com.amazonaws.services.elasticloadbalancing.model.TagDescription;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by wilsoncao on 7/13/16.
@@ -17,15 +15,21 @@ public class AmazonElasticLoadBalancing {
   public static com.amazonaws.services.elasticloadbalancing
       .AmazonElasticLoadBalancing loadBalancer;
 
-  public static com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing getLoadBalancer(){
-    loadBalancer = mock(com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing.class);
+  public static com.amazonaws.services.elasticloadbalancing
+      .AmazonElasticLoadBalancing getLoadBalancer() {
+    loadBalancer = mock(com.amazonaws.services.elasticloadbalancing
+        .AmazonElasticLoadBalancing.class);
     doNothing().when(loadBalancer).deleteLoadBalancer(any());
-    com.amazonaws.services.elasticloadbalancing.model.DescribeLoadBalancersResult describeLoadBalancersResult = mockAws
+    com.amazonaws.services.elasticloadbalancing.model
+        .DescribeLoadBalancersResult describeLoadBalancersResult = mockAws
         .DescribeLoadBalancersResult.getDescribeLoadBalancersResult();
-    when(loadBalancer.describeLoadBalancers(any())).thenReturn(describeLoadBalancersResult);
-    com.amazonaws.services.elasticloadbalancing.model.DescribeInstanceHealthResult describeInstanceHealthResult = mockAws
+    when(loadBalancer.describeLoadBalancers(any())).thenReturn
+        (describeLoadBalancersResult);
+    com.amazonaws.services.elasticloadbalancing.model
+        .DescribeInstanceHealthResult describeInstanceHealthResult = mockAws
         .DescribeInstanceHealthResult.getDescribeInstanceHealthResult();
-    when(loadBalancer.describeInstanceHealth(any())).thenReturn(describeInstanceHealthResult);
+    when(loadBalancer.describeInstanceHealth(any())).thenReturn
+        (describeInstanceHealthResult);
 
     when(loadBalancer.configureHealthCheck(any())).thenReturn(null);
 
@@ -37,7 +41,8 @@ public class AmazonElasticLoadBalancing {
     TagDescription tagDescription = mock(TagDescription.class);
     tagDescriptions.add(tagDescription);
 
-//    when(loadBalancer.describeTags(any()).getTagDescriptions()).thenReturn(tagDescriptions);
+//    when(loadBalancer.describeTags(any()).getTagDescriptions()).thenReturn
+// (tagDescriptions);
 
 //    doNothing().when(loadBalancer).removeTags(any());
     when(loadBalancer.removeTags(any())).thenReturn(null);

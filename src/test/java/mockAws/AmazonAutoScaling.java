@@ -1,16 +1,15 @@
 package mockAws;
 
 import com.amazonaws.services.autoscaling.model.Activity;
-import com.amazonaws.services.autoscaling.model.LaunchConfiguration;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingGroupsResult;
-import com.amazonaws.services.autoscaling.model.DescribeLaunchConfigurationsResult;
+import com.amazonaws.services.autoscaling.model
+    .DescribeLaunchConfigurationsResult;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by wilsoncao on 7/13/16.
@@ -18,7 +17,8 @@ import static org.mockito.Mockito.when;
 public class AmazonAutoScaling {
   public static com.amazonaws.services.autoscaling.AmazonAutoScaling client;
 
-  public static com.amazonaws.services.autoscaling.AmazonAutoScaling getClient(){
+  public static com.amazonaws.services.autoscaling.AmazonAutoScaling
+  getClient() {
     client = mock(com.amazonaws.services.autoscaling.AmazonAutoScaling.class);
     DescribeAutoScalingGroupsResult asgRes = mockAws
         .DescribeAutoScalingGroupsResult
@@ -34,7 +34,8 @@ public class AmazonAutoScaling {
 
     Activity activity = mock(Activity.class);
     activityRes.add(activity);
-    when(client.describeScalingActivities(any()).getActivities()).thenReturn(activityRes);
+    when(client.describeScalingActivities(any()).getActivities()).thenReturn
+        (activityRes);
 
     doNothing().when(client).updateAutoScalingGroup(any());
     doNothing().when(client).createLaunchConfiguration(any());

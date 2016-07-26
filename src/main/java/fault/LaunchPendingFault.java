@@ -22,16 +22,16 @@ public class LaunchPendingFault extends AbstractFault {
   private AsgService asgService;
   private Ec2Service ec2Service;
 
-  public LaunchPendingFault(HashMap<String,String> params) throws IOException {
+  public LaunchPendingFault(HashMap<String, String> params) throws IOException {
 
     super(params);
     this.asgName = params.get("asgName");
-    logger = new Loggi(faultInstanceId,LaunchPendingFault.class.getName());
+    logger = new Loggi(faultInstanceId, LaunchPendingFault.class.getName());
   }
 
-  public void start() throws Exception{
+  public void start() throws Exception {
 // Get the Services
-    if( asgService == null)
+    if (asgService == null)
       asgService = ServiceFactory.getAsgService(faultInstanceId);
     if (ec2Service == null)
       ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
@@ -45,9 +45,12 @@ public class LaunchPendingFault extends AbstractFault {
     // Get the list of "online" EC2 Instances in the ASG
     // (i.e. the EC2 instances which has state "pending" or "running")
     List<Instance> ec2RunningInstances = new ArrayList<Instance>();
-    List<com.amazonaws.services.autoscaling.model.Instance> asgInstances = asg.getInstances();
-    for (com.amazonaws.services.autoscaling.model.Instance asgInstance : asgInstances) {
-      Instance ec2Instance = ec2Service.describeEC2Instance(asgInstance.getInstanceId());
+    List<com.amazonaws.services.autoscaling.model.Instance> asgInstances =
+        asg.getInstances();
+    for (com.amazonaws.services.autoscaling.model.Instance asgInstance :
+        asgInstances) {
+      Instance ec2Instance = ec2Service.describeEC2Instance(asgInstance
+          .getInstanceId());
       if (ec2Instance.getState().getName().equals("pending") ||
           ec2Instance.getState().getName().equals("running")) {
         ec2RunningInstances.add(ec2Instance);
@@ -62,7 +65,8 @@ public class LaunchPendingFault extends AbstractFault {
       Instance instanceToInject = ec2RunningInstances.get(0);
 
       // Log the fault injected
-      logger.log("Fault injected: tag as Launch Stuck Pending EC2 Instance with ID = " +
+      logger.log("Fault injected: tag as Launch Stuck Pending EC2 Instance " +
+          "with ID = " +
           instanceToInject.getInstanceId());
 
       // Inject the fault - "Tag" the instance as: <"launch_status", "pending">
@@ -72,11 +76,11 @@ public class LaunchPendingFault extends AbstractFault {
     }
   }
 
-  public void asgServiceSetter(AsgService asgService){
+  public void asgServiceSetter(AsgService asgService) {
     this.asgService = asgService;
   }
 
-  public void ec2ServiceSetter(Ec2Service ec2Service){
+  public void ec2ServiceSetter(Ec2Service ec2Service) {
     this.ec2Service = ec2Service;
   }
 }

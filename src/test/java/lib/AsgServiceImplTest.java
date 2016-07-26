@@ -1,25 +1,26 @@
 package lib;
 
 
-import com.amazonaws.services.autoscaling.model.*;
-import com.amazonaws.services.autoscaling.model.Instance;
-import com.mchange.util.AssertException;
-import mockAws.*;
+import com.amazonaws.services.autoscaling.model.Activity;
+import com.amazonaws.services.autoscaling.model.CreateAutoScalingGroupRequest;
+import com.amazonaws.services.autoscaling.model
+    .CreateLaunchConfigurationRequest;
+import logmodifier.LogChanger;
+import mockAws.AmazonAutoScaling;
 import mockAws.DescribeAutoScalingGroupsResult;
 import mockAws.DescribeLaunchConfigurationsResult;
 import mockAws.DescribeScalingActivitiesResult;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 
@@ -28,11 +29,18 @@ import static org.mockito.Mockito.*;
  */
 public class AsgServiceImplTest {
   public AsgServiceImpl obj;
+  LogChanger log = new LogChanger();
 
   @Before
   public void setUp() throws Exception {
     obj = new AsgServiceImpl("testinstanceidwithrandomstring");
+    log.setupLogForTest();
 
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    log.resetLogAfterTest();
   }
 
   @Test
@@ -473,7 +481,7 @@ public class AsgServiceImplTest {
         (lcResult.describeLaunchConfigurationsRes);
     obj.AmazonAutoScalingSetter(amazonasg.client);
     obj.deleteLaunchConfiguration("test lc");
-    verify(amazonasg.client,times(1)).deleteLaunchConfiguration(any());
+    verify(amazonasg.client, times(1)).deleteLaunchConfiguration(any());
   }
 
   @Test
@@ -502,8 +510,8 @@ public class AsgServiceImplTest {
     obj.AmazonAutoScalingSetter(amazonasg.client);
     try {
       obj.deleteAutoScalingGroup("RandomASGname");
-    } catch(Exception ex){
-      assertEquals("Auto Scaling Group with provided Name does not exist",ex
+    } catch (Exception ex) {
+      assertEquals("Auto Scaling Group with provided Name does not exist", ex
           .getMessage());
     }
 
@@ -525,8 +533,8 @@ public class AsgServiceImplTest {
     obj.AmazonAutoScalingSetter(amazonasg.client);
     try {
       obj.deleteAutoScalingGroup("RandomASGname");
-    } catch(Exception ex){
-      assertEquals("Auto Scaling Group with provided Name does not exist",ex
+    } catch (Exception ex) {
+      assertEquals("Auto Scaling Group with provided Name does not exist", ex
           .getMessage());
     }
 

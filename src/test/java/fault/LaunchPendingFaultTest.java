@@ -9,7 +9,6 @@ import org.mockito.InOrder;
 
 import java.util.HashMap;
 
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.inOrder;
@@ -20,12 +19,12 @@ import static org.mockito.Mockito.inOrder;
 public class LaunchPendingFaultTest {
 
   @Rule
-  public ExpectedException thrown= ExpectedException.none();
+  public ExpectedException thrown = ExpectedException.none();
 
   @Test
   public void faultTest() throws Exception {
-    HashMap<String,String> params = new HashMap<>();
-    params.put("faultInstanceId","asdfjasldfkjasdf");
+    HashMap<String, String> params = new HashMap<>();
+    params.put("faultInstanceId", "asdfjasldfkjasdf");
     params.put("asgName", "asg");
     LaunchPendingFault fault = new LaunchPendingFault(params);
     Ec2Service ec2Service = mockLib.Ec2Service.getEc2Service();
@@ -34,16 +33,17 @@ public class LaunchPendingFaultTest {
     fault.asgServiceSetter(asgService);
     fault.start();
 
-    InOrder inOrder = inOrder(asgService,ec2Service);
+    InOrder inOrder = inOrder(asgService, ec2Service);
     inOrder.verify(asgService).getAutoScalingGroup(anyString());
-    inOrder.verify(ec2Service,atLeastOnce()).describeEC2Instance(anyString());
-    inOrder.verify(ec2Service).tagEC2Instance(anyString(),anyString(),anyString());
+    inOrder.verify(ec2Service, atLeastOnce()).describeEC2Instance(anyString());
+    inOrder.verify(ec2Service).tagEC2Instance(anyString(), anyString(),
+        anyString());
   }
 
   @Test
   public void faultTestNull() throws Exception {
-    HashMap<String,String> params = new HashMap<>();
-    params.put("faultInstanceId","asdfjasldfkjasdf");
+    HashMap<String, String> params = new HashMap<>();
+    params.put("faultInstanceId", "asdfjasldfkjasdf");
     params.put("asgName", "asg");
     LaunchPendingFault fault = new LaunchPendingFault(params);
     Ec2Service ec2Service = mockLib.Ec2Service.getEc2Service();

@@ -1,10 +1,6 @@
 package fi.vertx;
 
-import fi.core.DbConnection;
-import fi.core.FaultInjector;
-import fi.core.FaultModel;
-import fi.core.User;
-import fi.core.Utils;
+import fi.core.*;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.FileUpload;
@@ -190,7 +186,8 @@ public final class RouterClass {
             } else {
               File oldFile = new File("faults/" + fault.getName() + ".jar");
               oldFile.delete();
-              uploadedFault.renameTo(new File("faults/" + fault.getName() + ".jar"));
+              uploadedFault.renameTo(new File("faults/" + fault.getName() + "" +
+                  ".jar"));
               FaultModel.updateFault(fault.getFaultId().toString(), dbCon,
                   true, desc, args);
               response.put("success", "Fault updated successfully");

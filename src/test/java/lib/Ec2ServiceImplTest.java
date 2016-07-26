@@ -3,33 +3,39 @@ package lib;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.model.*;
 import com.amazonaws.services.ec2.model.Instance;
+import logmodifier.LogChanger;
 import mockAws.*;
 import mockAws.DescribeImagesResult;
 import mockAws.DescribeInstancesResult;
 import mockAws.DescribeKeyPairsResult;
 import mockAws.DescribeSecurityGroupsResult;
 import mockAws.RunInstancesResult;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by wilsoncao on 7/13/16.
  */
 public class Ec2ServiceImplTest {
   public Ec2ServiceImpl obj;
+  LogChanger log = new LogChanger();
 
   @Before
   public void setUp() throws Exception {
     obj = new Ec2ServiceImpl("testinstanceidwithrandomstring");
+    log.setupLogForTest();
 
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    log.resetLogAfterTest();
   }
 
   @Test
@@ -334,12 +340,13 @@ public class Ec2ServiceImplTest {
             .runInstancesResult.getReservation().getInstances().get(0));
     when(ec2Obj.amazonEC2.describeInstances(any())).thenReturn
         (describeIinstancesRes);
-    when(ec2Obj.amazonEC2.runInstances(any())).thenReturn(RunInstancesResult.runInstancesResult);
+    when(ec2Obj.amazonEC2.runInstances(any())).thenReturn(RunInstancesResult
+        .runInstancesResult);
 
 
     obj = new Ec2ServiceImpl("testinstanceidwithrandomstr", ec2Obj.amazonEC2);
     result = obj.runInstance(mock(RunInstancesRequest.class));
-    assertEquals("1234",result);
+    assertEquals("1234", result);
 
   }
 
@@ -362,9 +369,9 @@ public class Ec2ServiceImplTest {
     when(ec2Obj.amazonEC2.terminateInstances(any())).thenThrow
         (AmazonServiceException.class);
     obj = new Ec2ServiceImpl("testinstanceidwithrandomstr", ec2Obj.amazonEC2);
-    try{
+    try {
       obj.terminateInstance("testinstanceidwithrandomstr");
-    } catch(Exception ex){
+    } catch (Exception ex) {
       assertTrue(ex.getMessage().contains("EC2 Instance with id = " +
           "testinstanceidwithrandomstr not found. Caused by"));
     }

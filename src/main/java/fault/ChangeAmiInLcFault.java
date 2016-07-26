@@ -3,7 +3,8 @@ package fault;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
-import com.amazonaws.services.autoscaling.model.CreateLaunchConfigurationRequest;
+import com.amazonaws.services.autoscaling.model
+    .CreateLaunchConfigurationRequest;
 import com.amazonaws.services.autoscaling.model.LaunchConfiguration;
 import com.amazonaws.services.ec2.model.Instance;
 import lib.AsgService;
@@ -32,20 +33,22 @@ public class ChangeAmiInLcFault extends AbstractFault {
 
   /**
    * The constructor of the class.
+   *
    * @param params An HashMap as a parameter.
    */
   public ChangeAmiInLcFault(HashMap<String, String> params) throws IOException {
     super(params);
     this.asgName = params.get("asgName");
     this.faultyAmiId = params.get("faultyAmiId");
-    logger = new Loggi(faultInstanceId,ChangeAmiInLcFault.class.getName());
+    logger = new Loggi(faultInstanceId, ChangeAmiInLcFault.class.getName());
   }
 
   /**
    * A method that implements the interface
+   *
    * @throws AmazonServiceException thrown by AWS API.
-   * @throws AmazonClientException thrown by AWS API.
-   * @throws HoneyCombException thrown by AWS API.
+   * @throws AmazonClientException  thrown by AWS API.
+   * @throws HoneyCombException     thrown by AWS API.
    */
   @Override
   public void start() throws Exception {
@@ -61,17 +64,21 @@ public class ChangeAmiInLcFault extends AbstractFault {
     }
 
     // Log the fault injection
-    logger.log("Injecting fault: Attach new LaunchConfiguration with different AMI to the ASG");
+    logger.log("Injecting fault: Attach new LaunchConfiguration with " +
+        "different AMI to the ASG");
 
     // Grab the current Launch Configuration
-    LaunchConfiguration lc = asgService.getLaunchConfigurationForAutoScalingGroup(asgName);
+    LaunchConfiguration lc = asgService
+        .getLaunchConfigurationForAutoScalingGroup(asgName);
     if (lc == null) {
       throw new HoneyCombException("LC or ASG do not exist");
     }
 
-    // Create a new LaunchConfiguration based on the current LC with the faulty AMI ID
+    // Create a new LaunchConfiguration based on the current LC with the
+    // faulty AMI ID
     // and with name "faulty-lc"
-    CreateLaunchConfigurationRequest req = new CreateLaunchConfigurationRequest();
+    CreateLaunchConfigurationRequest req = new
+        CreateLaunchConfigurationRequest();
     req.withImageId(faultyAmiId)
         .withInstanceType(lc.getInstanceType())
         .withKeyName(lc.getKeyName())
@@ -87,10 +94,12 @@ public class ChangeAmiInLcFault extends AbstractFault {
     if (this.isTerminated())
       return;
 
-    asgService.updateLaunchConfigurationInAutoScalingGroup(asgName, "faulty-lc");
+    asgService.updateLaunchConfigurationInAutoScalingGroup(asgName,
+        "faulty-lc");
 
 
-    /* Terminate 1 random instance in the ASG to trigger the launch of a faulty LC instance */
+    /* Terminate 1 random instance in the ASG to trigger the launch of a
+    faulty LC instance */
 
     // Get the AutoScalingGroup with given Name
     if (asg == null) {
@@ -105,9 +114,12 @@ public class ChangeAmiInLcFault extends AbstractFault {
     // Get the list of "online" EC2 Instances in the ASG
     // (i.e. the EC2 instances which has state "pending" or "running")
     List<Instance> ec2RunningInstances = new ArrayList<Instance>();
-    List<com.amazonaws.services.autoscaling.model.Instance> asgInstances = asg.getInstances();
-    for (com.amazonaws.services.autoscaling.model.Instance asgInstance : asgInstances) {
-      Instance ec2Instance = ec2Service.describeEC2Instance(asgInstance.getInstanceId());
+    List<com.amazonaws.services.autoscaling.model.Instance> asgInstances =
+        asg.getInstances();
+    for (com.amazonaws.services.autoscaling.model.Instance asgInstance :
+        asgInstances) {
+      Instance ec2Instance = ec2Service.describeEC2Instance(asgInstance
+          .getInstanceId());
       if (ec2Instance.getState().getName().equals("pending")
           || ec2Instance.getState().getName().equals("running")) {
         ec2RunningInstances.add(ec2Instance);

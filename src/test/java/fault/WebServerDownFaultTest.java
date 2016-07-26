@@ -10,11 +10,8 @@ import org.mockito.InOrder;
 
 import java.util.HashMap;
 
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by wilsoncao on 7/18/16.
@@ -22,13 +19,14 @@ import static org.mockito.Mockito.any;
 public class WebServerDownFaultTest {
 
   @Rule
-  public ExpectedException thrown= ExpectedException.none();
+  public ExpectedException thrown = ExpectedException.none();
+
   @Test
   public void faultTest() throws Exception {
-    HashMap<String,String> params = new HashMap<>();
-    params.put("faultInstanceId","asdfjasldfkjasdf");
+    HashMap<String, String> params = new HashMap<>();
+    params.put("faultInstanceId", "asdfjasldfkjasdf");
     params.put("sshUser", "user");
-    params.put("sshKeyFilePath","/hello");
+    params.put("sshKeyFilePath", "/hello");
     params.put("asgName", "asg");
 
     WebServerDownFault fault = new WebServerDownFault(params);
@@ -43,17 +41,18 @@ public class WebServerDownFaultTest {
 
     InOrder inOrder = inOrder(asgService, ec2Service, sshService);
     inOrder.verify(asgService).getAutoScalingGroup(anyString());
-    inOrder.verify(ec2Service,atLeastOnce()).describeEC2Instance(anyString());
-    inOrder.verify(sshService).executeSshCommands(anyString(),anyString(),anyString(),any());
+    inOrder.verify(ec2Service, atLeastOnce()).describeEC2Instance(anyString());
+    inOrder.verify(sshService).executeSshCommands(anyString(), anyString(),
+        anyString(), any());
 
   }
 
   @Test
   public void faultTestNull() throws Exception {
-    HashMap<String,String> params = new HashMap<>();
-    params.put("faultInstanceId","asdfjasldfkjasdf");
+    HashMap<String, String> params = new HashMap<>();
+    params.put("faultInstanceId", "asdfjasldfkjasdf");
     params.put("sshUser", "user");
-    params.put("sshKeyFilePath","/hello");
+    params.put("sshKeyFilePath", "/hello");
     params.put("asgName", "asg");
 
     WebServerDownFault fault = new WebServerDownFault(params);

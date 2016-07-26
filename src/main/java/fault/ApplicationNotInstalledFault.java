@@ -2,7 +2,6 @@ package fault;
 
 import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
 import com.amazonaws.services.ec2.model.Instance;
-import javafx.application.Application;
 import lib.AsgService;
 import lib.Ec2Service;
 import lib.ServiceFactory;
@@ -27,27 +26,29 @@ public class ApplicationNotInstalledFault extends AbstractFault {
   private Ec2Service ec2Service;
   private SshService sshService;
 
-  public ApplicationNotInstalledFault(HashMap<String,String> params) throws IOException{
+  public ApplicationNotInstalledFault(HashMap<String, String> params) throws
+      IOException {
 
     super(params);
     sshUser = params.get("sshUser");
     asgName = params.get("asgName");
     sshKeyFilePath = params.get("sshKeyFilePath");
-    logger = new Loggi(faultInstanceId,ApplicationNotInstalledFault.class.getName());
+    logger = new Loggi(faultInstanceId, ApplicationNotInstalledFault.class
+        .getName());
   }
 
-  public void start() throws Exception{
+  public void start() throws Exception {
 
     logger.start();
 
     // Get the Services
-    if(asgService == null) {
+    if (asgService == null) {
       asgService = ServiceFactory.getAsgService(faultInstanceId);
     }
-    if(ec2Service == null) {
+    if (ec2Service == null) {
       ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
     }
-    if(sshService == null) {
+    if (sshService == null) {
       sshService = ServiceFactory.getSshService(faultInstanceId);
     }
 
@@ -62,9 +63,12 @@ public class ApplicationNotInstalledFault extends AbstractFault {
     // Get the list of "running" EC2 Instances in the ASG
     // (i.e. the EC2 instances which has state "running")
     List<Instance> ec2RunningInstances = new ArrayList<Instance>();
-    List<com.amazonaws.services.autoscaling.model.Instance> asgInstances = asg.getInstances();
-    for (com.amazonaws.services.autoscaling.model.Instance asgInstance : asgInstances) {
-      Instance ec2Instance = ec2Service.describeEC2Instance(asgInstance.getInstanceId());
+    List<com.amazonaws.services.autoscaling.model.Instance> asgInstances =
+        asg.getInstances();
+    for (com.amazonaws.services.autoscaling.model.Instance asgInstance :
+        asgInstances) {
+      Instance ec2Instance = ec2Service.describeEC2Instance(asgInstance
+          .getInstanceId());
       if (ec2Instance.getState().getName().equals("running")) {
         ec2RunningInstances.add(ec2Instance);
       }
@@ -79,7 +83,8 @@ public class ApplicationNotInstalledFault extends AbstractFault {
       Instance instanceToInject = ec2RunningInstances.get(0);
 
       // Log the fault injection
-      logger.log("Injecting fault: uninstall Wordpress Application on EC2 Instance with ID = " +
+      logger.log("Injecting fault: uninstall Wordpress Application on EC2 " +
+          "Instance with ID = " +
           instanceToInject.getInstanceId());
 
       // Inject fault: Uninstall Application on Instance (uninstall Wordpress)
@@ -89,9 +94,11 @@ public class ApplicationNotInstalledFault extends AbstractFault {
         List<String> sshCommands = new ArrayList<String>();
         sshCommands.add("rm -rf /var/www/html/*");
         sshService.executeSshCommands(
-            instanceToInject.getPublicIpAddress(), sshUser, sshKeyFilePath, sshCommands);
+            instanceToInject.getPublicIpAddress(), sshUser, sshKeyFilePath,
+            sshCommands);
       } catch (IOException e) {
-        throw new HoneyCombException("Unable to inject fault to Instance ID = " +
+        throw new HoneyCombException("Unable to inject fault to Instance ID =" +
+            " " +
             instanceToInject.getInstanceId() + ". Caused by: " + e);
       }
 
@@ -106,11 +113,11 @@ public class ApplicationNotInstalledFault extends AbstractFault {
     this.asgService = asgService;
   }
 
-  public void ec2ServiceSetter(Ec2Service ec2Service){
+  public void ec2ServiceSetter(Ec2Service ec2Service) {
     this.ec2Service = ec2Service;
   }
 
-  public void sshServiceSetter(SshService sshService){
+  public void sshServiceSetter(SshService sshService) {
     this.sshService = sshService;
   }
 

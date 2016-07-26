@@ -12,65 +12,66 @@ import java.util.HashMap;
  */
 public class TestFault extends AbstractFault {
 
+  /**
+   * private hashmap.
+   */
+  private final HashMap<String, String> paramsInstance;
+
+  /**
+   * constructor for testFault.
+   *
+   * @param params = "params get from the http request."
+   */
+  public TestFault(final HashMap<String, String> params) {
+    super(params);
+    this.paramsInstance = params;
+  }
+
+  @Override
+  public final void start() throws
+      AmazonServiceException,
+      AmazonClientException,
+      HoneyCombException,
+      IOException, InterruptedException {
+    String className = this.getClass().getSimpleName();
     /**
-     * private hashmap.
+     * construct the loggi
      */
-    private final HashMap<String, String> paramsInstance;
+    Loggi loggi =
+        new Loggi(paramsInstance.get("faultInstanceId"), className);
 
     /**
-     * constructor for testFault.
-     * @param params = "params get from the http request."
+     * remember to start the loggi.
      */
-    public TestFault(final HashMap<String, String> params) {
-        super(params);
-        this.paramsInstance = params;
-    }
+    loggi.start();
 
-    @Override
-    public final void start() throws
-            AmazonServiceException,
-            AmazonClientException,
-            HoneyCombException,
-            IOException, InterruptedException {
-        String className = this.getClass().getSimpleName();
-        /**
-         * construct the loggi
-         */
-        Loggi loggi =
-                new Loggi(paramsInstance.get("faultInstanceId"), className);
+    Thread.sleep(10000);
+    /**
+     * terminate here.
+     */
+    if (this.isTerminated())
+      return;
 
-        /**
-         * remember to start the loggi.
-         */
-        loggi.start();
+    /**
+     * log the "hello world".
+     */
+    loggi.log("Hello world");
 
-        Thread.sleep(10000);
-        /**
-         * terminate here.
-         */
-        if (this.isTerminated())
-            return;
+    if (this.isTerminated())
+      return;
 
-        /**
-         * log the "hello world".
-         */
-        loggi.log("Hello world");
+    /**
+     * log the nothing arguments.
+     */
+    loggi.log(paramsInstance.get("nothing"));
 
-        if (this.isTerminated())
-            return;
-
-        /**
-         * log the nothing arguments.
-         */
-        loggi.log(paramsInstance.get("nothing"));
-
-        if (this.isTerminated())
-            return;
+    if (this.isTerminated())
+      return;
 
 
-        /**
-         * log finish.
-         */
-        loggi.finish();
-    }
+    /**
+     * log finish.
+     */
+    loggi.finish();
+  }
 }

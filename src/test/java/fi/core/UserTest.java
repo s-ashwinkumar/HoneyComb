@@ -1,13 +1,14 @@
 package fi.core;
 
+import logmodifier.LogChanger;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
-
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -18,14 +19,21 @@ public class UserTest {
   private static User obj;
   @Rule
   public ExpectedException exception = ExpectedException.none();
+  LogChanger log = new LogChanger();
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException{
     obj = Mockito.mock(User.class);
     Mockito.when(obj.getUsername()).thenReturn("testUser");
     Mockito.when(obj.getPassword()).thenReturn("testPassword");
+    log.setupLogForTest();
   }
 
+  @After
+  public void tearDown() throws Exception {
+    log.resetLogAfterTest();
+  }
+  
   @Test
   public void User() throws Exception {
     User object = new User("test", "pass");

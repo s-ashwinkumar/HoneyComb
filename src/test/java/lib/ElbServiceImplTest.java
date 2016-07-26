@@ -2,20 +2,21 @@ package lib;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.elasticloadbalancing.model.*;
+import logmodifier.LogChanger;
 import mockAws.AmazonElasticLoadBalancing;
 import mockAws.DescribeInstanceHealthResult;
 import mockAws.DescribeLoadBalancersResult;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 
 /**
@@ -23,13 +24,20 @@ import java.util.List;
  */
 public class ElbServiceImplTest {
   public ElbServiceImpl obj;
+  LogChanger log = new LogChanger();
 
   @Before
   public void setUp() throws Exception {
     obj = new ElbServiceImpl("testinstanceidwithrandomstring");
+    log.setupLogForTest();
 
   }
 
+  @After
+  public void tearDown() throws Exception {
+    log.resetLogAfterTest();
+  }
+  
   @Test
   public void testConstructors() throws Exception {
     obj = new ElbServiceImpl("sampleinstanceid");
@@ -198,8 +206,8 @@ public class ElbServiceImplTest {
     client.loadBalancer = mock(com.amazonaws.services.elasticloadbalancing
         .AmazonElasticLoadBalancing.class);
     obj.AmazonElasticLoadBalancingSetter(client.loadBalancer);
-    obj.tagElb("whatever123", "whatever234","whatever345");
-    verify(client.loadBalancer,times(1)).addTags(any());
+    obj.tagElb("whatever123", "whatever234", "whatever345");
+    verify(client.loadBalancer, times(1)).addTags(any());
 
   }
 
@@ -231,13 +239,13 @@ public class ElbServiceImplTest {
     when(tagRes.getTagDescriptions()).thenReturn(tagsdesc);
     when(client.loadBalancer.describeTags(any())).thenReturn(tagRes);
     obj.AmazonElasticLoadBalancingSetter(client.loadBalancer);
-    assertEquals(tags,obj.describeElbTags("testin1234"));
+    assertEquals(tags, obj.describeElbTags("testin1234"));
   }
 
   @Test
   public void removeTagFromElb() throws Exception {
     try {
-      obj.removeTagFromElb("","whatever234");
+      obj.removeTagFromElb("", "whatever234");
     } catch (Exception ex) {
       assertEquals("No ELB Name provided for removing tag", ex.getMessage());
     }
@@ -261,8 +269,8 @@ public class ElbServiceImplTest {
     client.loadBalancer = mock(com.amazonaws.services.elasticloadbalancing
         .AmazonElasticLoadBalancing.class);
     obj.AmazonElasticLoadBalancingSetter(client.loadBalancer);
-    obj.removeTagFromElb("whatever1234","whatever2345");
-    verify(client.loadBalancer,times(1)).removeTags(any());
+    obj.removeTagFromElb("whatever1234", "whatever2345");
+    verify(client.loadBalancer, times(1)).removeTags(any());
 
   }
 }

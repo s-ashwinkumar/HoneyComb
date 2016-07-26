@@ -8,6 +8,7 @@ import org.junit.Test;
 public class HoneyCombExceptionTest {
   @Test
   public void exceptionTest() throws Exception {
-    HoneyCombException exception = new HoneyCombException("this is an exception");
+    HoneyCombException exception = new HoneyCombException("this is an " +
+        "exception");
   }
 }
