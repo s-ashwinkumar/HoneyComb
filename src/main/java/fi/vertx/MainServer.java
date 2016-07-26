@@ -56,7 +56,7 @@ final class MainServer {
 
     router.post("/faults/reactivate").blockingHandler
         (RouterClass::reactivateFault,
-        false);
+            false);
 
     router.post("/inject/:faultId").blockingHandler(RouterClass::inject, false);
 

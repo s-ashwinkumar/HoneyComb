@@ -308,7 +308,7 @@ public class AsgServiceImpl implements AsgService {
 
       List<Activity> scalingActivities =
           getScalingActivitiesForAutoScalingGroup(params
-          .getAutoScalingGroupName());
+              .getAutoScalingGroupName());
 
       // This only happens when an ASG with the provided name cannot be found
       // on AWS

@@ -22,7 +22,7 @@ public class UserTest {
   LogChanger log = new LogChanger();
 
   @Before
-  public void setUp() throws IOException{
+  public void setUp() throws IOException {
     obj = Mockito.mock(User.class);
     Mockito.when(obj.getUsername()).thenReturn("testUser");
     Mockito.when(obj.getPassword()).thenReturn("testPassword");
@@ -33,7 +33,7 @@ public class UserTest {
   public void tearDown() throws Exception {
     log.resetLogAfterTest();
   }
-  
+
   @Test
   public void User() throws Exception {
     User object = new User("test", "pass");

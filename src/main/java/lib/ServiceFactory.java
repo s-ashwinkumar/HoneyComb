@@ -14,7 +14,8 @@ public class ServiceFactory {
 
   /**
    * Static method for obtaining wrapper service for ASG.
-   * @param faultInstanceId  a String for fault instance ID.
+   *
+   * @param faultInstanceId a String for fault instance ID.
    * @return an AsgService object.
    * @throws IOException
    */
@@ -26,7 +27,8 @@ public class ServiceFactory {
 
   /**
    * Static method for obtaining wrapper service for EC2.
-   * @param faultInstanceId  a String for fault instance ID.
+   *
+   * @param faultInstanceId a String for fault instance ID.
    * @return an Ec2Service object.
    * @throws IOException
    */
@@ -38,7 +40,8 @@ public class ServiceFactory {
 
   /**
    * Static method for obtaining wrapper service for ELB.
-   * @param faultInstanceId  a String for fault instance ID.
+   *
+   * @param faultInstanceId a String for fault instance ID.
    * @return an ElbService object.
    * @throws IOException
    */
@@ -51,7 +54,8 @@ public class ServiceFactory {
 
   /**
    * Static method for obtaining SSH service.
-   * @param faultInstanceId  a String for fault instance ID.
+   *
+   * @param faultInstanceId a String for fault instance ID.
    * @return an SshService object.
    * @throws IOException
    */

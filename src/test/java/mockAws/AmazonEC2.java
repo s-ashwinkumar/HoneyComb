@@ -12,8 +12,8 @@ public class AmazonEC2 {
     amazonEC2 = mock(com.amazonaws.services.ec2.AmazonEC2.class);
     com.amazonaws.services.ec2.model.DescribeImagesResult describeImagesRes =
         mockAws
-        .DescribeImagesResult
-        .getDescribeImagesResult();
+            .DescribeImagesResult
+            .getDescribeImagesResult();
     when(amazonEC2.describeImages()).thenReturn(describeImagesRes);
 
     com.amazonaws.services.ec2.model.DescribeInstancesResult

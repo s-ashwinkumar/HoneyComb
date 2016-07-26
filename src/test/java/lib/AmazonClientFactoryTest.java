@@ -20,7 +20,7 @@ public class AmazonClientFactoryTest {
   LogChanger log = new LogChanger();
 
   @Before
-  public void setup() throws IOException{
+  public void setup() throws IOException {
     obj = new AmazonClientFactory();
     log.setupLogForTest();
   }

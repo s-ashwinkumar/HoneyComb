@@ -37,7 +37,7 @@ public class ElbServiceImplTest {
   public void tearDown() throws Exception {
     log.resetLogAfterTest();
   }
-  
+
   @Test
   public void testConstructors() throws Exception {
     obj = new ElbServiceImpl("sampleinstanceid");

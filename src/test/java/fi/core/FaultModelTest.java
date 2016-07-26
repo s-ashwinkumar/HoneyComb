@@ -107,7 +107,7 @@ public class FaultModelTest {
     assertEquals(oldFault.getDescription(), newFault.getDescription());
     oldFault = newFault;
     result = FaultModel.updateFault(id.toString(), obj, false, "new " +
-        "description",
+            "description",
         null);
     assertEquals(1, result);
     newFault = FaultModel.getFault(obj, id.toString());

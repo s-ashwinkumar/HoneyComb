@@ -27,7 +27,7 @@ public class DbConnectionTest {
   public void tearDown() throws Exception {
     log.resetLogAfterTest();
   }
-  
+
   @Test
   public void getFileName() throws Exception {
     assertEquals("MySQL.properties", DbConnection.getFileName());

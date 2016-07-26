@@ -29,7 +29,7 @@ public class SshServiceImpl implements SshService {
   @Override
   public void executeSshCommands(String hostname, String sshUser,
                                  String sshKeyFilePath, List<String>
-                                       commands) throws IOException {
+                                     commands) throws IOException {
 
     // If no command provided, do nothing
     if (commands == null || commands.isEmpty()) {
@@ -83,8 +83,8 @@ public class SshServiceImpl implements SshService {
   @Override
   public String executeSshCommandReturnOutput(String hostname,
                                               String sshUser, String
-                                                    sshKeyFilePath, String
-                                                    command)
+                                                  sshKeyFilePath, String
+                                                  command)
       throws IOException {
 
     // If no command provided, do nothing
