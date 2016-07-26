@@ -9,11 +9,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
+import org.mockito.Mockito;
 
 import java.util.HashMap;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.inOrder;
+
 
 /**
  * Created by wilsoncao on 7/16/16.
@@ -55,6 +57,23 @@ public class ChangeELBHealthCheckTargetFaultTest {
   }
 
   @Test
+  public void faultTestAsgWithNoELB() throws Exception {
+    HashMap<String, String> params = new HashMap<>();
+    params.put("faultInstanceId", "asdfjasldfkjasdf");
+    params.put("asgName", "asg");
+    params.put("faultyHealthCheckTarget", "\\health");
+    ChangeELBHealthCheckTargetFault fault = new
+        ChangeELBHealthCheckTargetFault(params);
+    AsgService asgService = mockLib.AsgService.getAsgServiceWithEmptyLB();
+    ElbService elbService = mockLib.ElbService.getElbService();
+    fault.asgServiceSetter(asgService);
+    fault.elbServiceSetter(elbService);
+    thrown.expect(HoneyCombException.class);
+    fault.start();
+
+  }
+
+  @Test
   public void faultTestNull() throws Exception {
     HashMap<String, String> params = new HashMap<>();
     params.put("faultInstanceId", "asdfjasldfkjasdf");
@@ -62,8 +81,6 @@ public class ChangeELBHealthCheckTargetFaultTest {
     params.put("faultyHealthCheckTarget", "\\health");
     ChangeELBHealthCheckTargetFault fault = new
         ChangeELBHealthCheckTargetFault(params);
-    AsgService asgService = mockLib.AsgService.getAsgService();
-    ElbService elbService = mockLib.ElbService.getElbService();
     thrown.expect(HoneyCombException.class);
     fault.start();
 

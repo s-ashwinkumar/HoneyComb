@@ -27,4 +27,18 @@ public class AsgService {
     when(asgService.getAutoScalingGroup(matches("null"))).thenReturn(null);
     return asgService;
   }
+
+  public static lib.AsgService getAsgServiceWithEmptyLB() {
+    asgService = mock(lib.AsgService.class);
+    LaunchConfiguration lc = mockAws.LaunchConfiguration.getLc();
+    when(asgService.getLaunchConfigurationForAutoScalingGroup(anyString()))
+        .thenReturn(lc);
+    when(asgService.createLaunchConfiguration(any())).thenReturn("ok");
+    AutoScalingGroup asg = mockAws.AutoScalingGroup.getAsgWithEmptyList();
+    when(asgService.getAutoScalingGroup(any())).thenReturn(asg);
+    doNothing().when(asgService).updateLaunchConfigurationInAutoScalingGroup
+        (anyString(), anyString());
+    when(asgService.getAutoScalingGroup(matches("null"))).thenReturn(null);
+    return asgService;
+  }
 }
