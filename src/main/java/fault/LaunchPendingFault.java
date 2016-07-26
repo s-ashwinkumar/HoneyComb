@@ -29,8 +29,10 @@ public class LaunchPendingFault extends AbstractFault {
     logger = new Loggi(faultInstanceId, LaunchPendingFault.class.getName());
   }
 
+
   public void start() throws Exception {
-// Get the Services
+    logger.start();
+    // Get the Services
     if (asgService == null)
       asgService = ServiceFactory.getAsgService(faultInstanceId);
     if (ec2Service == null)
@@ -74,6 +76,7 @@ public class LaunchPendingFault extends AbstractFault {
           instanceToInject.getInstanceId(), "launch_status", "pending");
 
     }
+    logger.finish();
   }
 
   public void asgServiceSetter(AsgService asgService) {

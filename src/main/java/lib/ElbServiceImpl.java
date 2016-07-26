@@ -65,6 +65,7 @@ public class ElbServiceImpl implements ElbService {
     try {
       elbs = client.describeLoadBalancers(req).getLoadBalancerDescriptions();
     } catch (AmazonServiceException exception) {
+
       logger.log("The ELB with name = " + elbName + " cannot be found. Caused" +
           " by: " + exception);
       return null;
