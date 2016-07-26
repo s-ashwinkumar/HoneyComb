@@ -3,6 +3,9 @@ package fault;
 import lib.AsgService;
 import lib.Ec2Service;
 import lib.SshService;
+import logmodifier.LogChanger;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -17,6 +20,18 @@ import static org.mockito.Mockito.*;
  * Created by wilsoncao on 7/18/16.
  */
 public class WebServerDownFaultTest {
+
+  LogChanger log = new LogChanger();
+
+  @Before
+  public void setUp() throws Exception {
+    log.setupLogForTest();
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    log.resetLogAfterTest();
+  }
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();

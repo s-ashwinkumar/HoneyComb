@@ -2,12 +2,15 @@ package fault;
 
 import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing;
 import lib.ElbService;
+import logmodifier.LogChanger;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import static org.mockito.Matchers.anyString;
@@ -21,17 +24,23 @@ public class ELBUnavailableFaultTest {
   private HashMap<String, String> params;
   private ElbService elbService;
   private AmazonElasticLoadBalancing lb;
+  LogChanger log = new LogChanger();
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     params = new HashMap<String, String>();
     elbService = mockLib.ElbService.getElbService();
     lb = mockAws.AmazonElasticLoadBalancing.getLoadBalancer();
+    log.setupLogForTest();
   }
 
+  @After
+  public void tearDown() throws Exception {
+    log.resetLogAfterTest();
+  }
 
   @Test
   public void faultTest() throws Exception {

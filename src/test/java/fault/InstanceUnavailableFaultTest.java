@@ -1,12 +1,15 @@
 package fault;
 
 import lib.Ec2Service;
+import logmodifier.LogChanger;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import static org.mockito.Matchers.anyString;
@@ -19,15 +22,22 @@ public class InstanceUnavailableFaultTest {
   private String instanceName;
   private HashMap<String, String> params;
   private Ec2Service ec2Service;
+  LogChanger log = new LogChanger();
+
+  @After
+  public void tearDown() throws Exception {
+    log.resetLogAfterTest();
+  }
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     instanceName = "hello";
     params = new HashMap<String, String>();
     ec2Service = mockLib.Ec2Service.getEc2Service();
+    log.setupLogForTest();
   }
 
 

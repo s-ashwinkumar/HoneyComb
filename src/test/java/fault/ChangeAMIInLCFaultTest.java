@@ -7,12 +7,15 @@ import com.amazonaws.services.autoscaling.model.LaunchConfiguration;
 import com.amazonaws.services.ec2.model.Instance;
 import lib.AsgService;
 import lib.Ec2Service;
+import logmodifier.LogChanger;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import static org.mockito.Mockito.*;
@@ -31,12 +34,14 @@ public class ChangeAMIInLCFaultTest {
   private static AutoScalingGroup asg;
   private static HashMap<String, String> params;
 
+  LogChanger log = new LogChanger();
+
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     ec2Service = mockLib.Ec2Service.getEc2Service();
     asgService = mockLib.AsgService.getAsgService();
     asg = mockAws.AutoScalingGroup.getAsg();
@@ -44,8 +49,15 @@ public class ChangeAMIInLCFaultTest {
 
     faultyAmiId = "faultyAmiId";
     params = new HashMap<String, String>();
+    log.setupLogForTest();
 
   }
+
+  @After
+  public void tearDown() throws Exception {
+    log.resetLogAfterTest();
+  }
+
 
   @Test
   public void faultTest() throws Exception {
