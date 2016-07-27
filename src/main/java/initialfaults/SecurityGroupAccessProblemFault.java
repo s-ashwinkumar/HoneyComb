@@ -1,5 +1,6 @@
 package initialfaults;
 
+import fault.AbstractFault;
 import lib.Ec2Service;
 import lib.ServiceFactory;
 import loggi.faultinjection.Loggi;
