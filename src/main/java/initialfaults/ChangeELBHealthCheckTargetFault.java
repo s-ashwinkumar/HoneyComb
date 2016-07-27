@@ -1,6 +1,7 @@
 package initialfaults;
 
 import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
+import fault.AbstractFault;
 import fault.HoneyCombException;
 import lib.AsgService;
 import lib.ElbService;

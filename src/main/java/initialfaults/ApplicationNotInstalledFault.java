@@ -2,6 +2,7 @@ package initialfaults;
 
 import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
 import com.amazonaws.services.ec2.model.Instance;
+import fault.AbstractFault;
 import fault.HoneyCombException;
 import lib.AsgService;
 import lib.Ec2Service;

@@ -2,6 +2,7 @@ package initialfaults;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import fault.AbstractFault;
 import fault.HoneyCombException;
 import loggi.faultinjection.Loggi;
 
