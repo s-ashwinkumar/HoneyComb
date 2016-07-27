@@ -1,6 +1,5 @@
-package fault;
+package initialfaults;
 
-import lib.AsgService;
 import lib.Ec2Service;
 import logmodifier.LogChanger;
 import org.junit.After;
@@ -12,14 +11,14 @@ import org.mockito.InOrder;
 
 import java.util.HashMap;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.inOrder;
 
 /**
- * Created by wilsoncao on 7/21/16.
+ * Created by wilsoncao on 7/16/16.
  */
-public class LaunchPendingFaultTest {
+public class SecurityGroupAccessProblemFaultTest {
   LogChanger log = new LogChanger();
 
   @Before
@@ -40,18 +39,16 @@ public class LaunchPendingFaultTest {
     HashMap<String, String> params = new HashMap<>();
     params.put("faultInstanceId", "asdfjasldfkjasdf");
     params.put("asgName", "asg");
-    LaunchPendingFault fault = new LaunchPendingFault(params);
+    params.put("failedSecurityGroupName", "failed");
+    SecurityGroupAccessProblemFault fault = new
+        SecurityGroupAccessProblemFault(params);
     Ec2Service ec2Service = mockLib.Ec2Service.getEc2Service();
-    AsgService asgService = mockLib.AsgService.getAsgService();
     fault.ec2ServiceSetter(ec2Service);
-    fault.asgServiceSetter(asgService);
     fault.start();
 
-    InOrder inOrder = inOrder(asgService, ec2Service);
-    inOrder.verify(asgService).getAutoScalingGroup(anyString());
-    inOrder.verify(ec2Service, atLeastOnce()).describeEC2Instance(anyString());
-    inOrder.verify(ec2Service).tagEC2Instance(anyString(), anyString(),
-        anyString());
+    InOrder inOrder = inOrder(ec2Service);
+    inOrder.verify(ec2Service).revokeSecurityGroupInboundRule(anyString(),
+        anyString(), anyInt(), anyString());
   }
 
   @Test
@@ -59,9 +56,10 @@ public class LaunchPendingFaultTest {
     HashMap<String, String> params = new HashMap<>();
     params.put("faultInstanceId", "asdfjasldfkjasdf");
     params.put("asgName", "asg");
-    LaunchPendingFault fault = new LaunchPendingFault(params);
+    params.put("failedSecurityGroupName", "failed");
+    SecurityGroupAccessProblemFault fault = new
+        SecurityGroupAccessProblemFault(params);
     Ec2Service ec2Service = mockLib.Ec2Service.getEc2Service();
-    AsgService asgService = mockLib.AsgService.getAsgService();
     thrown.expect(Exception.class);
     fault.start();
 

@@ -1,4 +1,4 @@
-package fault;
+package initialfaults;
 
 import lib.AsgService;
 import lib.Ec2Service;

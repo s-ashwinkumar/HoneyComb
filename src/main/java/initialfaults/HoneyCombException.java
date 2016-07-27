@@ -1,4 +1,4 @@
-package fault;
+package initialfaults;
 
 /**
  * Created by wilsoncao on 6/16/16.

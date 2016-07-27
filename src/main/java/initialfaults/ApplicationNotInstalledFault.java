@@ -1,4 +1,4 @@
-package fault;
+package initialfaults;
 
 import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
 import com.amazonaws.services.ec2.model.Instance;
@@ -17,35 +17,37 @@ import java.util.List;
 /**
  * Created by wilsoncao on 7/7/16.
  */
-public class WebServerDownFault extends AbstractFault {
+public class ApplicationNotInstalledFault extends AbstractFault {
   private String sshUser;
   private String sshKeyFilePath;
-  private static Loggi logger;
   private String asgName;
+  private static Loggi logger;
   private AsgService asgService;
   private Ec2Service ec2Service;
   private SshService sshService;
 
-  public WebServerDownFault(HashMap<String, String> params) throws IOException {
+  public ApplicationNotInstalledFault(HashMap<String, String> params) throws
+      IOException {
 
     super(params);
-    this.sshUser = params.get("sshUser");
-    this.sshKeyFilePath = params.get("sshKeyFilePath");
-    this.asgName = params.get("asgName");
-    logger = new Loggi(faultInstanceId, WebServerDownFault.class.getName());
+    sshUser = params.get("sshUser");
+    asgName = params.get("asgName");
+    sshKeyFilePath = params.get("sshKeyFilePath");
+    logger = new Loggi(faultInstanceId, ApplicationNotInstalledFault.class
+        .getName());
   }
 
   public void start() throws Exception {
+
     logger.start();
+
     // Get the Services
     if (asgService == null) {
-      asgService = ServiceFactory.getAsgService(this.faultInstanceId);
+      asgService = ServiceFactory.getAsgService(faultInstanceId);
     }
-
     if (ec2Service == null) {
       ec2Service = ServiceFactory.getEc2Service(faultInstanceId);
     }
-
     if (sshService == null) {
       sshService = ServiceFactory.getSshService(faultInstanceId);
     }
@@ -55,7 +57,6 @@ public class WebServerDownFault extends AbstractFault {
     if (asg == null) {
       throw new HoneyCombException("Invalid ASG name provided");
     }
-
 
     if (this.isTerminated())
       return;
@@ -72,6 +73,7 @@ public class WebServerDownFault extends AbstractFault {
         ec2RunningInstances.add(ec2Instance);
       }
     }
+
     if (this.isTerminated())
       return;
     // If the ASG has any "running" instances
@@ -81,15 +83,16 @@ public class WebServerDownFault extends AbstractFault {
       Instance instanceToInject = ec2RunningInstances.get(0);
 
       // Log the fault injection
-      logger.log("Injecting fault: take down Apache Web Server on EC2 " +
+      logger.log("Injecting fault: uninstall Wordpress Application on EC2 " +
           "Instance with ID = " +
           instanceToInject.getInstanceId());
+
+      // Inject fault: Uninstall Application on Instance (uninstall Wordpress)
       if (this.isTerminated())
         return;
-      // Inject fault: Take down Web Server on Instance (stop Apache Web Server)
       try {
         List<String> sshCommands = new ArrayList<String>();
-        sshCommands.add("sudo /etc/init.d/httpd stop");
+        sshCommands.add("rm -rf /var/www/html/*");
         sshService.executeSshCommands(
             instanceToInject.getPublicIpAddress(), sshUser, sshKeyFilePath,
             sshCommands);
@@ -101,6 +104,7 @@ public class WebServerDownFault extends AbstractFault {
 
       // Delay for 10s for ELB to detect the failure
       Thread.sleep(10000);
+
       logger.finish();
     }
   }
@@ -116,4 +120,5 @@ public class WebServerDownFault extends AbstractFault {
   public void sshServiceSetter(SshService sshService) {
     this.sshService = sshService;
   }
+
 }

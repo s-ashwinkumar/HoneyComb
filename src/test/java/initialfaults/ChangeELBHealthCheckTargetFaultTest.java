@@ -1,4 +1,4 @@
-package fault;
+package initialfaults;
 
 import lib.AsgService;
 import lib.ElbService;
@@ -9,7 +9,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
-import org.mockito.Mockito;
 
 import java.util.HashMap;
 

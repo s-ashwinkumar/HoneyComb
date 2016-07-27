@@ -1,4 +1,6 @@
-package fault;
+package initialfaults;
+
+import fault.FaultInterface;
 
 import java.util.HashMap;
 

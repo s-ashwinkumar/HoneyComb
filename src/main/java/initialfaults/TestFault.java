@@ -1,4 +1,4 @@
-package fault;
+package initialfaults;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;

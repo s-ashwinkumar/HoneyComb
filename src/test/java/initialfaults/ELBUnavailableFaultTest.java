@@ -1,4 +1,4 @@
-package fault;
+package initialfaults;
 
 import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing;
 import lib.ElbService;

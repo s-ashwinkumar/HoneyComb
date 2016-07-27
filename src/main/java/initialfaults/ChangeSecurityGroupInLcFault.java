@@ -1,4 +1,4 @@
-package fault;
+package initialfaults;
 
 import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
 import com.amazonaws.services.autoscaling.model

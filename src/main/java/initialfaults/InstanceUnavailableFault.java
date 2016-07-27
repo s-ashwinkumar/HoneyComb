@@ -1,4 +1,4 @@
-package fault;
+package initialfaults;
 
 import lib.Ec2Service;
 import lib.ServiceFactory;

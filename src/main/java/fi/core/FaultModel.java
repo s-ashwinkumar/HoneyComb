@@ -236,7 +236,7 @@ public class FaultModel {
       desc, String args) throws Exception {
     String query = "insert into fault (active,name,description,location," +
         "arguments) values (1,'" + name + "', '" + desc + "','faults/" +
-        name + "', " +
+        name + ".jar', " +
         "'" + args + "')";
     dbCon.getStmt().executeUpdate(query);
 

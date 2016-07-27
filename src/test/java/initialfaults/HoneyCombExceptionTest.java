@@ -1,4 +1,4 @@
-package fault;
+package initialfaults;
 
 import logmodifier.LogChanger;
 import org.junit.After;
