@@ -1,4 +1,4 @@
-package initialfaults;
+package fault;
 
 import fault.FaultInterface;
 

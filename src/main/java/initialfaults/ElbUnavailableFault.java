@@ -5,6 +5,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing;
 import com.amazonaws.services.elasticloadbalancing.model
     .DeleteLoadBalancerRequest;
+import fault.AbstractFault;
 import fault.HoneyCombException;
 import lib.AmazonClientFactory;
 import lib.ElbService;
