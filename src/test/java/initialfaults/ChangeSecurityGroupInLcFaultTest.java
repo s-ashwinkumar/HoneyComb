@@ -1,5 +1,6 @@
 package initialfaults;
 
+import fault.HoneyCombException;
 import lib.AsgService;
 import logmodifier.LogChanger;
 import org.junit.After;

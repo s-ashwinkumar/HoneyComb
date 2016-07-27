@@ -1,5 +1,6 @@
 package initialfaults;
 
+import fault.HoneyCombException;
 import lib.AsgService;
 import lib.Ec2Service;
 import lib.SshService;

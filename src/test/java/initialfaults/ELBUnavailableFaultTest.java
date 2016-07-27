@@ -1,6 +1,7 @@
 package initialfaults;
 
 import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing;
+import fault.HoneyCombException;
 import lib.ElbService;
 import logmodifier.LogChanger;
 import org.junit.After;

@@ -1,5 +1,6 @@
 package initialfaults;
 
+import fault.HoneyCombException;
 import lib.AsgService;
 import lib.ElbService;
 import logmodifier.LogChanger;
