@@ -178,7 +178,7 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.4.10</version>
                 <configuration>
-                    <imageName>ashwinks/faultinjector</imageName>
+                    <imageName>honeycomb/faultinjector</imageName>
                     <dockerDirectory>src/docker</dockerDirectory>
                     <resources>
                         <resource>
