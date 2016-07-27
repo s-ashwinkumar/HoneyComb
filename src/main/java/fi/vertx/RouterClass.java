@@ -445,8 +445,11 @@ public final class RouterClass {
           returnResponse(routingContext, responseCode, response);
           return;
         } else {
+          if(reason.toString().equals("The requested fault is disabled."))
+            response.put("error", reason.toString());
+          else
+            response.put("error", "missing argument: " + reason.toString());
 
-          response.put("error", "missing argument: " + reason.toString());
           responseCode = NOTACCEPTABLE;
           returnResponse(routingContext, responseCode, response);
           return;
