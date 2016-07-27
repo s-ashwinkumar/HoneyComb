@@ -1,45 +1,48 @@
 package lib;
 
-import java.io.IOException;
-import java.util.List;
-
-import loggi.faultinjection.Loggi;
-import org.apache.commons.validator.GenericValidator;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
-import com.amazonaws.services.ec2.model.CreateTagsRequest;
-import com.amazonaws.services.ec2.model.DescribeImagesRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
-import com.amazonaws.services.ec2.model.DescribeKeyPairsRequest;
-import com.amazonaws.services.ec2.model.DescribeSecurityGroupsRequest;
-import com.amazonaws.services.ec2.model.Image;
-import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.KeyPairInfo;
-import com.amazonaws.services.ec2.model.Reservation;
-import com.amazonaws.services.ec2.model.RevokeSecurityGroupIngressRequest;
-import com.amazonaws.services.ec2.model.RunInstancesRequest;
-import com.amazonaws.services.ec2.model.SecurityGroup;
-import com.amazonaws.services.ec2.model.Tag;
-import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
+import com.amazonaws.services.ec2.model.*;
+import loggi.faultinjection.Loggi;
+import org.apache.commons.validator.GenericValidator;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Implementation class for EC2-related services.
- *
  */
 public class Ec2ServiceImpl implements Ec2Service {
+
+
   private String faultInstanceId;
   static Loggi logger;
   AmazonEC2 client = AmazonClientFactory.getAmazonEC2Client();
 
   /**
    * A constructor of this class.
+   *
    * @param faultInstanceId A String.
    */
   public Ec2ServiceImpl(String faultInstanceId) throws IOException {
     this.faultInstanceId = faultInstanceId;
-    logger = new Loggi(faultInstanceId,Ec2ServiceImpl.class.getName());
+    logger = new Loggi(faultInstanceId, Ec2ServiceImpl.class.getName());
+  }
+
+  public Ec2ServiceImpl(String faultInstanceId, AmazonEC2 client) throws
+      IOException {
+    this.faultInstanceId = faultInstanceId;
+    logger = new Loggi(faultInstanceId, Ec2ServiceImpl.class.getName());
+    this.client = client;
+  }
+
+  public AmazonEC2 getClient() {
+    return client;
+  }
+
+  public String getFaultInstanceId() {
+    return faultInstanceId;
   }
 
   @Override
@@ -58,11 +61,13 @@ public class Ec2ServiceImpl implements Ec2Service {
     try {
       images = client.describeImages(req).getImages();
     } catch (AmazonServiceException exception) {
-      logger.log("The AMI with id = " + amiId + " cannot be found. Caused by: " + exception);
+      logger.log("The AMI with id = " + amiId + " cannot be found. Caused by:" +
+          " " + exception);
       return null;
     }
 
-    // Return the AMI Image object, or NULL if the AMI is not available in the region
+    // Return the AMI Image object, or NULL if the AMI is not available in
+    // the region
     if (images.isEmpty()) {
       return null;
     } else {
@@ -87,7 +92,7 @@ public class Ec2ServiceImpl implements Ec2Service {
     try {
       reservations = client.describeInstances(req).getReservations();
     } catch (AmazonServiceException exception) {
-      logger.log("The EC2 Instance with id = " + instanceId
+      logger.error("The EC2 Instance with id = " + instanceId
           + " cannot be found. Caused by: " + exception.getErrorMessage());
       return null;
     }
@@ -106,7 +111,8 @@ public class Ec2ServiceImpl implements Ec2Service {
 
   @Override
   public void tagEC2Instance(String instanceId, String tagKey, String tagValue)
-      throws AmazonServiceException, AmazonClientException, IllegalArgumentException {
+      throws AmazonServiceException, AmazonClientException,
+      IllegalArgumentException {
 
     // Check for valid parameters
     if (GenericValidator.isBlankOrNull(instanceId)) {
@@ -138,7 +144,7 @@ public class Ec2ServiceImpl implements Ec2Service {
     try {
       keyPairs = client.describeKeyPairs(req).getKeyPairs();
     } catch (AmazonServiceException exception) {
-      logger.log("The Key Pair with name = " + keyPairName
+      logger.error("The Key Pair with name = " + keyPairName
           + " cannot be found. Caused by: " + exception);
       return null;
     }
@@ -168,7 +174,7 @@ public class Ec2ServiceImpl implements Ec2Service {
     try {
       sgs = client.describeSecurityGroups(req).getSecurityGroups();
     } catch (AmazonServiceException exception) {
-      logger.log("The Security Group with name = "
+      logger.error("The Security Group with name = "
           + securityGroupName + " cannot be found. Caused by: " + exception);
       return null;
     }
@@ -184,11 +190,13 @@ public class Ec2ServiceImpl implements Ec2Service {
 
   @Override
   public void revokeSecurityGroupInboundRule(String securityGroupName,
-                                             String protocol, int port, String address)
+                                             String protocol, int port,
+                                             String address)
       throws AmazonServiceException, AmazonClientException {
 
     // Create request
-    RevokeSecurityGroupIngressRequest req = new RevokeSecurityGroupIngressRequest();
+    RevokeSecurityGroupIngressRequest req = new
+        RevokeSecurityGroupIngressRequest();
     req.withGroupName(securityGroupName)
         .withIpProtocol(protocol)
         .withFromPort(port)
@@ -200,10 +208,12 @@ public class Ec2ServiceImpl implements Ec2Service {
 
   @Override
   public void addSecurityGroupInboundRule(String securityGroupName,
-                                          String protocol, int port, String address)
+                                          String protocol, int port, String
+                                              address)
       throws AmazonServiceException, AmazonClientException {
 
-    AuthorizeSecurityGroupIngressRequest req = new AuthorizeSecurityGroupIngressRequest();
+    AuthorizeSecurityGroupIngressRequest req = new
+        AuthorizeSecurityGroupIngressRequest();
     req.withGroupName(securityGroupName)
         .withIpProtocol(protocol)
         .withFromPort(port)
@@ -220,11 +230,13 @@ public class Ec2ServiceImpl implements Ec2Service {
 
     // Check for valid parameters
     if (params == null) {
-      throw new IllegalArgumentException("No parameter for EC2 Instance provided");
+      throw new IllegalArgumentException("No parameter for EC2 Instance " +
+          "provided");
     }
 
     // Invoke API to create and run new EC2 Instance
-    Instance instance = client.runInstances(params).getReservation().getInstances().get(0);
+    Instance instance = client.runInstances(params).getReservation()
+        .getInstances().get(0);
     String instanceId = instance.getInstanceId();
 
     // Periodically check until the instance becomes RUNNING
@@ -249,7 +261,8 @@ public class Ec2ServiceImpl implements Ec2Service {
 
     // Check for valid parameter
     if (GenericValidator.isBlankOrNull(instanceId)) {
-      throw new IllegalArgumentException("No Instance ID provided for termination");
+      throw new IllegalArgumentException("No Instance ID provided for " +
+          "termination");
     }
 
     // Invoke API to terminate the specified EC2 Instance ID
@@ -261,6 +274,10 @@ public class Ec2ServiceImpl implements Ec2Service {
       throw new IllegalArgumentException("EC2 Instance with id = "
           + instanceId + " not found. Caused by: " + exception);
     }
+  }
+
+  public void AmazonEC2Setter(AmazonEC2 client) {
+    this.client = client;
   }
 
 }

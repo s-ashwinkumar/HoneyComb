@@ -15,9 +15,12 @@ public class ServiceFactory {
   /**
    * Static method for obtaining wrapper service for ASG.
    *
+   * @param faultInstanceId a String for fault instance ID.
    * @return an AsgService object.
+   * @throws IOException
    */
-  public static AsgService getAsgService(String faultInstanceId) throws IOException {
+  public static AsgService getAsgService(String faultInstanceId) throws
+      IOException {
     AsgService = new AsgServiceImpl(faultInstanceId);
     return AsgService;
   }
@@ -25,9 +28,12 @@ public class ServiceFactory {
   /**
    * Static method for obtaining wrapper service for EC2.
    *
+   * @param faultInstanceId a String for fault instance ID.
    * @return an Ec2Service object.
+   * @throws IOException
    */
-  public static Ec2Service getEc2Service(String faultInstanceId) throws IOException  {
+  public static Ec2Service getEc2Service(String faultInstanceId) throws
+      IOException {
     Ec2Service = new Ec2ServiceImpl(faultInstanceId);
     return Ec2Service;
   }
@@ -35,9 +41,12 @@ public class ServiceFactory {
   /**
    * Static method for obtaining wrapper service for ELB.
    *
+   * @param faultInstanceId a String for fault instance ID.
    * @return an ElbService object.
+   * @throws IOException
    */
-  public static ElbService getElbService(String faultInstanceId) throws IOException  {
+  public static ElbService getElbService(String faultInstanceId) throws
+      IOException {
     ElbService = new ElbServiceImpl(faultInstanceId);
     return ElbService;
   }
@@ -46,9 +55,12 @@ public class ServiceFactory {
   /**
    * Static method for obtaining SSH service.
    *
+   * @param faultInstanceId a String for fault instance ID.
    * @return an SshService object.
+   * @throws IOException
    */
-  public static SshService getSshService(String faultInstanceId) throws IOException  {
+  public static SshService getSshService(String faultInstanceId) throws
+      IOException {
     SshService = new SshServiceImpl(faultInstanceId);
     return SshService;
   }

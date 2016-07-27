@@ -6,10 +6,20 @@ description TEXT,
 location varchar(255) NOT NULL,
 arguments varchar(500),
 active BOOLEAN NOT NULL,
+UNIQUE (name),
 PRIMARY KEY (faultID)
 );
 
 
 ALTER TABLE fault AUTO_INCREMENT = 10000;
 
-Insert into fault (name,description,location,arguments,active) values ("Test Fault","Description of test fault","/var/whatever","instancename;secondargument;thirdargument",true);
+-- Alter TABLE fault add UNIQUE (name);
+
+Insert into fault (name,description,location,arguments,active) values ("TestFault","Description of test fault, this fault can be used to test termination","faults/TestFault.jar","nothing",true);
+
+Insert into fault (name,description,location,arguments,active) values ("ChangeAmiInLcFault","Change ami for an ASG group","faults/ChangeAmiInLcFault.jar","asgName;faultyAmiId",true);
+
+Insert into fault (name,description,location,arguments,active) values ("ElbUnavailableFault","Cannot create an asg when ELB is deleted","faults/ElbUnavailableFault.jar","asgName;elbName",true);
+
+Insert into fault (name,description,location,arguments,active) values ("InstanceUnavailableFault","Delete an instance","faults/InstanceUnavailableFault.jar","instanceId",true);
+

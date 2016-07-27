@@ -29,7 +29,6 @@ public class Utils {
     return true;
   }
 
-
   /**
    * Util method to get db connection.
    *
