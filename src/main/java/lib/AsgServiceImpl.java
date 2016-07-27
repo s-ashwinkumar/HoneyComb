@@ -1,34 +1,25 @@
 package lib;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.autoscaling.AmazonAutoScaling;
+import com.amazonaws.services.autoscaling.model.*;
+import com.amazonaws.services.ec2.model.Instance;
+import loggi.faultinjection.Loggi;
+import org.apache.commons.validator.GenericValidator;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import loggi.faultinjection.Loggi;
-import org.apache.commons.validator.GenericValidator;
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.autoscaling.AmazonAutoScaling;
-import com.amazonaws.services.autoscaling.model.Activity;
-import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
-import com.amazonaws.services.autoscaling.model.CreateAutoScalingGroupRequest;
-import com.amazonaws.services.autoscaling.model.CreateLaunchConfigurationRequest;
-import com.amazonaws.services.autoscaling.model.DeleteAutoScalingGroupRequest;
-import com.amazonaws.services.autoscaling.model.DeleteLaunchConfigurationRequest;
-import com.amazonaws.services.autoscaling.model.DescribeAutoScalingGroupsRequest;
-import com.amazonaws.services.autoscaling.model.DescribeLaunchConfigurationsRequest;
-import com.amazonaws.services.autoscaling.model.DescribeScalingActivitiesRequest;
-import com.amazonaws.services.autoscaling.model.LaunchConfiguration;
-import com.amazonaws.services.autoscaling.model.UpdateAutoScalingGroupRequest;
-import com.amazonaws.services.ec2.model.Instance;
-
 /**
  * Implementation class for ASG-related services.
- *
  */
 public class AsgServiceImpl implements AsgService {
+
+
   private String faultInstanceId;
   private static Loggi logger;
   private AmazonAutoScaling client;
@@ -36,15 +27,35 @@ public class AsgServiceImpl implements AsgService {
 
   /**
    * A constructor of this class.
+   *
    * @param faultInstanceId A String.
    */
   public AsgServiceImpl(String faultInstanceId) throws IOException {
     this.faultInstanceId = faultInstanceId;
-    logger = new Loggi(faultInstanceId,AsgServiceImpl.class.getName());
+    logger = new Loggi(faultInstanceId, AsgServiceImpl.class.getName());
     client = AmazonClientFactory.getAmazonAutoScalingClient();
     ec2Service = new Ec2ServiceImpl(faultInstanceId);
   }
 
+  public AsgServiceImpl(String faultInstanceId, AmazonAutoScaling client,
+                        Ec2Service ec2Service) throws IOException {
+    this.faultInstanceId = faultInstanceId;
+    logger = new Loggi(faultInstanceId, AsgServiceImpl.class.getName());
+    this.client = client;
+    this.ec2Service = ec2Service;
+  }
+
+  public String getFaultInstanceId() {
+    return faultInstanceId;
+  }
+
+  public AmazonAutoScaling getClient() {
+    return client;
+  }
+
+  public Ec2Service getEc2Service() {
+    return ec2Service;
+  }
 
   @Override
   public AutoScalingGroup getAutoScalingGroup(String asgName)
@@ -56,11 +67,14 @@ public class AsgServiceImpl implements AsgService {
     }
 
     // Make API call to describe the AutoScalingGroup
-    DescribeAutoScalingGroupsRequest req = new DescribeAutoScalingGroupsRequest();
+    DescribeAutoScalingGroupsRequest req = new
+        DescribeAutoScalingGroupsRequest();
     req.withAutoScalingGroupNames(asgName);
-    List<AutoScalingGroup> asgs = client.describeAutoScalingGroups(req).getAutoScalingGroups();
+    List<AutoScalingGroup> asgs = client.describeAutoScalingGroups(req)
+        .getAutoScalingGroups();
 
-    // Return the AutoScalingGroup object, or NULL if no ASG with the specified name are found
+    // Return the AutoScalingGroup object, or NULL if no ASG with the
+    // specified name are found
     if (asgs.isEmpty()) {
       return null;
     } else {
@@ -86,13 +100,16 @@ public class AsgServiceImpl implements AsgService {
       return null;
     }
 
-    // Make API call to describe the LaunchConfiguration associated with the above ASG
-    DescribeLaunchConfigurationsRequest req = new DescribeLaunchConfigurationsRequest();
+    // Make API call to describe the LaunchConfiguration associated with the
+    // above ASG
+    DescribeLaunchConfigurationsRequest req = new
+        DescribeLaunchConfigurationsRequest();
     req.withLaunchConfigurationNames(asg.getLaunchConfigurationName());
     List<LaunchConfiguration> lcs = client.describeLaunchConfigurations(req)
         .getLaunchConfigurations();
 
-    // Return the LaunchConfiguration object, or NULL if no LC with the name is found
+    // Return the LaunchConfiguration object, or NULL if no LC with the name
+    // is found
     if (lcs.isEmpty()) {
       return null;
     } else {
@@ -111,12 +128,14 @@ public class AsgServiceImpl implements AsgService {
     }
 
     // Invoke API to describe the LC with the specified Name
-    DescribeLaunchConfigurationsRequest req = new DescribeLaunchConfigurationsRequest();
+    DescribeLaunchConfigurationsRequest req = new
+        DescribeLaunchConfigurationsRequest();
     req.withLaunchConfigurationNames(lcName);
     List<LaunchConfiguration> lcs = client.describeLaunchConfigurations(req)
         .getLaunchConfigurations();
 
-    // Return the LaunchConfiguration object, or NULL if no LC with the given Name is found
+    // Return the LaunchConfiguration object, or NULL if no LC with the given
+    // Name is found
     if (lcs.isEmpty()) {
       return null;
     } else {
@@ -140,7 +159,8 @@ public class AsgServiceImpl implements AsgService {
     }
 
     // Make API call to describe the Scaling Activities of this ASG
-    DescribeScalingActivitiesRequest req = new DescribeScalingActivitiesRequest();
+    DescribeScalingActivitiesRequest req = new
+        DescribeScalingActivitiesRequest();
     req.withAutoScalingGroupName(asgName);
 
     // Return the list of Scaling Activities for this ASG
@@ -166,9 +186,12 @@ public class AsgServiceImpl implements AsgService {
 
     // Grab the list of EC2 instances in the ASG
     List<Instance> ec2Instances = new ArrayList<Instance>();
-    List<com.amazonaws.services.autoscaling.model.Instance> asgInstances = asg.getInstances();
-    for (com.amazonaws.services.autoscaling.model.Instance asgInstance : asgInstances) {
-      Instance ec2Instance = ec2Service.describeEC2Instance(asgInstance.getInstanceId());
+    List<com.amazonaws.services.autoscaling.model.Instance> asgInstances =
+        asg.getInstances();
+    for (com.amazonaws.services.autoscaling.model.Instance asgInstance :
+        asgInstances) {
+      Instance ec2Instance = ec2Service.describeEC2Instance(asgInstance
+          .getInstanceId());
       ec2Instances.add(ec2Instance);
     }
 
@@ -191,7 +214,8 @@ public class AsgServiceImpl implements AsgService {
       }
     });
 
-    // Return the EC2 Instance at the Head of the List, as the "newest" instance launched
+    // Return the EC2 Instance at the Head of the List, as the "newest"
+    // instance launched
     return ec2Instances.get(0);
 
   }
@@ -219,12 +243,14 @@ public class AsgServiceImpl implements AsgService {
 
     // Check if the ASG with the provided name can be found on AWS
     if (getAutoScalingGroup(asgName) == null) {
-      throw new IllegalArgumentException("Auto Scaling Group with provided Name does not exist");
+      throw new IllegalArgumentException("Auto Scaling Group with provided " +
+          "Name does not exist");
     }
 
     // Check for valid Capacity value
     if (capacity < 0) {
-      throw new IllegalArgumentException("ASG Capacity need to be non-negative!");
+      throw new IllegalArgumentException("ASG Capacity need to be " +
+          "non-negative!");
     }
 
     // Invoke API to update new Capacity for ASG
@@ -280,23 +306,29 @@ public class AsgServiceImpl implements AsgService {
     do {
       isScalingActivitiesInProgress = false;
 
-      List<Activity> scalingActivities = getScalingActivitiesForAutoScalingGroup(params
-          .getAutoScalingGroupName());
+      List<Activity> scalingActivities =
+          getScalingActivitiesForAutoScalingGroup(params
+              .getAutoScalingGroupName());
 
-      // This only happens when an ASG with the provided name cannot be found on AWS
+      // This only happens when an ASG with the provided name cannot be found
+      // on AWS
       if (scalingActivities == null) {
-        throw new IllegalArgumentException("Auto Scaling Group with provided Name does not exist");
+        throw new IllegalArgumentException("Auto Scaling Group with provided " +
+            "Name does not exist");
       }
 
-      // If there are "in progress" Scaling Activities, need to wait until all activities completed
-      // (i.e. activity status is other than "Successful", "Failed" or "Cancelled")
+      // If there are "in progress" Scaling Activities, need to wait until
+      // all activities completed
+      // (i.e. activity status is other than "Successful", "Failed" or
+      // "Cancelled")
       if (!scalingActivities.isEmpty()) {
         for (Activity a : scalingActivities) {
           if (!a.getStatusCode().equals("Successful")
               && !a.getStatusCode().equals("Failed")
               && !a.getStatusCode().equals("Cancelled")) {
 
-            logger.log("Waiting for all Instances in ASG to complete launching...");
+            logger.log("Waiting for all Instances in ASG to complete " +
+                "launching...");
 
             isScalingActivitiesInProgress = true;
 
@@ -329,18 +361,22 @@ public class AsgServiceImpl implements AsgService {
 
     // Check for valid parameter
     if (GenericValidator.isBlankOrNull(lcName)) {
-      throw new IllegalArgumentException("No Launch Configuration name provided");
+      throw new IllegalArgumentException("No Launch Configuration name " +
+          "provided");
     }
 
     // Check whether a LC with the specified name actually exists on AWS
     if (client.describeLaunchConfigurations(
-        new DescribeLaunchConfigurationsRequest().withLaunchConfigurationNames(lcName))
+        new DescribeLaunchConfigurationsRequest()
+            .withLaunchConfigurationNames(lcName))
         .getLaunchConfigurations().isEmpty()) {
-      throw new IllegalArgumentException("Launch Configuration with provided Name does not exist");
+      throw new IllegalArgumentException("Launch Configuration with provided " +
+          "Name does not exist");
     }
 
     // Invoke API to delete LC
-    DeleteLaunchConfigurationRequest req = new DeleteLaunchConfigurationRequest();
+    DeleteLaunchConfigurationRequest req = new
+        DeleteLaunchConfigurationRequest();
     req.withLaunchConfigurationName(lcName);
     client.deleteLaunchConfiguration(req);
 
@@ -358,14 +394,16 @@ public class AsgServiceImpl implements AsgService {
 
     // Check if the ASG with the provided name can be found on AWS
     if (getAutoScalingGroup(asgName) == null) {
-      throw new IllegalArgumentException("Auto Scaling Group with provided Name does not exist");
+      throw new IllegalArgumentException("Auto Scaling Group with provided " +
+          "Name does not exist");
     }
 
     // Reduce the MinSize, DesiredCapacity and MaxSize
     // of ASG to 0 (effectively kill all existing instances)
     updateCapacityOfAsg(asgName, 0);
 
-    // Wait for the changes to kick in (i.e. for ASG to start deleting Instances)
+    // Wait for the changes to kick in (i.e. for ASG to start deleting
+    // Instances)
     try {
       Thread.sleep(60000);
     } catch (InterruptedException ex) {
@@ -378,22 +416,28 @@ public class AsgServiceImpl implements AsgService {
     do {
       isScalingActivitiesInProgress = false;
 
-      List<Activity> scalingActivities = getScalingActivitiesForAutoScalingGroup(asgName);
+      List<Activity> scalingActivities =
+          getScalingActivitiesForAutoScalingGroup(asgName);
 
-      // This only happens when an ASG with the provided name cannot be found on AWS
+      // This only happens when an ASG with the provided name cannot be found
+      // on AWS
       if (scalingActivities == null) {
-        throw new IllegalArgumentException("Auto Scaling Group with provided Name does not exist");
+        throw new IllegalArgumentException("Auto Scaling Group with provided " +
+            "Name does not exist");
       }
 
-      // If there are "in progress" Scaling Activities, need to wait until all activities completed
-      // (i.e. activity status is other than "Successful", "Failed" or "Cancelled")
+      // If there are "in progress" Scaling Activities, need to wait until
+      // all activities completed
+      // (i.e. activity status is other than "Successful", "Failed" or
+      // "Cancelled")
       if (!scalingActivities.isEmpty()) {
         for (Activity a : scalingActivities) {
           if (!a.getStatusCode().equals("Successful")
               && !a.getStatusCode().equals("Failed")
               && !a.getStatusCode().equals("Cancelled")) {
 
-            logger.log("Waiting for all Scaling Activities to finish before deleting ASG...");
+            logger.log("Waiting for all Scaling Activities to finish before " +
+                "deleting ASG...");
 
             isScalingActivitiesInProgress = true;
 
@@ -415,6 +459,14 @@ public class AsgServiceImpl implements AsgService {
     req.withAutoScalingGroupName(asgName);
     client.deleteAutoScalingGroup(req);
 
+  }
+
+  public void AmazonAutoScalingSetter(AmazonAutoScaling client) {
+    this.client = client;
+  }
+
+  public void Ec2ServiceSetter(Ec2Service ec2Service) {
+    this.ec2Service = ec2Service;
   }
 
 }

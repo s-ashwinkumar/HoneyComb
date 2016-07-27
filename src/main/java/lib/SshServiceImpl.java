@@ -6,29 +6,30 @@ import ch.ethz.ssh2.StreamGobbler;
 import loggi.faultinjection.Loggi;
 import org.apache.commons.validator.GenericValidator;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
 
 /**
  * Implementation class for SSH services.
- *
  */
 public class SshServiceImpl implements SshService {
+
   private String faultInstanceId;
   static Loggi logger;
 
   public SshServiceImpl(String faultInstanceId) throws IOException {
     this.faultInstanceId = faultInstanceId;
-    logger = new Loggi(faultInstanceId,SshServiceImpl.class.getName());
+    logger = new Loggi(faultInstanceId, SshServiceImpl.class.getName());
+  }
+
+  public String getFaultInstanceId() {
+    return faultInstanceId;
   }
 
   @Override
   public void executeSshCommands(String hostname, String sshUser,
-                                 String sshKeyFilePath, List<String> commands) throws IOException {
+                                 String sshKeyFilePath, List<String>
+                                     commands) throws IOException {
 
     // If no command provided, do nothing
     if (commands == null || commands.isEmpty()) {
@@ -43,7 +44,8 @@ public class SshServiceImpl implements SshService {
     // Open SSH connection to EC2 Instance
     Connection conn = new Connection(hostname);
     conn.connect();
-    boolean isAuthenticated = conn.authenticateWithPublicKey(sshUser, sshKeyFile, sshKeyFilePass);
+    boolean isAuthenticated = conn.authenticateWithPublicKey(sshUser,
+        sshKeyFile, sshKeyFilePass);
 
     if (isAuthenticated == false) {
       throw new IOException("Authentication failed.");
@@ -63,7 +65,8 @@ public class SshServiceImpl implements SshService {
       sess.execCommand(cmd);
 
       // Log command exit status, if available (otherwise "null")
-      logger.log("Shell command: " + cmd + ", Exit code: " + sess.getExitStatus()
+      logger.log("Shell command: " + cmd + ", Exit code: " + sess
+          .getExitStatus()
           + ", Output: " + getSshOutput(sess.getStdout()));
 
       // Close the session
@@ -79,7 +82,9 @@ public class SshServiceImpl implements SshService {
 
   @Override
   public String executeSshCommandReturnOutput(String hostname,
-                                              String sshUser, String sshKeyFilePath, String command)
+                                              String sshUser, String
+                                                  sshKeyFilePath, String
+                                                  command)
       throws IOException {
 
     // If no command provided, do nothing
@@ -95,7 +100,8 @@ public class SshServiceImpl implements SshService {
     // Open SSH connection to EC2 Instance
     Connection conn = new Connection(hostname);
     conn.connect();
-    boolean isAuthenticated = conn.authenticateWithPublicKey(sshUser, sshKeyFile, sshKeyFilePass);
+    boolean isAuthenticated = conn.authenticateWithPublicKey(sshUser,
+        sshKeyFile, sshKeyFilePass);
 
     if (isAuthenticated == false) {
       throw new IOException("Authentication failed.");
@@ -115,7 +121,8 @@ public class SshServiceImpl implements SshService {
     String output = getSshOutput(sess.getStdout());
 
     // Log command exit status, if available (otherwise "null")
-    logger.log("Shell command: " + command + ", Exit code: " + sess.getExitStatus()
+    logger.log("Shell command: " + command + ", Exit code: " + sess
+        .getExitStatus()
         + ", Output: " + output);
 
     // Close the session
@@ -133,9 +140,11 @@ public class SshServiceImpl implements SshService {
 
   /**
    * Private method.
-   * Grab the output from SSH session stdout. Trim any blank lines from the output.
+   * Grab the output from SSH session stdout. Trim any blank lines from the
+   * output.
    *
-   * @param sshSessionOutput the InputStream which is the stdout of the SSH session
+   * @param sshSessionOutput the InputStream which is the stdout of the SSH
+   *                         session
    * @return a String containing the appended output of the SSH session
    * @throws IOException if an error occurred when reading the output
    */

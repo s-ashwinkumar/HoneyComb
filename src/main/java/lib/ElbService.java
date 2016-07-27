@@ -1,12 +1,13 @@
 package lib;
 
-import java.util.List;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.elasticloadbalancing.model.InstanceState;
-import com.amazonaws.services.elasticloadbalancing.model.LoadBalancerDescription;
+import com.amazonaws.services.elasticloadbalancing.model
+    .LoadBalancerDescription;
 import com.amazonaws.services.elasticloadbalancing.model.Tag;
+
+import java.util.List;
 
 /**
  * ELBService interface.
@@ -20,7 +21,8 @@ public interface ElbService {
    * Describe an Elastic Load Balancer (ELB) from the provided Name.
    *
    * @param elbName the provided ELB Name
-   * @return a LoadBalancerDescription object for the ELB, or NULL if the ELB cannot be found
+   * @return a LoadBalancerDescription object for the ELB, or NULL if the ELB
+   * cannot be found
    * @throws AmazonServiceException if error occurred while calling AWS API
    * @throws AmazonClientException  if error occurred while calling AWS API
    */
@@ -32,11 +34,12 @@ public interface ElbService {
    *
    * @param elbName the provided ELB Name
    * @return a list of InstanceState describing the ELB Health status of
-   *     all Instances in the ELB, or NULL if the ELB cannot be found
+   * all Instances in the ELB, or NULL if the ELB cannot be found
    * @throws AmazonServiceException if error occurred while calling AWS API
    * @throws AmazonClientException  if error occurred while calling AWS API
    */
-  public List<InstanceState> describeInstanceHealthInLoadBalancer(String elbName)
+  public List<InstanceState> describeInstanceHealthInLoadBalancer(String
+                                                                      elbName)
       throws AmazonServiceException, AmazonClientException;
 
   /**
@@ -49,7 +52,8 @@ public interface ElbService {
    * @throws IllegalArgumentException if invalid parameters provided
    */
   public void updateElbHealthCheckTarget(String elbName, String target)
-      throws AmazonServiceException, AmazonClientException, IllegalArgumentException;
+      throws AmazonServiceException, AmazonClientException,
+      IllegalArgumentException;
 
   /**
    * Add Tag to a Load Balancer.
@@ -62,7 +66,8 @@ public interface ElbService {
    * @throws IllegalArgumentException if either elbName or tagKey are invalid
    */
   public void tagElb(String elbName, String tagKey, String tagValue)
-      throws AmazonServiceException, AmazonClientException, IllegalArgumentException;
+      throws AmazonServiceException, AmazonClientException,
+      IllegalArgumentException;
 
   /**
    * Get the Tags associated with a Load Balancer.
@@ -85,6 +90,7 @@ public interface ElbService {
    * @throws IllegalArgumentException if either elbName or tagKey are invalid
    */
   public void removeTagFromElb(String elbName, String tagKey)
-      throws AmazonServiceException, AmazonClientException, IllegalArgumentException;
+      throws AmazonServiceException, AmazonClientException,
+      IllegalArgumentException;
 
 }

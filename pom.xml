@@ -58,12 +58,6 @@
     </dependency>
 
     <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-api-mockito</artifactId>
-        <version>1.6.5</version>
-    </dependency>
-
-    <dependency>
         <groupId>ch.ethz.ganymed</groupId>
         <artifactId>ganymed-ssh2</artifactId>
         <version>build210</version>
@@ -184,7 +178,7 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.4.10</version>
                 <configuration>
-                    <imageName>honeycombrepo/faultinjector</imageName>
+                    <imageName>honeycomb/faultinjector</imageName>
                     <dockerDirectory>src/docker</dockerDirectory>
                     <resources>
                         <resource>

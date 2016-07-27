@@ -173,10 +173,10 @@ public class FaultModel {
     String query = "select * from fault";
     ResultSet rs = dbCon.getStmt().executeQuery(query);
     while (rs.next()) {
-      FaultModel tempObj = new FaultModel(rs.getInt("faultID"), rs.getString
-          ("name"),
-          rs.getString("arguments"), rs.getBoolean("active"), rs.getString
-          ("location"), rs.getString("description"));
+      FaultModel tempObj = new FaultModel(rs.getInt("faultID"),
+          rs.getString("name"), rs.getString("arguments"),
+          rs.getBoolean("active"), rs.getString("location"),
+          rs.getString("description"));
       faultList.add(tempObj);
     }
     return faultList;
@@ -188,17 +188,66 @@ public class FaultModel {
    * @param id id of the fault to be deactivated
    * @return integer number of records updated
    */
-  public static Integer removeFault(String id, DbConnection dbCon) throws
+  public static Integer updateFault(String id, DbConnection dbCon, Boolean
+      status, String description, String arguments)
+      throws
       Exception {
-    String query = "update fault set active=0 where faultID=" + id;
+    String query = "update fault set active=" + status;
+    if (description != null && !description.trim().equals(""))
+      query += ", description='" + description + "'";
+    if (arguments != null && !arguments.trim().equals(""))
+      query += ", arguments='" + arguments + "'";
+    query += " where faultID=" + id;
     return dbCon.getStmt().executeUpdate(query);
   }
 
+  /**
+   * method for returning a fault.
+   *
+   * @param dbCon   connection object
+   * @param faultId fault id
+   * @return fault model object
+   * @throws Exception io exceptions
+   */
   public static FaultModel getFault(DbConnection dbCon, String faultId) throws
       Exception {
     String sql = "select * from fault where faultID = '" + faultId + "'";
     ResultSet rs = dbCon.getStmt().executeQuery(sql);
-    FaultModel tempObj=null;
+    FaultModel tempObj = null;
+    while (rs.next()) {
+      tempObj = new FaultModel(rs.getInt("faultID"), rs.getString("name"),
+          rs.getString("arguments"), rs.getBoolean("active"),
+          rs.getString("location"), rs.getString("description"));
+    }
+    rs.close();
+    return tempObj;
+  }
+
+  /**
+   * method to insert a record in db while uploading fault.
+   *
+   * @param dbCon Dbconnection object
+   * @param name  Name of the fault
+   * @param desc  Description of the fault
+   * @param args  arguments for the fault
+   * @return -1 if failure else should ideally return 1 if inserted.
+   */
+  public static void insertFault(DbConnection dbCon, String name, String
+      desc, String args) throws Exception {
+    String query = "insert into fault (active,name,description,location," +
+        "arguments) values (1,'" + name + "', '" + desc + "','faults/" +
+        name + ".jar', " +
+        "'" + args + "')";
+    dbCon.getStmt().executeUpdate(query);
+
+  }
+
+  public static FaultModel getFaultByName(DbConnection dbCon, String name)
+      throws
+      Exception {
+    String sql = "select * from fault where name = '" + name + "'";
+    ResultSet rs = dbCon.getStmt().executeQuery(sql);
+    FaultModel tempObj = null;
     while (rs.next()) {
       tempObj = new FaultModel(rs.getInt("faultID"), rs.getString("name"),
           rs.getString("arguments"), rs.getBoolean("active"), rs.getString
@@ -206,7 +255,7 @@ public class FaultModel {
     }
     rs.close();
     return tempObj;
-  }
 
+  }
 
 }

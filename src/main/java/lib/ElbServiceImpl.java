@@ -1,43 +1,50 @@
 package lib;
 
-import java.io.IOException;
-import java.util.List;
-
-import loggi.faultinjection.Loggi;
-import org.apache.commons.validator.GenericValidator;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing;
-import com.amazonaws.services.elasticloadbalancing.model.AddTagsRequest;
-import com.amazonaws.services.elasticloadbalancing.model.ConfigureHealthCheckRequest;
-import com.amazonaws.services.elasticloadbalancing.model.DescribeInstanceHealthRequest;
-import com.amazonaws.services.elasticloadbalancing.model.DescribeLoadBalancersRequest;
-import com.amazonaws.services.elasticloadbalancing.model.DescribeTagsRequest;
-import com.amazonaws.services.elasticloadbalancing.model.HealthCheck;
-import com.amazonaws.services.elasticloadbalancing.model.InstanceState;
-import com.amazonaws.services.elasticloadbalancing.model.LoadBalancerDescription;
-import com.amazonaws.services.elasticloadbalancing.model.RemoveTagsRequest;
-import com.amazonaws.services.elasticloadbalancing.model.Tag;
-import com.amazonaws.services.elasticloadbalancing.model.TagDescription;
-import com.amazonaws.services.elasticloadbalancing.model.TagKeyOnly;
+import com.amazonaws.services.elasticloadbalancing.model.*;
+import loggi.faultinjection.Loggi;
+import org.apache.commons.validator.GenericValidator;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public class ElbServiceImpl implements ElbService {
 
   static Loggi logger;
   private String faultInstanceId;
-  AmazonElasticLoadBalancing client = AmazonClientFactory.getAmazonElasticLoadBalancingClient();
+  AmazonElasticLoadBalancing client;
 
   /**
    * A constructor of this class.
+   *
    * @param faultInstanceId A String.
    */
   public ElbServiceImpl(String faultInstanceId) throws IOException {
     this.faultInstanceId = faultInstanceId;
-    logger = new Loggi(faultInstanceId,ElbServiceImpl.class.getName());
+    logger = new Loggi(faultInstanceId, ElbServiceImpl.class.getName());
+    client = AmazonClientFactory.getAmazonElasticLoadBalancingClient();
 
   }
+
+  public String getFaultInstanceId() {
+    return faultInstanceId;
+  }
+
+  public AmazonElasticLoadBalancing getClient() {
+    return client;
+  }
+
+  public ElbServiceImpl(String faultInstanceId, AmazonElasticLoadBalancing
+      client) throws IOException {
+    this.faultInstanceId = faultInstanceId;
+    logger = new Loggi(faultInstanceId, ElbServiceImpl.class.getName());
+    this.client = client;
+
+  }
+
   /**
    * The AmazonElasticLoadBalancing client for calling AWS API.
    */
@@ -58,11 +65,14 @@ public class ElbServiceImpl implements ElbService {
     try {
       elbs = client.describeLoadBalancers(req).getLoadBalancerDescriptions();
     } catch (AmazonServiceException exception) {
-      logger.log("The ELB with name = " + elbName + " cannot be found. Caused by: " + exception);
+
+      logger.log("The ELB with name = " + elbName + " cannot be found. Caused" +
+          " by: " + exception);
       return null;
     }
 
-    // Return the ELB Description, or NULL if the ELB does not exist in the region
+    // Return the ELB Description, or NULL if the ELB does not exist in the
+    // region
     if (elbs.isEmpty()) {
       return null;
     } else {
@@ -88,7 +98,8 @@ public class ElbServiceImpl implements ElbService {
     try {
       instances = client.describeInstanceHealth(req).getInstanceStates();
     } catch (AmazonServiceException exception) {
-      logger.log("The ELB with name = " + elbName + " cannot be found. Caused by: " + exception);
+      logger.log("The ELB with name = " + elbName + " cannot be found. Caused" +
+          " by: " + exception);
       return null;
     }
 
@@ -99,11 +110,14 @@ public class ElbServiceImpl implements ElbService {
 
   @Override
   public void updateElbHealthCheckTarget(String elbName, String target)
-      throws AmazonServiceException, AmazonClientException, IllegalArgumentException {
+      throws AmazonServiceException, AmazonClientException,
+      IllegalArgumentException {
 
     // Check for valid parameter
-    if (GenericValidator.isBlankOrNull(elbName) || GenericValidator.isBlankOrNull(target)) {
-      throw new IllegalArgumentException("No ELB Name and/or Health Check target provided");
+    if (GenericValidator.isBlankOrNull(elbName) || GenericValidator
+        .isBlankOrNull(target)) {
+      throw new IllegalArgumentException("No ELB Name and/or Health Check " +
+          "target provided");
     }
 
     // Grab the ELB to get current Health Check settings
@@ -155,7 +169,8 @@ public class ElbServiceImpl implements ElbService {
     try {
       tagDescriptions = client.describeTags(req).getTagDescriptions();
     } catch (AmazonServiceException exception) {
-      logger.log("ELB with name = " + elbName + " cannot be found. Caused by: " + exception);
+      logger.log("ELB with name = " + elbName + " cannot be found. Caused by:" +
+          " " + exception);
       return null;
     }
 
@@ -174,7 +189,8 @@ public class ElbServiceImpl implements ElbService {
 
     // Check for valid parameters
     if (GenericValidator.isBlankOrNull(elbName)) {
-      throw new IllegalArgumentException("No ELB Name provided for removing tag");
+      throw new IllegalArgumentException("No ELB Name provided for removing " +
+          "tag");
     }
     if (GenericValidator.isBlankOrNull(tagKey)) {
       throw new IllegalArgumentException("Tag Key cannot be null or empty");
@@ -187,6 +203,11 @@ public class ElbServiceImpl implements ElbService {
     req.withLoadBalancerNames(elbName).withTags(tagToRemove);
     client.removeTags(req);
 
+  }
+
+  public void AmazonElasticLoadBalancingSetter(AmazonElasticLoadBalancing
+                                                   client) {
+    this.client = client;
   }
 
 }

@@ -1,10 +1,10 @@
 package fi.vertx;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.StaticHandler;
 
 
 /**
@@ -34,7 +34,9 @@ final class MainServer {
     // Create an HTTP server which simply returns "Hello World!" to each
     // request.
     Router router = Router.router(Vertx.vertx());
-    router.route().handler(BodyHandler.create());
+    BodyHandler bodyHandler = BodyHandler.create();
+    bodyHandler.setUploadsDirectory("faults");
+    router.route().handler(bodyHandler);
     router.route("/test").blockingHandler(routingContext -> {
       HttpServerResponse response = routingContext.response();
       response.putHeader("content-type", "text/plain");
@@ -43,13 +45,31 @@ final class MainServer {
 
     router.post("/login").blockingHandler(RouterClass::login, false);
 
+    router.get("/logs").blockingHandler(RouterClass::logs, false);
+
     router.get("/faults/list").blockingHandler(RouterClass::faultList,
         false);
 
-    router.delete("/faults").blockingHandler(RouterClass::removeFault,
-        false);
+    router.post("/faults/deactivate").blockingHandler
+        (RouterClass::deactivateFault,
+            false);
+
+    router.post("/faults/reactivate").blockingHandler
+        (RouterClass::reactivateFault,
+            false);
 
     router.post("/inject/:faultId").blockingHandler(RouterClass::inject, false);
+
+    router.post("/terminate/:faultInstanceId").blockingHandler
+        (RouterClass::termination, false);
+
+    router.post("/faults/upload").blockingHandler(RouterClass::uploadFault,
+        false);
+
+    router.post("/faults/update").blockingHandler(RouterClass::updateFault,
+        false);
+
+    router.route("/*").handler(StaticHandler.create());  //for the front end
 
     Vertx.vertx().createHttpServer().requestHandler(router::accept)
         .listen(PORT);

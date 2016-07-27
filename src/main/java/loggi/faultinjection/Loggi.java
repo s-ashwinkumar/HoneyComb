@@ -9,12 +9,12 @@ import java.io.IOException;
 /**
  * This is a logger class file, package the log4j.
  * This class has four method which are start, log, finish, error
- *
+ * <p>
  * The format will be as below:
  * 2016-06-01 19:18:16:000 timeZone INFO
  * [FaultInstanceId = 123456789112300001]
  * [FaultId = 00001]    [faultName = “LaunchConfiguration”]    Message
- *
+ * <p>
  * You can use as below:
  * Loggi loggi = new Loggi("123456789112300001", className);
  * loggi.start();
@@ -22,100 +22,112 @@ import java.io.IOException;
  * loggi.finish();
  * loggi.error("wrong");
  * loggi.error(Exception e);
- *
  */
 public class Loggi {
-    /**
-     * faultInstanceId is the fault injection thread.
-     */
-    private String faultInstanceId;
-    /**
-     * faultId indicate a specific fault.
-     */
-    private String faultId;
-    /**
-     * className is the faultName.
-     */
-    private String className;
-    /**
-     * logger is the instance of log4j.
-     */
-    private Logger logger;
+  /**
+   * faultInstanceId is the fault injection thread.
+   */
+  private String faultInstanceId;
+  /**
+   * faultId indicate a specific fault.
+   */
+  private String faultId;
+  /**
+   * className is the faultName.
+   */
+  private String className;
+  /**
+   * logger is the instance of log4j.
+   */
+  private Logger logger;
 
-    /**
-     * position for the faultId (FaultInstanceId is timeStamp + faultId).
-     */
-    static final int FAULTID_POSITION = 13;
+  /**
+   * position for the faultId (FaultInstanceId is timeStamp + faultId).
+   */
+  static final int FAULTID_POSITION = 13;
 
-    /**
-     * This is the constructor, it will check whether the log file is existed,
-     * and it will make a new one if not existed.
-     * @param s is the faultInstanceId
-     * @param c is the className (faultName)
-     */
-    public Loggi(final String s, final String c) throws IOException {
-        File file = new File("src/main/resources/log");
-        if (!file.exists())
-            file.createNewFile();
-        faultInstanceId = s;
-        faultId = s.substring(FAULTID_POSITION);
-        className = c;
-        logger = Logger.getLogger("honeycomb");
+  /**
+   * This is the constructor, it will check whether the log file is existed,
+   * and it will make a new one if not existed.
+   *
+   * @param s is the faultInstanceId
+   * @param c is the className (faultName)
+   */
+  public Loggi(final String s, final String c) throws IOException {
+    File file = new File("src/main/resources/log");
+    if (!file.exists())
+      file.createNewFile();
+    faultInstanceId = s;
+    try {
+      faultId = s.substring(FAULTID_POSITION);
+    } catch (Exception e) {
+      System.out.println("Exception thrown  :" + e);
     }
+    className = c;
+    logger = Logger.getLogger(s);
+  }
 
-    /**
-     * this is the start log function,
-     * you should call this at the start of a fault injection.
-     */
-    public final void start() {
-        logger.info("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
-                + faultId + "]\t"
-                + "[FaultName = " + className + "]\t"
-                + "fault injection start!");
-    }
+  /**
+   * this is the start log function,
+   * you should call this at the start of a fault injection.
+   */
+  public final void start() {
+    logger.info("[FaultInstanceId = " + faultInstanceId + "]    [FaultId = "
+        + faultId + "]    "
+        + "[FaultName = " + className + "]    "
+        + "fault injection start!");
+    System.out.flush();
+  }
 
-    /**
-     * This function can log any normal message you want to store.
-     * @param s is the message you want to store.
-     */
-    public final void log(final String s) {
-        logger.info("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
-                + faultId + "]\t"
-                + "[FaultName = " + className + "]\t"
-                + s);
-    }
+  /**
+   * This function can log any normal message you want to store.
+   *
+   * @param s is the message you want to store.
+   */
+  public final void log(final String s) {
+    logger.info("[FaultInstanceId = " + faultInstanceId + "]    [FaultId = "
+        + faultId + "]    "
+        + "[FaultName = " + className + "]    "
+        + s);
+    System.out.flush();
+  }
 
-    /**
-     * this is the start log function,
-     * you should call this at the end of a fault injection.
-     */
-    public final void finish() {
-        logger.info("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
-                + faultId + "]\t"
-                + "[FaultName = " + className + "]\t"
-                + "fault injection finish!");
-    }
+  /**
+   * this is the start log function,
+   * you should call this at the end of a fault injection.
+   */
+  public final void finish() {
+    logger.info("[FaultInstanceId = " + faultInstanceId + "]    [FaultId = "
+        + faultId + "]    "
+        + "[FaultName = " + className + "]    "
+        + "fault injection finish!");
+    System.out.flush();
+  }
 
-    /**
-     * This function can log any error string message you want to store.
-     * @param s is the error message.
-     */
-    public final void error(final String s) {
-        logger.error("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
-                + faultId + "]\t"
-                + "[FaultName = "
-                + className + "]\t" + s);
-    }
+  /**
+   * This function can log any error string message you want to store.
+   *
+   * @param s is the error message.
+   */
+  public final void error(final String s) {
+    logger.error("[FaultInstanceId = " + faultInstanceId + "]    [FaultId = "
+        + faultId + "]    "
+        + "[FaultName = "
+        + className + "]    " + s);
+    System.out.flush();
+  }
 
-    /**
-     * This function can log any error exception message you want to store.
-     * @param e is the error exception.
-     */
-    public final void error(final Exception e) {
-        logger.error("[FaultInstanceId = " + faultInstanceId + "]\t[FaultId = "
-                + faultId + "]\t"
-                + "[FaultName = "
-                + className + "]\t" + e);
-    }
+  /**
+   * This function can log any error exception message you want to store.
+   *
+   * @param e is the error exception.
+   */
+  public final void error(final Exception e) {
+    logger.error("[FaultInstanceId = " + faultInstanceId + "]    [FaultId = "
+        + faultId + "]    "
+        + "[FaultName = "
+        + className + "]    " + e);
+    System.out.flush();
+  }
 
 }
