@@ -1,4 +1,4 @@
-# HoneyComb
+# HoneyComb - Fault Injector Tool 
 
 During the deployment of hundreds of instances on cloud, there could be a number of things that could go wrong and affect the deployment. When you use some of the continuous deployment tools like Spinnaker, it is important to handle some of these faults which cannot be automatically handled by the tool. Also, in order to test the robustness of you deployment pipeline, you need a fault injector to inject faults during the deployment and observe the response. Manual injection of faults for such scenarios could be a time consuming and laborious job.
 
