@@ -3,6 +3,7 @@ package fi.core;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Created by ashwin on 6/3/16.
@@ -83,7 +84,7 @@ public class User {
    * @param filename String filename path to pass
    * @return boolean true if valid username password, false if invalid
    */
-  public boolean isValidUser(String filename) {
+  public boolean isValidUser(String filename) throws IOException {
     BufferedReader br = null;
     String line;
     try {
@@ -100,6 +101,8 @@ public class User {
     } catch (Exception ex) {
       ex.printStackTrace();
       return false;
+    } finally {
+      br.close();
     }
     return false;
   }
@@ -116,16 +119,24 @@ public class User {
       Exception {
     BufferedReader br = null;
     String line;
-    if (token != null) {
-      br = new BufferedReader(
-          new FileReader(filename));
-      while ((line = br.readLine()) != null) {
-        String[] fields = line.split("\t");
-        if (token.equals(fields[2])) {
-          return true;
+    try {
+      if (token != null) {
+        br = new BufferedReader(
+            new FileReader(filename));
+        while ((line = br.readLine()) != null) {
+          String[] fields = line.split("\t");
+          if (token.equals(fields[2])) {
+            return true;
+          }
         }
       }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      return false;
+    } finally {
+      br.close();
     }
+
     return false;
   }
 }

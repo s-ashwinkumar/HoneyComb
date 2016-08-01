@@ -13,11 +13,12 @@ public abstract class AbstractFault implements FaultInterface {
   private boolean isTerminated = false;
   protected String faultInstanceId;
 
-  public AbstractFault(HashMap<String, String> params) {
-    this.faultInstanceId = params.get("faultInstanceId");
-    this.params = params;
+  public AbstractFault(HashMap<String, String> parameters) {
+    this.faultInstanceId = parameters.get("faultInstanceId");
+    this.params = parameters;
   }
 
+  @Override
   public void terminate() {
     isTerminated = true;
   }

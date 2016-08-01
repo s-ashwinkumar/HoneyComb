@@ -5,10 +5,12 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
+import org.apache.commons.validator.GenericValidator;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -79,7 +81,12 @@ public final class RouterClass {
 
     User user = new User(request.getParam("username"),
         request.getParam("password"));
-    boolean validUser = user.isValidUser(User.getFileName());
+    boolean validUser = false;
+    try {
+      validUser = user.isValidUser(User.getFileName());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     HashMap<String, String> response = new HashMap<>();
     int responseCode;
     if (validUser) {
@@ -113,8 +120,8 @@ public final class RouterClass {
         String name = request.getParam("name");
         String desc = request.getParam("description");
         String args = request.getParam("arguments");
-        if (file == null || name == null || name.equals("") || desc == null
-            || desc.equals("")) {
+        if ( GenericValidator.isBlankOrNull(name) || GenericValidator
+            .isBlankOrNull(desc) || uploads.iterator().hasNext()) {
           uploadedFault.delete();
           response.put("error", "Invalid request. Please check the " +
               "parameters");
@@ -169,7 +176,7 @@ public final class RouterClass {
         String desc = request.getParam("description");
         String args = request.getParam("arguments");
         FaultModel fault = null;
-        if (file == null || faultId == null || faultId.equals("")) {
+        if (uploads.iterator().hasNext() || GenericValidator.isBlankOrNull(faultId)) {
           uploadedFault.delete();
           response.put("error", "Invalid request.Please check the parameters.");
           returnResponse(routingContext, BADREQUEST, response);
