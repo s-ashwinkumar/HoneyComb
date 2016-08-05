@@ -4,6 +4,9 @@ $(function() {
     	alert( response ); // server response
 	});
     */
+    var scrollTop = function() {
+        window.scrollTo(0, 0);
+    };
 
     function syntaxHighlight(json) {
         json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -53,6 +56,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
 
                 },
                 success: function(data) {
@@ -70,6 +74,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
 
                     $.cookie("HoneyCombToken", data.Token, { expires: 7 }); // Sample 2
                 }
@@ -104,6 +109,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
 
                 },
                 success: function(data) {
@@ -137,6 +143,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
                 }
             });
         return false;
@@ -177,6 +184,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
 
                 },
                 success: function(data) {
@@ -194,6 +202,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
                 }
             });
         return false;
@@ -226,6 +235,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
 
                 },
                 success: function(data) {
@@ -243,6 +253,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
                 }
             });
         return false;
@@ -288,6 +299,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
 
                 },
                 success: function(data) {
@@ -305,6 +317,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
                 }
             });
         return false;
@@ -336,6 +349,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
 
                 },
                 success: function(data) {
@@ -353,6 +367,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
                 }
             });
         return false;
@@ -409,6 +424,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
                 }
       });
       return false;
@@ -444,6 +460,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
 
                 },
                 success: function(data) {
@@ -461,6 +478,7 @@ $("#login-form").submit(function() {
                     output += "</div>";
 
                     $("#response").prepend(output);
+                    scrollTop();
                 }
       });
       return false;
