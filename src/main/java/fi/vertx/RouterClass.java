@@ -85,6 +85,7 @@ public final class RouterClass {
     try {
       validUser = user.isValidUser(User.getFileName());
     } catch (IOException e) {
+
       e.printStackTrace();
     }
     HashMap<String, String> response = new HashMap<>();

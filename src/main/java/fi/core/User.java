@@ -102,7 +102,8 @@ public class User {
       ex.printStackTrace();
       return false;
     } finally {
-      br.close();
+      if(br != null)
+        br.close();
     }
     return false;
   }
@@ -134,7 +135,8 @@ public class User {
       ex.printStackTrace();
       return false;
     } finally {
-      br.close();
+      if(br != null)
+        br.close();
     }
 
     return false;

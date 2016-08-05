@@ -115,7 +115,7 @@ public class FaultInjector {
     }
 
     File authorizedJarFile = new File(location);
-    ClassLoader authorizedLoader = URLClassLoader
+    URLClassLoader authorizedLoader = URLClassLoader
         .newInstance(new URL[]{authorizedJarFile.toURI().toURL()});
     String faultName = "fault." + name;
     FaultInterface authorizedPlugin =
@@ -128,8 +128,7 @@ public class FaultInjector {
 
     FaultInjector.faultInstances.putIfAbsent(faultInstanceId, faultInstance);
     (new Thread(faultInstance)).start();
-    //faultInstance.run();
-
+      authorizedLoader.close();
     return faultInstanceId;
   }
 
